@@ -1,0 +1,103 @@
+{
+  "study_id": "human-pilot-v1",
+  "status": "precommitted_no_sessions_yet",
+  "recorded_at": "2026-11-23T12:20:44.424193+00:00",
+  "seed": 4242,
+  "source_plan_sha256": "a31f0f20b2bd378a284e6cfebd4dbd552578b2b07dcc96e4debdbb84947e8e24",
+  "planned_participants": 1,
+  "tasks": [
+    {
+      "case_opaque_id": "H-e7bedc988781",
+      "scenario_id": "S0059",
+      "group_id": "G011",
+      "condition": "B3_assistant"
+    },
+    {
+      "case_opaque_id": "H-937649e1cb29",
+      "scenario_id": "S0055",
+      "group_id": "G010",
+      "condition": "B3_assistant"
+    },
+    {
+      "case_opaque_id": "H-07391ab17428",
+      "scenario_id": "S0195",
+      "group_id": "G028",
+      "condition": "B0_dashboard"
+    },
+    {
+      "case_opaque_id": "H-0c4ede716719",
+      "scenario_id": "S0189",
+      "group_id": "G027",
+      "condition": "B3_assistant"
+    },
+    {
+      "case_opaque_id": "H-a2d8e7de6705",
+      "scenario_id": "S0060",
+      "group_id": "G011",
+      "condition": "B0_dashboard"
+    },
+    {
+      "case_opaque_id": "H-4d3352424911",
+      "scenario_id": "S0054",
+      "group_id": "G010",
+      "condition": "B0_dashboard"
+    },
+    {
+      "case_opaque_id": "H-e4c48944248f",
+      "scenario_id": "S0064",
+      "group_id": "G012",
+      "condition": "B3_assistant"
+    },
+    {
+      "case_opaque_id": "H-bfe0254c00d4",
+      "scenario_id": "S0188",
+      "group_id": "G027",
+      "condition": "B0_dashboard"
+    },
+    {
+      "case_opaque_id": "H-846963591d83",
+      "scenario_id": "S0123",
+      "group_id": "G021",
+      "condition": "B3_assistant"
+    },
+    {
+      "case_opaque_id": "H-bd3993f044f7",
+      "scenario_id": "S0130",
+      "group_id": "G022",
+      "condition": "B3_assistant"
+    },
+    {
+      "case_opaque_id": "H-5605ceca71a9",
+      "scenario_id": "S0065",
+      "group_id": "G012",
+      "condition": "B0_dashboard"
+    },
+    {
+      "case_opaque_id": "H-ff2b79abb7e6",
+      "scenario_id": "S0129",
+      "group_id": "G022",
+      "condition": "B0_dashboard"
+    },
+    {
+      "case_opaque_id": "H-9f25e59acedc",
+      "scenario_id": "S0122",
+      "group_id": "G021",
+      "condition": "B0_dashboard"
+    },
+    {
+      "case_opaque_id": "H-c5030db384b1",
+      "scenario_id": "S0196",
+      "group_id": "G028",
+      "condition": "B3_assistant"
+    }
+  ],
+  "blinding": "Hide all test ground truth and test reports outside assigned assistant tasks until the full study is complete.",
+  "timing": "Observed human decision time with preloaded context; assistant report is precomputed. This is not live LLM TTD.",
+  "design": "One participant; seven matched scenario-family pairs using different cases, one per condition. Not a same-case paired crossover.",
+  "limitations": [
+    "Small exploratory study; do not generalize to engineer population or production ROI.",
+    "Matched cases differ in parameters/traffic; condition differences are not causal proof.",
+    "No correctness feedback until all tasks end.",
+    "No imputed or assistant-generated human timings."
+  ]
+}

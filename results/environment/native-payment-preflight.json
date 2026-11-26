@@ -1,0 +1,54 @@
+{
+  "status": "standalone_smoke_passed_not_cluster_deployed",
+  "checks": [
+    {
+      "path": "/health",
+      "input": null,
+      "http_status": 200,
+      "body": {
+        "health": [
+          {
+            "service": "payment",
+            "status": "OK",
+            "time": "2026-11-21 23:14:30.394516921 +0000 UTC m=+14.468209507"
+          }
+        ]
+      }
+    },
+    {
+      "path": "/paymentAuth",
+      "input": {
+        "amount": 25
+      },
+      "http_status": 200,
+      "body": {
+        "authorised": true,
+        "message": "Payment authorised"
+      }
+    },
+    {
+      "path": "/paymentAuth",
+      "input": {
+        "amount": 125
+      },
+      "http_status": 200,
+      "body": {
+        "authorised": false,
+        "message": "Payment declined: amount exceeds 100.00"
+      }
+    }
+  ],
+  "additional_successful_stub_requests": 100,
+  "docker_stats": {
+    "BlockIO": "0B / 0B",
+    "CPUPerc": "0.03%",
+    "Container": "shyn-payment-native-preflight",
+    "ID": "763f4b2d83f8",
+    "MemPerc": "2.98%",
+    "MemUsage": "3.809MiB / 128MiB",
+    "Name": "shyn-payment-native-preflight",
+    "NetIO": "56.1kB / 55.1kB",
+    "PIDs": "11"
+  },
+  "note": "Small local stub smoke; not long-term stability, same-workload benchmark, tracing or cluster checkout validation."
+}

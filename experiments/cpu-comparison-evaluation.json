@@ -1,0 +1,26 @@
+{
+  "dataset_role": "development_pilot",
+  "modes": [
+    "B1",
+    "B2",
+    "B3"
+  ],
+  "note": "One underlying CPU development pilot, same approved observation cutoff across modes. Not three cases or official test data.",
+  "cases": [
+    {
+      "case_id": "CPU-COMPARISON-ONE",
+      "context_id": "CTX-0043135a9e0a5209",
+      "admission_status": "reviewed_for_development_scoring",
+      "split": "development",
+      "expected": {
+        "target": "payment",
+        "fault_type": "Resource Exhaustion"
+      },
+      "reports": {
+        "B1": "../results/diagnoses/CTX-0043135a9e0a5209/B1/result.json",
+        "B2": "../results/diagnoses/CTX-0043135a9e0a5209/B2/result.json",
+        "B3": "../results/diagnoses/CTX-0043135a9e0a5209/B3/result.json"
+      }
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+google-genai==3.6.1
+langchain-core==1.8.4
+qdrant-client==1.20.0
+drain3==0.9.11
+streamlit==1.67.0
+python-dotenv==1.2.4

@@ -1,0 +1,34 @@
+{
+  "status": "source_provenance_only",
+  "compiler": "go1.23.12",
+  "target": "linux/arm64",
+  "services": [
+    {
+      "service": "payment",
+      "repository": "https://github.com/microservices-demo/payment",
+      "tag": "0.4.3",
+      "commit": "923c8b030364fd4e217c54cd1e30150b7cad4266",
+      "dependency_lock_path": "vendor/manifest",
+      "dependency_lock_sha256": "4bee21e231813e17a4e982ae9f20f455f30d2343cbf1bde9170007abfc2ab095",
+      "status": "source_verified"
+    },
+    {
+      "service": "catalogue",
+      "repository": "https://github.com/microservices-demo/catalogue",
+      "tag": "0.3.5",
+      "commit": "93452255c62cac6e44f5d86376d7cb3c5409e162",
+      "dependency_lock_path": "vendor/manifest",
+      "dependency_lock_sha256": "73b784076d1d70044cf2f395efc17d1b26fcb3e9a33cd9f894c6cdea3d77fa79",
+      "status": "source_verified"
+    },
+    {
+      "service": "user",
+      "repository": "https://github.com/microservices-demo/user",
+      "tag": "0.4.7",
+      "commit": "1968fe09635e320bb573260a27711f08f7a4a43a",
+      "dependency_lock_path": "glide.lock",
+      "dependency_lock_sha256": "26d75d95e6f49e6a746119973e67c7b58c3dc3c03431aa8cb68dedb5fe940329",
+      "status": "source_verified"
+    }
+  ]
+}

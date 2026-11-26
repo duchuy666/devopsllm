@@ -1,0 +1,20 @@
+Fri Nov 20 08:35:27 UTC 2026
+ProductName:		macOS
+ProductVersion:		27.0.1
+BuildVersion:		26A434
+arm64
+sysctl: sysctl fmt -1 1024 1: Operation not permitted
+WARN: hardware query restricted by execution environment
+Filesystem      Size    Used   Avail Capacity iused ifree %iused  Mounted on
+/dev/disk3s5   228Gi    78Gi   119Gi    40%    706k  1.3G    0%   /System/Volumes/Data
+/usr/bin/git
+git version 2.39.2 (Apple Git-143)
+MISSING: docker
+/opt/homebrew/bin/minikube
+minikube version: v1.39.0
+commit: 7a9f6a841470a207de8cf4bafcccee0969d8ba10
+/opt/homebrew/bin/kubectl
+Client Version: v1.37.1
+Kustomize Version: v5.8.1
+/opt/homebrew/bin/helm
+v4.3.1+gc0d08d0

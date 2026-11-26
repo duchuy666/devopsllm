@@ -1,0 +1,4264 @@
+{
+  "status": "collection_plan_precommitted",
+  "plan_version": "0.3.0",
+  "execution_status": "planned_only",
+  "official_cases_collected": 0,
+  "note": "200 distinct nominal settings by variant/target/parameters/duration/traffic pause; 28 grouped scenario families, not 200 distinct failure mechanisms. Pod traffic pauses vary; first three settings per family are preserved from v0.2. Observed near-duplicate/effect review still required. This is a plan, not admitted data.",
+  "seed": 42,
+  "fault_counts": {
+    "Resource Exhaustion": 67,
+    "Network Delay / Packet Loss": 67,
+    "Pod Failure": 66
+  },
+  "split_counts": {
+    "reference": 120,
+    "validation": 40,
+    "test": 40
+  },
+  "groups": [
+    {
+      "group_id": "G001",
+      "split": "reference",
+      "family": {
+        "fault_class": "Resource Exhaustion",
+        "variant": "memory",
+        "target": "payment"
+      },
+      "case_count": 7
+    },
+    {
+      "group_id": "G002",
+      "split": "reference",
+      "family": {
+        "fault_class": "Resource Exhaustion",
+        "variant": "cpu",
+        "target": "shipping"
+      },
+      "case_count": 7
+    },
+    {
+      "group_id": "G003",
+      "split": "reference",
+      "family": {
+        "fault_class": "Resource Exhaustion",
+        "variant": "cpu",
+        "target": "user"
+      },
+      "case_count": 7
+    },
+    {
+      "group_id": "G004",
+      "split": "reference",
+      "family": {
+        "fault_class": "Resource Exhaustion",
+        "variant": "memory",
+        "target": "user"
+      },
+      "case_count": 7
+    },
+    {
+      "group_id": "G005",
+      "split": "reference",
+      "family": {
+        "fault_class": "Resource Exhaustion",
+        "variant": "memory",
+        "target": "carts"
+      },
+      "case_count": 6
+    },
+    {
+      "group_id": "G006",
+      "split": "reference",
+      "family": {
+        "fault_class": "Resource Exhaustion",
+        "variant": "memory",
+        "target": "catalogue"
+      },
+      "case_count": 6
+    },
+    {
+      "group_id": "G007",
+      "split": "validation",
+      "family": {
+        "fault_class": "Resource Exhaustion",
+        "variant": "memory",
+        "target": "shipping"
+      },
+      "case_count": 5
+    },
+    {
+      "group_id": "G008",
+      "split": "validation",
+      "family": {
+        "fault_class": "Resource Exhaustion",
+        "variant": "cpu",
+        "target": "carts"
+      },
+      "case_count": 4
+    },
+    {
+      "group_id": "G009",
+      "split": "validation",
+      "family": {
+        "fault_class": "Resource Exhaustion",
+        "variant": "cpu",
+        "target": "orders"
+      },
+      "case_count": 4
+    },
+    {
+      "group_id": "G010",
+      "split": "test",
+      "family": {
+        "fault_class": "Resource Exhaustion",
+        "variant": "cpu",
+        "target": "catalogue"
+      },
+      "case_count": 5
+    },
+    {
+      "group_id": "G011",
+      "split": "test",
+      "family": {
+        "fault_class": "Resource Exhaustion",
+        "variant": "cpu",
+        "target": "payment"
+      },
+      "case_count": 5
+    },
+    {
+      "group_id": "G012",
+      "split": "test",
+      "family": {
+        "fault_class": "Resource Exhaustion",
+        "variant": "memory",
+        "target": "orders"
+      },
+      "case_count": 4
+    },
+    {
+      "group_id": "G013",
+      "split": "reference",
+      "family": {
+        "fault_class": "Network Delay / Packet Loss",
+        "variant": "network-loss",
+        "target": [
+          "front-end",
+          "carts"
+        ]
+      },
+      "case_count": 7
+    },
+    {
+      "group_id": "G014",
+      "split": "reference",
+      "family": {
+        "fault_class": "Network Delay / Packet Loss",
+        "variant": "network-delay",
+        "target": [
+          "orders",
+          "shipping"
+        ]
+      },
+      "case_count": 7
+    },
+    {
+      "group_id": "G015",
+      "split": "reference",
+      "family": {
+        "fault_class": "Network Delay / Packet Loss",
+        "variant": "network-delay",
+        "target": [
+          "front-end",
+          "user"
+        ]
+      },
+      "case_count": 7
+    },
+    {
+      "group_id": "G016",
+      "split": "reference",
+      "family": {
+        "fault_class": "Network Delay / Packet Loss",
+        "variant": "network-loss",
+        "target": [
+          "front-end",
+          "user"
+        ]
+      },
+      "case_count": 7
+    },
+    {
+      "group_id": "G017",
+      "split": "reference",
+      "family": {
+        "fault_class": "Network Delay / Packet Loss",
+        "variant": "network-delay",
+        "target": [
+          "front-end",
+          "carts"
+        ]
+      },
+      "case_count": 6
+    },
+    {
+      "group_id": "G018",
+      "split": "reference",
+      "family": {
+        "fault_class": "Network Delay / Packet Loss",
+        "variant": "network-loss",
+        "target": [
+          "front-end",
+          "catalogue"
+        ]
+      },
+      "case_count": 6
+    },
+    {
+      "group_id": "G019",
+      "split": "validation",
+      "family": {
+        "fault_class": "Network Delay / Packet Loss",
+        "variant": "network-loss",
+        "target": [
+          "orders",
+          "shipping"
+        ]
+      },
+      "case_count": 7
+    },
+    {
+      "group_id": "G020",
+      "split": "validation",
+      "family": {
+        "fault_class": "Network Delay / Packet Loss",
+        "variant": "network-delay",
+        "target": [
+          "orders",
+          "payment"
+        ]
+      },
+      "case_count": 7
+    },
+    {
+      "group_id": "G021",
+      "split": "test",
+      "family": {
+        "fault_class": "Network Delay / Packet Loss",
+        "variant": "network-loss",
+        "target": [
+          "orders",
+          "payment"
+        ]
+      },
+      "case_count": 7
+    },
+    {
+      "group_id": "G022",
+      "split": "test",
+      "family": {
+        "fault_class": "Network Delay / Packet Loss",
+        "variant": "network-delay",
+        "target": [
+          "front-end",
+          "catalogue"
+        ]
+      },
+      "case_count": 6
+    },
+    {
+      "group_id": "G023",
+      "split": "reference",
+      "family": {
+        "fault_class": "Pod Failure",
+        "variant": "pod-failure",
+        "target": "user"
+      },
+      "case_count": 20
+    },
+    {
+      "group_id": "G024",
+      "split": "reference",
+      "family": {
+        "fault_class": "Pod Failure",
+        "variant": "pod-failure",
+        "target": "payment"
+      },
+      "case_count": 20
+    },
+    {
+      "group_id": "G025",
+      "split": "validation",
+      "family": {
+        "fault_class": "Pod Failure",
+        "variant": "pod-failure",
+        "target": "shipping"
+      },
+      "case_count": 7
+    },
+    {
+      "group_id": "G026",
+      "split": "validation",
+      "family": {
+        "fault_class": "Pod Failure",
+        "variant": "pod-failure",
+        "target": "catalogue"
+      },
+      "case_count": 6
+    },
+    {
+      "group_id": "G027",
+      "split": "test",
+      "family": {
+        "fault_class": "Pod Failure",
+        "variant": "pod-failure",
+        "target": "orders"
+      },
+      "case_count": 7
+    },
+    {
+      "group_id": "G028",
+      "split": "test",
+      "family": {
+        "fault_class": "Pod Failure",
+        "variant": "pod-failure",
+        "target": "carts"
+      },
+      "case_count": 6
+    }
+  ],
+  "scenarios": [
+    {
+      "scenario_id": "S0001",
+      "group_id": "G001",
+      "split": "reference",
+      "fault_class": "Resource Exhaustion",
+      "variant": "memory",
+      "target": "payment",
+      "traffic_profile": "checkout-low",
+      "replicate_index": 1,
+      "parameters": {
+        "additional_memory_fraction_of_declared_limit": 0.6
+      },
+      "duration_seconds": 30,
+      "traffic_pause_seconds": 1.5,
+      "seed": 55,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0002",
+      "group_id": "G001",
+      "split": "reference",
+      "fault_class": "Resource Exhaustion",
+      "variant": "memory",
+      "target": "payment",
+      "traffic_profile": "checkout-medium",
+      "replicate_index": 1,
+      "parameters": {
+        "additional_memory_fraction_of_declared_limit": 0.7
+      },
+      "duration_seconds": 45,
+      "traffic_pause_seconds": 0.75,
+      "seed": 68,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0003",
+      "group_id": "G001",
+      "split": "reference",
+      "fault_class": "Resource Exhaustion",
+      "variant": "memory",
+      "target": "payment",
+      "traffic_profile": "checkout-high",
+      "replicate_index": 1,
+      "parameters": {
+        "additional_memory_fraction_of_declared_limit": 0.8
+      },
+      "duration_seconds": 60,
+      "traffic_pause_seconds": 0.25,
+      "seed": 81,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0004",
+      "group_id": "G001",
+      "split": "reference",
+      "fault_class": "Resource Exhaustion",
+      "variant": "memory",
+      "target": "payment",
+      "traffic_profile": "checkout-low",
+      "replicate_index": 2,
+      "parameters": {
+        "additional_memory_fraction_of_declared_limit": 0.75
+      },
+      "duration_seconds": 90,
+      "traffic_pause_seconds": 1.5,
+      "seed": 94,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0005",
+      "group_id": "G001",
+      "split": "reference",
+      "fault_class": "Resource Exhaustion",
+      "variant": "memory",
+      "target": "payment",
+      "traffic_profile": "checkout-medium",
+      "replicate_index": 2,
+      "parameters": {
+        "additional_memory_fraction_of_declared_limit": 0.65
+      },
+      "duration_seconds": 120,
+      "traffic_pause_seconds": 0.75,
+      "seed": 107,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0006",
+      "group_id": "G001",
+      "split": "reference",
+      "fault_class": "Resource Exhaustion",
+      "variant": "memory",
+      "target": "payment",
+      "traffic_profile": "checkout-high",
+      "replicate_index": 2,
+      "parameters": {
+        "additional_memory_fraction_of_declared_limit": 0.6
+      },
+      "duration_seconds": 30,
+      "traffic_pause_seconds": 0.25,
+      "seed": 120,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0007",
+      "group_id": "G001",
+      "split": "reference",
+      "fault_class": "Resource Exhaustion",
+      "variant": "memory",
+      "target": "payment",
+      "traffic_profile": "checkout-low",
+      "replicate_index": 3,
+      "parameters": {
+        "additional_memory_fraction_of_declared_limit": 0.7
+      },
+      "duration_seconds": 45,
+      "traffic_pause_seconds": 1.5,
+      "seed": 133,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0008",
+      "group_id": "G002",
+      "split": "reference",
+      "fault_class": "Resource Exhaustion",
+      "variant": "cpu",
+      "target": "shipping",
+      "traffic_profile": "checkout-low",
+      "replicate_index": 1,
+      "parameters": {
+        "workers": 1,
+        "load_percent": 100
+      },
+      "duration_seconds": 30,
+      "traffic_pause_seconds": 1.5,
+      "seed": 146,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0009",
+      "group_id": "G002",
+      "split": "reference",
+      "fault_class": "Resource Exhaustion",
+      "variant": "cpu",
+      "target": "shipping",
+      "traffic_profile": "checkout-medium",
+      "replicate_index": 1,
+      "parameters": {
+        "workers": 2,
+        "load_percent": 100
+      },
+      "duration_seconds": 45,
+      "traffic_pause_seconds": 0.75,
+      "seed": 159,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0010",
+      "group_id": "G002",
+      "split": "reference",
+      "fault_class": "Resource Exhaustion",
+      "variant": "cpu",
+      "target": "shipping",
+      "traffic_profile": "checkout-high",
+      "replicate_index": 1,
+      "parameters": {
+        "workers": 1,
+        "load_percent": 100
+      },
+      "duration_seconds": 60,
+      "traffic_pause_seconds": 0.25,
+      "seed": 172,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0011",
+      "group_id": "G002",
+      "split": "reference",
+      "fault_class": "Resource Exhaustion",
+      "variant": "cpu",
+      "target": "shipping",
+      "traffic_profile": "checkout-low",
+      "replicate_index": 2,
+      "parameters": {
+        "workers": 2,
+        "load_percent": 100
+      },
+      "duration_seconds": 90,
+      "traffic_pause_seconds": 1.5,
+      "seed": 185,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0012",
+      "group_id": "G002",
+      "split": "reference",
+      "fault_class": "Resource Exhaustion",
+      "variant": "cpu",
+      "target": "shipping",
+      "traffic_profile": "checkout-medium",
+      "replicate_index": 2,
+      "parameters": {
+        "workers": 1,
+        "load_percent": 100
+      },
+      "duration_seconds": 120,
+      "traffic_pause_seconds": 0.75,
+      "seed": 198,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0013",
+      "group_id": "G002",
+      "split": "reference",
+      "fault_class": "Resource Exhaustion",
+      "variant": "cpu",
+      "target": "shipping",
+      "traffic_profile": "checkout-high",
+      "replicate_index": 2,
+      "parameters": {
+        "workers": 2,
+        "load_percent": 100
+      },
+      "duration_seconds": 30,
+      "traffic_pause_seconds": 0.25,
+      "seed": 211,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0014",
+      "group_id": "G002",
+      "split": "reference",
+      "fault_class": "Resource Exhaustion",
+      "variant": "cpu",
+      "target": "shipping",
+      "traffic_profile": "checkout-low",
+      "replicate_index": 3,
+      "parameters": {
+        "workers": 1,
+        "load_percent": 100
+      },
+      "duration_seconds": 45,
+      "traffic_pause_seconds": 1.5,
+      "seed": 224,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0015",
+      "group_id": "G003",
+      "split": "reference",
+      "fault_class": "Resource Exhaustion",
+      "variant": "cpu",
+      "target": "user",
+      "traffic_profile": "checkout-low",
+      "replicate_index": 1,
+      "parameters": {
+        "workers": 1,
+        "load_percent": 100
+      },
+      "duration_seconds": 30,
+      "traffic_pause_seconds": 1.5,
+      "seed": 237,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0016",
+      "group_id": "G003",
+      "split": "reference",
+      "fault_class": "Resource Exhaustion",
+      "variant": "cpu",
+      "target": "user",
+      "traffic_profile": "checkout-medium",
+      "replicate_index": 1,
+      "parameters": {
+        "workers": 2,
+        "load_percent": 100
+      },
+      "duration_seconds": 45,
+      "traffic_pause_seconds": 0.75,
+      "seed": 250,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0017",
+      "group_id": "G003",
+      "split": "reference",
+      "fault_class": "Resource Exhaustion",
+      "variant": "cpu",
+      "target": "user",
+      "traffic_profile": "checkout-high",
+      "replicate_index": 1,
+      "parameters": {
+        "workers": 1,
+        "load_percent": 100
+      },
+      "duration_seconds": 60,
+      "traffic_pause_seconds": 0.25,
+      "seed": 263,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0018",
+      "group_id": "G003",
+      "split": "reference",
+      "fault_class": "Resource Exhaustion",
+      "variant": "cpu",
+      "target": "user",
+      "traffic_profile": "checkout-low",
+      "replicate_index": 2,
+      "parameters": {
+        "workers": 2,
+        "load_percent": 100
+      },
+      "duration_seconds": 90,
+      "traffic_pause_seconds": 1.5,
+      "seed": 276,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0019",
+      "group_id": "G003",
+      "split": "reference",
+      "fault_class": "Resource Exhaustion",
+      "variant": "cpu",
+      "target": "user",
+      "traffic_profile": "checkout-medium",
+      "replicate_index": 2,
+      "parameters": {
+        "workers": 1,
+        "load_percent": 100
+      },
+      "duration_seconds": 120,
+      "traffic_pause_seconds": 0.75,
+      "seed": 289,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0020",
+      "group_id": "G003",
+      "split": "reference",
+      "fault_class": "Resource Exhaustion",
+      "variant": "cpu",
+      "target": "user",
+      "traffic_profile": "checkout-high",
+      "replicate_index": 2,
+      "parameters": {
+        "workers": 2,
+        "load_percent": 100
+      },
+      "duration_seconds": 30,
+      "traffic_pause_seconds": 0.25,
+      "seed": 302,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0021",
+      "group_id": "G003",
+      "split": "reference",
+      "fault_class": "Resource Exhaustion",
+      "variant": "cpu",
+      "target": "user",
+      "traffic_profile": "checkout-low",
+      "replicate_index": 3,
+      "parameters": {
+        "workers": 1,
+        "load_percent": 100
+      },
+      "duration_seconds": 45,
+      "traffic_pause_seconds": 1.5,
+      "seed": 315,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0022",
+      "group_id": "G004",
+      "split": "reference",
+      "fault_class": "Resource Exhaustion",
+      "variant": "memory",
+      "target": "user",
+      "traffic_profile": "checkout-low",
+      "replicate_index": 1,
+      "parameters": {
+        "additional_memory_fraction_of_declared_limit": 0.6
+      },
+      "duration_seconds": 30,
+      "traffic_pause_seconds": 1.5,
+      "seed": 328,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0023",
+      "group_id": "G004",
+      "split": "reference",
+      "fault_class": "Resource Exhaustion",
+      "variant": "memory",
+      "target": "user",
+      "traffic_profile": "checkout-medium",
+      "replicate_index": 1,
+      "parameters": {
+        "additional_memory_fraction_of_declared_limit": 0.7
+      },
+      "duration_seconds": 45,
+      "traffic_pause_seconds": 0.75,
+      "seed": 341,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0024",
+      "group_id": "G004",
+      "split": "reference",
+      "fault_class": "Resource Exhaustion",
+      "variant": "memory",
+      "target": "user",
+      "traffic_profile": "checkout-high",
+      "replicate_index": 1,
+      "parameters": {
+        "additional_memory_fraction_of_declared_limit": 0.8
+      },
+      "duration_seconds": 60,
+      "traffic_pause_seconds": 0.25,
+      "seed": 354,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0025",
+      "group_id": "G004",
+      "split": "reference",
+      "fault_class": "Resource Exhaustion",
+      "variant": "memory",
+      "target": "user",
+      "traffic_profile": "checkout-low",
+      "replicate_index": 2,
+      "parameters": {
+        "additional_memory_fraction_of_declared_limit": 0.75
+      },
+      "duration_seconds": 90,
+      "traffic_pause_seconds": 1.5,
+      "seed": 367,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0026",
+      "group_id": "G004",
+      "split": "reference",
+      "fault_class": "Resource Exhaustion",
+      "variant": "memory",
+      "target": "user",
+      "traffic_profile": "checkout-medium",
+      "replicate_index": 2,
+      "parameters": {
+        "additional_memory_fraction_of_declared_limit": 0.65
+      },
+      "duration_seconds": 120,
+      "traffic_pause_seconds": 0.75,
+      "seed": 380,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0027",
+      "group_id": "G004",
+      "split": "reference",
+      "fault_class": "Resource Exhaustion",
+      "variant": "memory",
+      "target": "user",
+      "traffic_profile": "checkout-high",
+      "replicate_index": 2,
+      "parameters": {
+        "additional_memory_fraction_of_declared_limit": 0.6
+      },
+      "duration_seconds": 30,
+      "traffic_pause_seconds": 0.25,
+      "seed": 393,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0028",
+      "group_id": "G004",
+      "split": "reference",
+      "fault_class": "Resource Exhaustion",
+      "variant": "memory",
+      "target": "user",
+      "traffic_profile": "checkout-low",
+      "replicate_index": 3,
+      "parameters": {
+        "additional_memory_fraction_of_declared_limit": 0.7
+      },
+      "duration_seconds": 45,
+      "traffic_pause_seconds": 1.5,
+      "seed": 406,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0029",
+      "group_id": "G005",
+      "split": "reference",
+      "fault_class": "Resource Exhaustion",
+      "variant": "memory",
+      "target": "carts",
+      "traffic_profile": "checkout-low",
+      "replicate_index": 1,
+      "parameters": {
+        "additional_memory_fraction_of_declared_limit": 0.6
+      },
+      "duration_seconds": 30,
+      "traffic_pause_seconds": 1.5,
+      "seed": 419,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0030",
+      "group_id": "G005",
+      "split": "reference",
+      "fault_class": "Resource Exhaustion",
+      "variant": "memory",
+      "target": "carts",
+      "traffic_profile": "checkout-medium",
+      "replicate_index": 1,
+      "parameters": {
+        "additional_memory_fraction_of_declared_limit": 0.7
+      },
+      "duration_seconds": 45,
+      "traffic_pause_seconds": 0.75,
+      "seed": 432,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0031",
+      "group_id": "G005",
+      "split": "reference",
+      "fault_class": "Resource Exhaustion",
+      "variant": "memory",
+      "target": "carts",
+      "traffic_profile": "checkout-high",
+      "replicate_index": 1,
+      "parameters": {
+        "additional_memory_fraction_of_declared_limit": 0.8
+      },
+      "duration_seconds": 60,
+      "traffic_pause_seconds": 0.25,
+      "seed": 445,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0032",
+      "group_id": "G005",
+      "split": "reference",
+      "fault_class": "Resource Exhaustion",
+      "variant": "memory",
+      "target": "carts",
+      "traffic_profile": "checkout-low",
+      "replicate_index": 2,
+      "parameters": {
+        "additional_memory_fraction_of_declared_limit": 0.75
+      },
+      "duration_seconds": 90,
+      "traffic_pause_seconds": 1.5,
+      "seed": 458,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0033",
+      "group_id": "G005",
+      "split": "reference",
+      "fault_class": "Resource Exhaustion",
+      "variant": "memory",
+      "target": "carts",
+      "traffic_profile": "checkout-medium",
+      "replicate_index": 2,
+      "parameters": {
+        "additional_memory_fraction_of_declared_limit": 0.65
+      },
+      "duration_seconds": 120,
+      "traffic_pause_seconds": 0.75,
+      "seed": 471,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0034",
+      "group_id": "G005",
+      "split": "reference",
+      "fault_class": "Resource Exhaustion",
+      "variant": "memory",
+      "target": "carts",
+      "traffic_profile": "checkout-high",
+      "replicate_index": 2,
+      "parameters": {
+        "additional_memory_fraction_of_declared_limit": 0.6
+      },
+      "duration_seconds": 30,
+      "traffic_pause_seconds": 0.25,
+      "seed": 484,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0035",
+      "group_id": "G006",
+      "split": "reference",
+      "fault_class": "Resource Exhaustion",
+      "variant": "memory",
+      "target": "catalogue",
+      "traffic_profile": "checkout-low",
+      "replicate_index": 1,
+      "parameters": {
+        "additional_memory_fraction_of_declared_limit": 0.6
+      },
+      "duration_seconds": 30,
+      "traffic_pause_seconds": 1.5,
+      "seed": 497,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0036",
+      "group_id": "G006",
+      "split": "reference",
+      "fault_class": "Resource Exhaustion",
+      "variant": "memory",
+      "target": "catalogue",
+      "traffic_profile": "checkout-medium",
+      "replicate_index": 1,
+      "parameters": {
+        "additional_memory_fraction_of_declared_limit": 0.7
+      },
+      "duration_seconds": 45,
+      "traffic_pause_seconds": 0.75,
+      "seed": 510,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0037",
+      "group_id": "G006",
+      "split": "reference",
+      "fault_class": "Resource Exhaustion",
+      "variant": "memory",
+      "target": "catalogue",
+      "traffic_profile": "checkout-high",
+      "replicate_index": 1,
+      "parameters": {
+        "additional_memory_fraction_of_declared_limit": 0.8
+      },
+      "duration_seconds": 60,
+      "traffic_pause_seconds": 0.25,
+      "seed": 523,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0038",
+      "group_id": "G006",
+      "split": "reference",
+      "fault_class": "Resource Exhaustion",
+      "variant": "memory",
+      "target": "catalogue",
+      "traffic_profile": "checkout-low",
+      "replicate_index": 2,
+      "parameters": {
+        "additional_memory_fraction_of_declared_limit": 0.75
+      },
+      "duration_seconds": 90,
+      "traffic_pause_seconds": 1.5,
+      "seed": 536,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0039",
+      "group_id": "G006",
+      "split": "reference",
+      "fault_class": "Resource Exhaustion",
+      "variant": "memory",
+      "target": "catalogue",
+      "traffic_profile": "checkout-medium",
+      "replicate_index": 2,
+      "parameters": {
+        "additional_memory_fraction_of_declared_limit": 0.65
+      },
+      "duration_seconds": 120,
+      "traffic_pause_seconds": 0.75,
+      "seed": 549,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0040",
+      "group_id": "G006",
+      "split": "reference",
+      "fault_class": "Resource Exhaustion",
+      "variant": "memory",
+      "target": "catalogue",
+      "traffic_profile": "checkout-high",
+      "replicate_index": 2,
+      "parameters": {
+        "additional_memory_fraction_of_declared_limit": 0.6
+      },
+      "duration_seconds": 30,
+      "traffic_pause_seconds": 0.25,
+      "seed": 562,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0041",
+      "group_id": "G007",
+      "split": "validation",
+      "fault_class": "Resource Exhaustion",
+      "variant": "memory",
+      "target": "shipping",
+      "traffic_profile": "checkout-low",
+      "replicate_index": 1,
+      "parameters": {
+        "additional_memory_fraction_of_declared_limit": 0.6
+      },
+      "duration_seconds": 30,
+      "traffic_pause_seconds": 1.5,
+      "seed": 575,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0042",
+      "group_id": "G007",
+      "split": "validation",
+      "fault_class": "Resource Exhaustion",
+      "variant": "memory",
+      "target": "shipping",
+      "traffic_profile": "checkout-medium",
+      "replicate_index": 1,
+      "parameters": {
+        "additional_memory_fraction_of_declared_limit": 0.7
+      },
+      "duration_seconds": 45,
+      "traffic_pause_seconds": 0.75,
+      "seed": 588,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0043",
+      "group_id": "G007",
+      "split": "validation",
+      "fault_class": "Resource Exhaustion",
+      "variant": "memory",
+      "target": "shipping",
+      "traffic_profile": "checkout-high",
+      "replicate_index": 1,
+      "parameters": {
+        "additional_memory_fraction_of_declared_limit": 0.8
+      },
+      "duration_seconds": 60,
+      "traffic_pause_seconds": 0.25,
+      "seed": 601,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0044",
+      "group_id": "G007",
+      "split": "validation",
+      "fault_class": "Resource Exhaustion",
+      "variant": "memory",
+      "target": "shipping",
+      "traffic_profile": "checkout-low",
+      "replicate_index": 2,
+      "parameters": {
+        "additional_memory_fraction_of_declared_limit": 0.75
+      },
+      "duration_seconds": 90,
+      "traffic_pause_seconds": 1.5,
+      "seed": 614,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0045",
+      "group_id": "G007",
+      "split": "validation",
+      "fault_class": "Resource Exhaustion",
+      "variant": "memory",
+      "target": "shipping",
+      "traffic_profile": "checkout-medium",
+      "replicate_index": 2,
+      "parameters": {
+        "additional_memory_fraction_of_declared_limit": 0.65
+      },
+      "duration_seconds": 120,
+      "traffic_pause_seconds": 0.75,
+      "seed": 627,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0046",
+      "group_id": "G008",
+      "split": "validation",
+      "fault_class": "Resource Exhaustion",
+      "variant": "cpu",
+      "target": "carts",
+      "traffic_profile": "checkout-low",
+      "replicate_index": 1,
+      "parameters": {
+        "workers": 1,
+        "load_percent": 100
+      },
+      "duration_seconds": 30,
+      "traffic_pause_seconds": 1.5,
+      "seed": 640,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0047",
+      "group_id": "G008",
+      "split": "validation",
+      "fault_class": "Resource Exhaustion",
+      "variant": "cpu",
+      "target": "carts",
+      "traffic_profile": "checkout-medium",
+      "replicate_index": 1,
+      "parameters": {
+        "workers": 2,
+        "load_percent": 100
+      },
+      "duration_seconds": 45,
+      "traffic_pause_seconds": 0.75,
+      "seed": 653,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0048",
+      "group_id": "G008",
+      "split": "validation",
+      "fault_class": "Resource Exhaustion",
+      "variant": "cpu",
+      "target": "carts",
+      "traffic_profile": "checkout-high",
+      "replicate_index": 1,
+      "parameters": {
+        "workers": 1,
+        "load_percent": 100
+      },
+      "duration_seconds": 60,
+      "traffic_pause_seconds": 0.25,
+      "seed": 666,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0049",
+      "group_id": "G008",
+      "split": "validation",
+      "fault_class": "Resource Exhaustion",
+      "variant": "cpu",
+      "target": "carts",
+      "traffic_profile": "checkout-low",
+      "replicate_index": 2,
+      "parameters": {
+        "workers": 2,
+        "load_percent": 100
+      },
+      "duration_seconds": 90,
+      "traffic_pause_seconds": 1.5,
+      "seed": 679,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0050",
+      "group_id": "G009",
+      "split": "validation",
+      "fault_class": "Resource Exhaustion",
+      "variant": "cpu",
+      "target": "orders",
+      "traffic_profile": "checkout-low",
+      "replicate_index": 1,
+      "parameters": {
+        "workers": 1,
+        "load_percent": 100
+      },
+      "duration_seconds": 30,
+      "traffic_pause_seconds": 1.5,
+      "seed": 692,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0051",
+      "group_id": "G009",
+      "split": "validation",
+      "fault_class": "Resource Exhaustion",
+      "variant": "cpu",
+      "target": "orders",
+      "traffic_profile": "checkout-medium",
+      "replicate_index": 1,
+      "parameters": {
+        "workers": 2,
+        "load_percent": 100
+      },
+      "duration_seconds": 45,
+      "traffic_pause_seconds": 0.75,
+      "seed": 705,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0052",
+      "group_id": "G009",
+      "split": "validation",
+      "fault_class": "Resource Exhaustion",
+      "variant": "cpu",
+      "target": "orders",
+      "traffic_profile": "checkout-high",
+      "replicate_index": 1,
+      "parameters": {
+        "workers": 1,
+        "load_percent": 100
+      },
+      "duration_seconds": 60,
+      "traffic_pause_seconds": 0.25,
+      "seed": 718,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0053",
+      "group_id": "G009",
+      "split": "validation",
+      "fault_class": "Resource Exhaustion",
+      "variant": "cpu",
+      "target": "orders",
+      "traffic_profile": "checkout-low",
+      "replicate_index": 2,
+      "parameters": {
+        "workers": 2,
+        "load_percent": 100
+      },
+      "duration_seconds": 90,
+      "traffic_pause_seconds": 1.5,
+      "seed": 731,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0054",
+      "group_id": "G010",
+      "split": "test",
+      "fault_class": "Resource Exhaustion",
+      "variant": "cpu",
+      "target": "catalogue",
+      "traffic_profile": "checkout-low",
+      "replicate_index": 1,
+      "parameters": {
+        "workers": 1,
+        "load_percent": 100
+      },
+      "duration_seconds": 30,
+      "traffic_pause_seconds": 1.5,
+      "seed": 744,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0055",
+      "group_id": "G010",
+      "split": "test",
+      "fault_class": "Resource Exhaustion",
+      "variant": "cpu",
+      "target": "catalogue",
+      "traffic_profile": "checkout-medium",
+      "replicate_index": 1,
+      "parameters": {
+        "workers": 2,
+        "load_percent": 100
+      },
+      "duration_seconds": 45,
+      "traffic_pause_seconds": 0.75,
+      "seed": 757,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0056",
+      "group_id": "G010",
+      "split": "test",
+      "fault_class": "Resource Exhaustion",
+      "variant": "cpu",
+      "target": "catalogue",
+      "traffic_profile": "checkout-high",
+      "replicate_index": 1,
+      "parameters": {
+        "workers": 1,
+        "load_percent": 100
+      },
+      "duration_seconds": 60,
+      "traffic_pause_seconds": 0.25,
+      "seed": 770,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0057",
+      "group_id": "G010",
+      "split": "test",
+      "fault_class": "Resource Exhaustion",
+      "variant": "cpu",
+      "target": "catalogue",
+      "traffic_profile": "checkout-low",
+      "replicate_index": 2,
+      "parameters": {
+        "workers": 2,
+        "load_percent": 100
+      },
+      "duration_seconds": 90,
+      "traffic_pause_seconds": 1.5,
+      "seed": 783,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0058",
+      "group_id": "G010",
+      "split": "test",
+      "fault_class": "Resource Exhaustion",
+      "variant": "cpu",
+      "target": "catalogue",
+      "traffic_profile": "checkout-medium",
+      "replicate_index": 2,
+      "parameters": {
+        "workers": 1,
+        "load_percent": 100
+      },
+      "duration_seconds": 120,
+      "traffic_pause_seconds": 0.75,
+      "seed": 796,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0059",
+      "group_id": "G011",
+      "split": "test",
+      "fault_class": "Resource Exhaustion",
+      "variant": "cpu",
+      "target": "payment",
+      "traffic_profile": "checkout-low",
+      "replicate_index": 1,
+      "parameters": {
+        "workers": 1,
+        "load_percent": 100
+      },
+      "duration_seconds": 30,
+      "traffic_pause_seconds": 1.5,
+      "seed": 809,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0060",
+      "group_id": "G011",
+      "split": "test",
+      "fault_class": "Resource Exhaustion",
+      "variant": "cpu",
+      "target": "payment",
+      "traffic_profile": "checkout-medium",
+      "replicate_index": 1,
+      "parameters": {
+        "workers": 2,
+        "load_percent": 100
+      },
+      "duration_seconds": 45,
+      "traffic_pause_seconds": 0.75,
+      "seed": 822,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0061",
+      "group_id": "G011",
+      "split": "test",
+      "fault_class": "Resource Exhaustion",
+      "variant": "cpu",
+      "target": "payment",
+      "traffic_profile": "checkout-high",
+      "replicate_index": 1,
+      "parameters": {
+        "workers": 1,
+        "load_percent": 100
+      },
+      "duration_seconds": 60,
+      "traffic_pause_seconds": 0.25,
+      "seed": 835,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0062",
+      "group_id": "G011",
+      "split": "test",
+      "fault_class": "Resource Exhaustion",
+      "variant": "cpu",
+      "target": "payment",
+      "traffic_profile": "checkout-low",
+      "replicate_index": 2,
+      "parameters": {
+        "workers": 2,
+        "load_percent": 100
+      },
+      "duration_seconds": 90,
+      "traffic_pause_seconds": 1.5,
+      "seed": 848,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0063",
+      "group_id": "G011",
+      "split": "test",
+      "fault_class": "Resource Exhaustion",
+      "variant": "cpu",
+      "target": "payment",
+      "traffic_profile": "checkout-medium",
+      "replicate_index": 2,
+      "parameters": {
+        "workers": 1,
+        "load_percent": 100
+      },
+      "duration_seconds": 120,
+      "traffic_pause_seconds": 0.75,
+      "seed": 861,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0064",
+      "group_id": "G012",
+      "split": "test",
+      "fault_class": "Resource Exhaustion",
+      "variant": "memory",
+      "target": "orders",
+      "traffic_profile": "checkout-low",
+      "replicate_index": 1,
+      "parameters": {
+        "additional_memory_fraction_of_declared_limit": 0.6
+      },
+      "duration_seconds": 30,
+      "traffic_pause_seconds": 1.5,
+      "seed": 874,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0065",
+      "group_id": "G012",
+      "split": "test",
+      "fault_class": "Resource Exhaustion",
+      "variant": "memory",
+      "target": "orders",
+      "traffic_profile": "checkout-medium",
+      "replicate_index": 1,
+      "parameters": {
+        "additional_memory_fraction_of_declared_limit": 0.7
+      },
+      "duration_seconds": 45,
+      "traffic_pause_seconds": 0.75,
+      "seed": 887,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0066",
+      "group_id": "G012",
+      "split": "test",
+      "fault_class": "Resource Exhaustion",
+      "variant": "memory",
+      "target": "orders",
+      "traffic_profile": "checkout-high",
+      "replicate_index": 1,
+      "parameters": {
+        "additional_memory_fraction_of_declared_limit": 0.8
+      },
+      "duration_seconds": 60,
+      "traffic_pause_seconds": 0.25,
+      "seed": 900,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0067",
+      "group_id": "G012",
+      "split": "test",
+      "fault_class": "Resource Exhaustion",
+      "variant": "memory",
+      "target": "orders",
+      "traffic_profile": "checkout-low",
+      "replicate_index": 2,
+      "parameters": {
+        "additional_memory_fraction_of_declared_limit": 0.75
+      },
+      "duration_seconds": 90,
+      "traffic_pause_seconds": 1.5,
+      "seed": 913,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0068",
+      "group_id": "G013",
+      "split": "reference",
+      "fault_class": "Network Delay / Packet Loss",
+      "variant": "network-loss",
+      "target": [
+        "front-end",
+        "carts"
+      ],
+      "traffic_profile": "checkout-low",
+      "replicate_index": 1,
+      "parameters": {
+        "loss_percent": 10
+      },
+      "duration_seconds": 30,
+      "traffic_pause_seconds": 1.5,
+      "seed": 926,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0069",
+      "group_id": "G013",
+      "split": "reference",
+      "fault_class": "Network Delay / Packet Loss",
+      "variant": "network-loss",
+      "target": [
+        "front-end",
+        "carts"
+      ],
+      "traffic_profile": "checkout-medium",
+      "replicate_index": 1,
+      "parameters": {
+        "loss_percent": 15
+      },
+      "duration_seconds": 45,
+      "traffic_pause_seconds": 0.75,
+      "seed": 939,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0070",
+      "group_id": "G013",
+      "split": "reference",
+      "fault_class": "Network Delay / Packet Loss",
+      "variant": "network-loss",
+      "target": [
+        "front-end",
+        "carts"
+      ],
+      "traffic_profile": "checkout-high",
+      "replicate_index": 1,
+      "parameters": {
+        "loss_percent": 20
+      },
+      "duration_seconds": 60,
+      "traffic_pause_seconds": 0.25,
+      "seed": 952,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0071",
+      "group_id": "G013",
+      "split": "reference",
+      "fault_class": "Network Delay / Packet Loss",
+      "variant": "network-loss",
+      "target": [
+        "front-end",
+        "carts"
+      ],
+      "traffic_profile": "checkout-low",
+      "replicate_index": 2,
+      "parameters": {
+        "loss_percent": 25
+      },
+      "duration_seconds": 90,
+      "traffic_pause_seconds": 1.5,
+      "seed": 965,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0072",
+      "group_id": "G013",
+      "split": "reference",
+      "fault_class": "Network Delay / Packet Loss",
+      "variant": "network-loss",
+      "target": [
+        "front-end",
+        "carts"
+      ],
+      "traffic_profile": "checkout-medium",
+      "replicate_index": 2,
+      "parameters": {
+        "loss_percent": 30
+      },
+      "duration_seconds": 120,
+      "traffic_pause_seconds": 0.75,
+      "seed": 978,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0073",
+      "group_id": "G013",
+      "split": "reference",
+      "fault_class": "Network Delay / Packet Loss",
+      "variant": "network-loss",
+      "target": [
+        "front-end",
+        "carts"
+      ],
+      "traffic_profile": "checkout-high",
+      "replicate_index": 2,
+      "parameters": {
+        "loss_percent": 10
+      },
+      "duration_seconds": 30,
+      "traffic_pause_seconds": 0.25,
+      "seed": 991,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0074",
+      "group_id": "G013",
+      "split": "reference",
+      "fault_class": "Network Delay / Packet Loss",
+      "variant": "network-loss",
+      "target": [
+        "front-end",
+        "carts"
+      ],
+      "traffic_profile": "checkout-low",
+      "replicate_index": 3,
+      "parameters": {
+        "loss_percent": 15
+      },
+      "duration_seconds": 45,
+      "traffic_pause_seconds": 1.5,
+      "seed": 1004,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0075",
+      "group_id": "G014",
+      "split": "reference",
+      "fault_class": "Network Delay / Packet Loss",
+      "variant": "network-delay",
+      "target": [
+        "orders",
+        "shipping"
+      ],
+      "traffic_profile": "checkout-low",
+      "replicate_index": 1,
+      "parameters": {
+        "latency_ms": 100,
+        "jitter_ms": 20
+      },
+      "duration_seconds": 30,
+      "traffic_pause_seconds": 1.5,
+      "seed": 1017,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0076",
+      "group_id": "G014",
+      "split": "reference",
+      "fault_class": "Network Delay / Packet Loss",
+      "variant": "network-delay",
+      "target": [
+        "orders",
+        "shipping"
+      ],
+      "traffic_profile": "checkout-medium",
+      "replicate_index": 1,
+      "parameters": {
+        "latency_ms": 200,
+        "jitter_ms": 20
+      },
+      "duration_seconds": 45,
+      "traffic_pause_seconds": 0.75,
+      "seed": 1030,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0077",
+      "group_id": "G014",
+      "split": "reference",
+      "fault_class": "Network Delay / Packet Loss",
+      "variant": "network-delay",
+      "target": [
+        "orders",
+        "shipping"
+      ],
+      "traffic_profile": "checkout-high",
+      "replicate_index": 1,
+      "parameters": {
+        "latency_ms": 300,
+        "jitter_ms": 20
+      },
+      "duration_seconds": 60,
+      "traffic_pause_seconds": 0.25,
+      "seed": 1043,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0078",
+      "group_id": "G014",
+      "split": "reference",
+      "fault_class": "Network Delay / Packet Loss",
+      "variant": "network-delay",
+      "target": [
+        "orders",
+        "shipping"
+      ],
+      "traffic_profile": "checkout-low",
+      "replicate_index": 2,
+      "parameters": {
+        "latency_ms": 450,
+        "jitter_ms": 20
+      },
+      "duration_seconds": 90,
+      "traffic_pause_seconds": 1.5,
+      "seed": 1056,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0079",
+      "group_id": "G014",
+      "split": "reference",
+      "fault_class": "Network Delay / Packet Loss",
+      "variant": "network-delay",
+      "target": [
+        "orders",
+        "shipping"
+      ],
+      "traffic_profile": "checkout-medium",
+      "replicate_index": 2,
+      "parameters": {
+        "latency_ms": 600,
+        "jitter_ms": 20
+      },
+      "duration_seconds": 120,
+      "traffic_pause_seconds": 0.75,
+      "seed": 1069,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0080",
+      "group_id": "G014",
+      "split": "reference",
+      "fault_class": "Network Delay / Packet Loss",
+      "variant": "network-delay",
+      "target": [
+        "orders",
+        "shipping"
+      ],
+      "traffic_profile": "checkout-high",
+      "replicate_index": 2,
+      "parameters": {
+        "latency_ms": 100,
+        "jitter_ms": 20
+      },
+      "duration_seconds": 30,
+      "traffic_pause_seconds": 0.25,
+      "seed": 1082,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0081",
+      "group_id": "G014",
+      "split": "reference",
+      "fault_class": "Network Delay / Packet Loss",
+      "variant": "network-delay",
+      "target": [
+        "orders",
+        "shipping"
+      ],
+      "traffic_profile": "checkout-low",
+      "replicate_index": 3,
+      "parameters": {
+        "latency_ms": 200,
+        "jitter_ms": 20
+      },
+      "duration_seconds": 45,
+      "traffic_pause_seconds": 1.5,
+      "seed": 1095,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0082",
+      "group_id": "G015",
+      "split": "reference",
+      "fault_class": "Network Delay / Packet Loss",
+      "variant": "network-delay",
+      "target": [
+        "front-end",
+        "user"
+      ],
+      "traffic_profile": "checkout-low",
+      "replicate_index": 1,
+      "parameters": {
+        "latency_ms": 100,
+        "jitter_ms": 20
+      },
+      "duration_seconds": 30,
+      "traffic_pause_seconds": 1.5,
+      "seed": 1108,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0083",
+      "group_id": "G015",
+      "split": "reference",
+      "fault_class": "Network Delay / Packet Loss",
+      "variant": "network-delay",
+      "target": [
+        "front-end",
+        "user"
+      ],
+      "traffic_profile": "checkout-medium",
+      "replicate_index": 1,
+      "parameters": {
+        "latency_ms": 200,
+        "jitter_ms": 20
+      },
+      "duration_seconds": 45,
+      "traffic_pause_seconds": 0.75,
+      "seed": 1121,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0084",
+      "group_id": "G015",
+      "split": "reference",
+      "fault_class": "Network Delay / Packet Loss",
+      "variant": "network-delay",
+      "target": [
+        "front-end",
+        "user"
+      ],
+      "traffic_profile": "checkout-high",
+      "replicate_index": 1,
+      "parameters": {
+        "latency_ms": 300,
+        "jitter_ms": 20
+      },
+      "duration_seconds": 60,
+      "traffic_pause_seconds": 0.25,
+      "seed": 1134,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0085",
+      "group_id": "G015",
+      "split": "reference",
+      "fault_class": "Network Delay / Packet Loss",
+      "variant": "network-delay",
+      "target": [
+        "front-end",
+        "user"
+      ],
+      "traffic_profile": "checkout-low",
+      "replicate_index": 2,
+      "parameters": {
+        "latency_ms": 450,
+        "jitter_ms": 20
+      },
+      "duration_seconds": 90,
+      "traffic_pause_seconds": 1.5,
+      "seed": 1147,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0086",
+      "group_id": "G015",
+      "split": "reference",
+      "fault_class": "Network Delay / Packet Loss",
+      "variant": "network-delay",
+      "target": [
+        "front-end",
+        "user"
+      ],
+      "traffic_profile": "checkout-medium",
+      "replicate_index": 2,
+      "parameters": {
+        "latency_ms": 600,
+        "jitter_ms": 20
+      },
+      "duration_seconds": 120,
+      "traffic_pause_seconds": 0.75,
+      "seed": 1160,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0087",
+      "group_id": "G015",
+      "split": "reference",
+      "fault_class": "Network Delay / Packet Loss",
+      "variant": "network-delay",
+      "target": [
+        "front-end",
+        "user"
+      ],
+      "traffic_profile": "checkout-high",
+      "replicate_index": 2,
+      "parameters": {
+        "latency_ms": 100,
+        "jitter_ms": 20
+      },
+      "duration_seconds": 30,
+      "traffic_pause_seconds": 0.25,
+      "seed": 1173,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0088",
+      "group_id": "G015",
+      "split": "reference",
+      "fault_class": "Network Delay / Packet Loss",
+      "variant": "network-delay",
+      "target": [
+        "front-end",
+        "user"
+      ],
+      "traffic_profile": "checkout-low",
+      "replicate_index": 3,
+      "parameters": {
+        "latency_ms": 200,
+        "jitter_ms": 20
+      },
+      "duration_seconds": 45,
+      "traffic_pause_seconds": 1.5,
+      "seed": 1186,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0089",
+      "group_id": "G016",
+      "split": "reference",
+      "fault_class": "Network Delay / Packet Loss",
+      "variant": "network-loss",
+      "target": [
+        "front-end",
+        "user"
+      ],
+      "traffic_profile": "checkout-low",
+      "replicate_index": 1,
+      "parameters": {
+        "loss_percent": 10
+      },
+      "duration_seconds": 30,
+      "traffic_pause_seconds": 1.5,
+      "seed": 1199,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0090",
+      "group_id": "G016",
+      "split": "reference",
+      "fault_class": "Network Delay / Packet Loss",
+      "variant": "network-loss",
+      "target": [
+        "front-end",
+        "user"
+      ],
+      "traffic_profile": "checkout-medium",
+      "replicate_index": 1,
+      "parameters": {
+        "loss_percent": 15
+      },
+      "duration_seconds": 45,
+      "traffic_pause_seconds": 0.75,
+      "seed": 1212,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0091",
+      "group_id": "G016",
+      "split": "reference",
+      "fault_class": "Network Delay / Packet Loss",
+      "variant": "network-loss",
+      "target": [
+        "front-end",
+        "user"
+      ],
+      "traffic_profile": "checkout-high",
+      "replicate_index": 1,
+      "parameters": {
+        "loss_percent": 20
+      },
+      "duration_seconds": 60,
+      "traffic_pause_seconds": 0.25,
+      "seed": 1225,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0092",
+      "group_id": "G016",
+      "split": "reference",
+      "fault_class": "Network Delay / Packet Loss",
+      "variant": "network-loss",
+      "target": [
+        "front-end",
+        "user"
+      ],
+      "traffic_profile": "checkout-low",
+      "replicate_index": 2,
+      "parameters": {
+        "loss_percent": 25
+      },
+      "duration_seconds": 90,
+      "traffic_pause_seconds": 1.5,
+      "seed": 1238,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0093",
+      "group_id": "G016",
+      "split": "reference",
+      "fault_class": "Network Delay / Packet Loss",
+      "variant": "network-loss",
+      "target": [
+        "front-end",
+        "user"
+      ],
+      "traffic_profile": "checkout-medium",
+      "replicate_index": 2,
+      "parameters": {
+        "loss_percent": 30
+      },
+      "duration_seconds": 120,
+      "traffic_pause_seconds": 0.75,
+      "seed": 1251,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0094",
+      "group_id": "G016",
+      "split": "reference",
+      "fault_class": "Network Delay / Packet Loss",
+      "variant": "network-loss",
+      "target": [
+        "front-end",
+        "user"
+      ],
+      "traffic_profile": "checkout-high",
+      "replicate_index": 2,
+      "parameters": {
+        "loss_percent": 10
+      },
+      "duration_seconds": 30,
+      "traffic_pause_seconds": 0.25,
+      "seed": 1264,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0095",
+      "group_id": "G016",
+      "split": "reference",
+      "fault_class": "Network Delay / Packet Loss",
+      "variant": "network-loss",
+      "target": [
+        "front-end",
+        "user"
+      ],
+      "traffic_profile": "checkout-low",
+      "replicate_index": 3,
+      "parameters": {
+        "loss_percent": 15
+      },
+      "duration_seconds": 45,
+      "traffic_pause_seconds": 1.5,
+      "seed": 1277,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0096",
+      "group_id": "G017",
+      "split": "reference",
+      "fault_class": "Network Delay / Packet Loss",
+      "variant": "network-delay",
+      "target": [
+        "front-end",
+        "carts"
+      ],
+      "traffic_profile": "checkout-low",
+      "replicate_index": 1,
+      "parameters": {
+        "latency_ms": 100,
+        "jitter_ms": 20
+      },
+      "duration_seconds": 30,
+      "traffic_pause_seconds": 1.5,
+      "seed": 1290,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0097",
+      "group_id": "G017",
+      "split": "reference",
+      "fault_class": "Network Delay / Packet Loss",
+      "variant": "network-delay",
+      "target": [
+        "front-end",
+        "carts"
+      ],
+      "traffic_profile": "checkout-medium",
+      "replicate_index": 1,
+      "parameters": {
+        "latency_ms": 200,
+        "jitter_ms": 20
+      },
+      "duration_seconds": 45,
+      "traffic_pause_seconds": 0.75,
+      "seed": 1303,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0098",
+      "group_id": "G017",
+      "split": "reference",
+      "fault_class": "Network Delay / Packet Loss",
+      "variant": "network-delay",
+      "target": [
+        "front-end",
+        "carts"
+      ],
+      "traffic_profile": "checkout-high",
+      "replicate_index": 1,
+      "parameters": {
+        "latency_ms": 300,
+        "jitter_ms": 20
+      },
+      "duration_seconds": 60,
+      "traffic_pause_seconds": 0.25,
+      "seed": 1316,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0099",
+      "group_id": "G017",
+      "split": "reference",
+      "fault_class": "Network Delay / Packet Loss",
+      "variant": "network-delay",
+      "target": [
+        "front-end",
+        "carts"
+      ],
+      "traffic_profile": "checkout-low",
+      "replicate_index": 2,
+      "parameters": {
+        "latency_ms": 450,
+        "jitter_ms": 20
+      },
+      "duration_seconds": 90,
+      "traffic_pause_seconds": 1.5,
+      "seed": 1329,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0100",
+      "group_id": "G017",
+      "split": "reference",
+      "fault_class": "Network Delay / Packet Loss",
+      "variant": "network-delay",
+      "target": [
+        "front-end",
+        "carts"
+      ],
+      "traffic_profile": "checkout-medium",
+      "replicate_index": 2,
+      "parameters": {
+        "latency_ms": 600,
+        "jitter_ms": 20
+      },
+      "duration_seconds": 120,
+      "traffic_pause_seconds": 0.75,
+      "seed": 1342,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0101",
+      "group_id": "G017",
+      "split": "reference",
+      "fault_class": "Network Delay / Packet Loss",
+      "variant": "network-delay",
+      "target": [
+        "front-end",
+        "carts"
+      ],
+      "traffic_profile": "checkout-high",
+      "replicate_index": 2,
+      "parameters": {
+        "latency_ms": 100,
+        "jitter_ms": 20
+      },
+      "duration_seconds": 30,
+      "traffic_pause_seconds": 0.25,
+      "seed": 1355,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0102",
+      "group_id": "G018",
+      "split": "reference",
+      "fault_class": "Network Delay / Packet Loss",
+      "variant": "network-loss",
+      "target": [
+        "front-end",
+        "catalogue"
+      ],
+      "traffic_profile": "checkout-low",
+      "replicate_index": 1,
+      "parameters": {
+        "loss_percent": 10
+      },
+      "duration_seconds": 30,
+      "traffic_pause_seconds": 1.5,
+      "seed": 1368,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0103",
+      "group_id": "G018",
+      "split": "reference",
+      "fault_class": "Network Delay / Packet Loss",
+      "variant": "network-loss",
+      "target": [
+        "front-end",
+        "catalogue"
+      ],
+      "traffic_profile": "checkout-medium",
+      "replicate_index": 1,
+      "parameters": {
+        "loss_percent": 15
+      },
+      "duration_seconds": 45,
+      "traffic_pause_seconds": 0.75,
+      "seed": 1381,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0104",
+      "group_id": "G018",
+      "split": "reference",
+      "fault_class": "Network Delay / Packet Loss",
+      "variant": "network-loss",
+      "target": [
+        "front-end",
+        "catalogue"
+      ],
+      "traffic_profile": "checkout-high",
+      "replicate_index": 1,
+      "parameters": {
+        "loss_percent": 20
+      },
+      "duration_seconds": 60,
+      "traffic_pause_seconds": 0.25,
+      "seed": 1394,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0105",
+      "group_id": "G018",
+      "split": "reference",
+      "fault_class": "Network Delay / Packet Loss",
+      "variant": "network-loss",
+      "target": [
+        "front-end",
+        "catalogue"
+      ],
+      "traffic_profile": "checkout-low",
+      "replicate_index": 2,
+      "parameters": {
+        "loss_percent": 25
+      },
+      "duration_seconds": 90,
+      "traffic_pause_seconds": 1.5,
+      "seed": 1407,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0106",
+      "group_id": "G018",
+      "split": "reference",
+      "fault_class": "Network Delay / Packet Loss",
+      "variant": "network-loss",
+      "target": [
+        "front-end",
+        "catalogue"
+      ],
+      "traffic_profile": "checkout-medium",
+      "replicate_index": 2,
+      "parameters": {
+        "loss_percent": 30
+      },
+      "duration_seconds": 120,
+      "traffic_pause_seconds": 0.75,
+      "seed": 1420,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0107",
+      "group_id": "G018",
+      "split": "reference",
+      "fault_class": "Network Delay / Packet Loss",
+      "variant": "network-loss",
+      "target": [
+        "front-end",
+        "catalogue"
+      ],
+      "traffic_profile": "checkout-high",
+      "replicate_index": 2,
+      "parameters": {
+        "loss_percent": 10
+      },
+      "duration_seconds": 30,
+      "traffic_pause_seconds": 0.25,
+      "seed": 1433,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0108",
+      "group_id": "G019",
+      "split": "validation",
+      "fault_class": "Network Delay / Packet Loss",
+      "variant": "network-loss",
+      "target": [
+        "orders",
+        "shipping"
+      ],
+      "traffic_profile": "checkout-low",
+      "replicate_index": 1,
+      "parameters": {
+        "loss_percent": 10
+      },
+      "duration_seconds": 30,
+      "traffic_pause_seconds": 1.5,
+      "seed": 1446,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0109",
+      "group_id": "G019",
+      "split": "validation",
+      "fault_class": "Network Delay / Packet Loss",
+      "variant": "network-loss",
+      "target": [
+        "orders",
+        "shipping"
+      ],
+      "traffic_profile": "checkout-medium",
+      "replicate_index": 1,
+      "parameters": {
+        "loss_percent": 15
+      },
+      "duration_seconds": 45,
+      "traffic_pause_seconds": 0.75,
+      "seed": 1459,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0110",
+      "group_id": "G019",
+      "split": "validation",
+      "fault_class": "Network Delay / Packet Loss",
+      "variant": "network-loss",
+      "target": [
+        "orders",
+        "shipping"
+      ],
+      "traffic_profile": "checkout-high",
+      "replicate_index": 1,
+      "parameters": {
+        "loss_percent": 20
+      },
+      "duration_seconds": 60,
+      "traffic_pause_seconds": 0.25,
+      "seed": 1472,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0111",
+      "group_id": "G019",
+      "split": "validation",
+      "fault_class": "Network Delay / Packet Loss",
+      "variant": "network-loss",
+      "target": [
+        "orders",
+        "shipping"
+      ],
+      "traffic_profile": "checkout-low",
+      "replicate_index": 2,
+      "parameters": {
+        "loss_percent": 25
+      },
+      "duration_seconds": 90,
+      "traffic_pause_seconds": 1.5,
+      "seed": 1485,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0112",
+      "group_id": "G019",
+      "split": "validation",
+      "fault_class": "Network Delay / Packet Loss",
+      "variant": "network-loss",
+      "target": [
+        "orders",
+        "shipping"
+      ],
+      "traffic_profile": "checkout-medium",
+      "replicate_index": 2,
+      "parameters": {
+        "loss_percent": 30
+      },
+      "duration_seconds": 120,
+      "traffic_pause_seconds": 0.75,
+      "seed": 1498,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0113",
+      "group_id": "G019",
+      "split": "validation",
+      "fault_class": "Network Delay / Packet Loss",
+      "variant": "network-loss",
+      "target": [
+        "orders",
+        "shipping"
+      ],
+      "traffic_profile": "checkout-high",
+      "replicate_index": 2,
+      "parameters": {
+        "loss_percent": 10
+      },
+      "duration_seconds": 30,
+      "traffic_pause_seconds": 0.25,
+      "seed": 1511,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0114",
+      "group_id": "G019",
+      "split": "validation",
+      "fault_class": "Network Delay / Packet Loss",
+      "variant": "network-loss",
+      "target": [
+        "orders",
+        "shipping"
+      ],
+      "traffic_profile": "checkout-low",
+      "replicate_index": 3,
+      "parameters": {
+        "loss_percent": 15
+      },
+      "duration_seconds": 45,
+      "traffic_pause_seconds": 1.5,
+      "seed": 1524,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0115",
+      "group_id": "G020",
+      "split": "validation",
+      "fault_class": "Network Delay / Packet Loss",
+      "variant": "network-delay",
+      "target": [
+        "orders",
+        "payment"
+      ],
+      "traffic_profile": "checkout-low",
+      "replicate_index": 1,
+      "parameters": {
+        "latency_ms": 100,
+        "jitter_ms": 20
+      },
+      "duration_seconds": 30,
+      "traffic_pause_seconds": 1.5,
+      "seed": 1537,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0116",
+      "group_id": "G020",
+      "split": "validation",
+      "fault_class": "Network Delay / Packet Loss",
+      "variant": "network-delay",
+      "target": [
+        "orders",
+        "payment"
+      ],
+      "traffic_profile": "checkout-medium",
+      "replicate_index": 1,
+      "parameters": {
+        "latency_ms": 200,
+        "jitter_ms": 20
+      },
+      "duration_seconds": 45,
+      "traffic_pause_seconds": 0.75,
+      "seed": 1550,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0117",
+      "group_id": "G020",
+      "split": "validation",
+      "fault_class": "Network Delay / Packet Loss",
+      "variant": "network-delay",
+      "target": [
+        "orders",
+        "payment"
+      ],
+      "traffic_profile": "checkout-high",
+      "replicate_index": 1,
+      "parameters": {
+        "latency_ms": 300,
+        "jitter_ms": 20
+      },
+      "duration_seconds": 60,
+      "traffic_pause_seconds": 0.25,
+      "seed": 1563,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0118",
+      "group_id": "G020",
+      "split": "validation",
+      "fault_class": "Network Delay / Packet Loss",
+      "variant": "network-delay",
+      "target": [
+        "orders",
+        "payment"
+      ],
+      "traffic_profile": "checkout-low",
+      "replicate_index": 2,
+      "parameters": {
+        "latency_ms": 450,
+        "jitter_ms": 20
+      },
+      "duration_seconds": 90,
+      "traffic_pause_seconds": 1.5,
+      "seed": 1576,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0119",
+      "group_id": "G020",
+      "split": "validation",
+      "fault_class": "Network Delay / Packet Loss",
+      "variant": "network-delay",
+      "target": [
+        "orders",
+        "payment"
+      ],
+      "traffic_profile": "checkout-medium",
+      "replicate_index": 2,
+      "parameters": {
+        "latency_ms": 600,
+        "jitter_ms": 20
+      },
+      "duration_seconds": 120,
+      "traffic_pause_seconds": 0.75,
+      "seed": 1589,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0120",
+      "group_id": "G020",
+      "split": "validation",
+      "fault_class": "Network Delay / Packet Loss",
+      "variant": "network-delay",
+      "target": [
+        "orders",
+        "payment"
+      ],
+      "traffic_profile": "checkout-high",
+      "replicate_index": 2,
+      "parameters": {
+        "latency_ms": 100,
+        "jitter_ms": 20
+      },
+      "duration_seconds": 30,
+      "traffic_pause_seconds": 0.25,
+      "seed": 1602,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0121",
+      "group_id": "G020",
+      "split": "validation",
+      "fault_class": "Network Delay / Packet Loss",
+      "variant": "network-delay",
+      "target": [
+        "orders",
+        "payment"
+      ],
+      "traffic_profile": "checkout-low",
+      "replicate_index": 3,
+      "parameters": {
+        "latency_ms": 200,
+        "jitter_ms": 20
+      },
+      "duration_seconds": 45,
+      "traffic_pause_seconds": 1.5,
+      "seed": 1615,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0122",
+      "group_id": "G021",
+      "split": "test",
+      "fault_class": "Network Delay / Packet Loss",
+      "variant": "network-loss",
+      "target": [
+        "orders",
+        "payment"
+      ],
+      "traffic_profile": "checkout-low",
+      "replicate_index": 1,
+      "parameters": {
+        "loss_percent": 10
+      },
+      "duration_seconds": 30,
+      "traffic_pause_seconds": 1.5,
+      "seed": 1628,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0123",
+      "group_id": "G021",
+      "split": "test",
+      "fault_class": "Network Delay / Packet Loss",
+      "variant": "network-loss",
+      "target": [
+        "orders",
+        "payment"
+      ],
+      "traffic_profile": "checkout-medium",
+      "replicate_index": 1,
+      "parameters": {
+        "loss_percent": 15
+      },
+      "duration_seconds": 45,
+      "traffic_pause_seconds": 0.75,
+      "seed": 1641,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0124",
+      "group_id": "G021",
+      "split": "test",
+      "fault_class": "Network Delay / Packet Loss",
+      "variant": "network-loss",
+      "target": [
+        "orders",
+        "payment"
+      ],
+      "traffic_profile": "checkout-high",
+      "replicate_index": 1,
+      "parameters": {
+        "loss_percent": 20
+      },
+      "duration_seconds": 60,
+      "traffic_pause_seconds": 0.25,
+      "seed": 1654,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0125",
+      "group_id": "G021",
+      "split": "test",
+      "fault_class": "Network Delay / Packet Loss",
+      "variant": "network-loss",
+      "target": [
+        "orders",
+        "payment"
+      ],
+      "traffic_profile": "checkout-low",
+      "replicate_index": 2,
+      "parameters": {
+        "loss_percent": 25
+      },
+      "duration_seconds": 90,
+      "traffic_pause_seconds": 1.5,
+      "seed": 1667,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0126",
+      "group_id": "G021",
+      "split": "test",
+      "fault_class": "Network Delay / Packet Loss",
+      "variant": "network-loss",
+      "target": [
+        "orders",
+        "payment"
+      ],
+      "traffic_profile": "checkout-medium",
+      "replicate_index": 2,
+      "parameters": {
+        "loss_percent": 30
+      },
+      "duration_seconds": 120,
+      "traffic_pause_seconds": 0.75,
+      "seed": 1680,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0127",
+      "group_id": "G021",
+      "split": "test",
+      "fault_class": "Network Delay / Packet Loss",
+      "variant": "network-loss",
+      "target": [
+        "orders",
+        "payment"
+      ],
+      "traffic_profile": "checkout-high",
+      "replicate_index": 2,
+      "parameters": {
+        "loss_percent": 10
+      },
+      "duration_seconds": 30,
+      "traffic_pause_seconds": 0.25,
+      "seed": 1693,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0128",
+      "group_id": "G021",
+      "split": "test",
+      "fault_class": "Network Delay / Packet Loss",
+      "variant": "network-loss",
+      "target": [
+        "orders",
+        "payment"
+      ],
+      "traffic_profile": "checkout-low",
+      "replicate_index": 3,
+      "parameters": {
+        "loss_percent": 15
+      },
+      "duration_seconds": 45,
+      "traffic_pause_seconds": 1.5,
+      "seed": 1706,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0129",
+      "group_id": "G022",
+      "split": "test",
+      "fault_class": "Network Delay / Packet Loss",
+      "variant": "network-delay",
+      "target": [
+        "front-end",
+        "catalogue"
+      ],
+      "traffic_profile": "checkout-low",
+      "replicate_index": 1,
+      "parameters": {
+        "latency_ms": 100,
+        "jitter_ms": 20
+      },
+      "duration_seconds": 30,
+      "traffic_pause_seconds": 1.5,
+      "seed": 1719,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0130",
+      "group_id": "G022",
+      "split": "test",
+      "fault_class": "Network Delay / Packet Loss",
+      "variant": "network-delay",
+      "target": [
+        "front-end",
+        "catalogue"
+      ],
+      "traffic_profile": "checkout-medium",
+      "replicate_index": 1,
+      "parameters": {
+        "latency_ms": 200,
+        "jitter_ms": 20
+      },
+      "duration_seconds": 45,
+      "traffic_pause_seconds": 0.75,
+      "seed": 1732,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0131",
+      "group_id": "G022",
+      "split": "test",
+      "fault_class": "Network Delay / Packet Loss",
+      "variant": "network-delay",
+      "target": [
+        "front-end",
+        "catalogue"
+      ],
+      "traffic_profile": "checkout-high",
+      "replicate_index": 1,
+      "parameters": {
+        "latency_ms": 300,
+        "jitter_ms": 20
+      },
+      "duration_seconds": 60,
+      "traffic_pause_seconds": 0.25,
+      "seed": 1745,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0132",
+      "group_id": "G022",
+      "split": "test",
+      "fault_class": "Network Delay / Packet Loss",
+      "variant": "network-delay",
+      "target": [
+        "front-end",
+        "catalogue"
+      ],
+      "traffic_profile": "checkout-low",
+      "replicate_index": 2,
+      "parameters": {
+        "latency_ms": 450,
+        "jitter_ms": 20
+      },
+      "duration_seconds": 90,
+      "traffic_pause_seconds": 1.5,
+      "seed": 1758,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0133",
+      "group_id": "G022",
+      "split": "test",
+      "fault_class": "Network Delay / Packet Loss",
+      "variant": "network-delay",
+      "target": [
+        "front-end",
+        "catalogue"
+      ],
+      "traffic_profile": "checkout-medium",
+      "replicate_index": 2,
+      "parameters": {
+        "latency_ms": 600,
+        "jitter_ms": 20
+      },
+      "duration_seconds": 120,
+      "traffic_pause_seconds": 0.75,
+      "seed": 1771,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0134",
+      "group_id": "G022",
+      "split": "test",
+      "fault_class": "Network Delay / Packet Loss",
+      "variant": "network-delay",
+      "target": [
+        "front-end",
+        "catalogue"
+      ],
+      "traffic_profile": "checkout-high",
+      "replicate_index": 2,
+      "parameters": {
+        "latency_ms": 100,
+        "jitter_ms": 20
+      },
+      "duration_seconds": 30,
+      "traffic_pause_seconds": 0.25,
+      "seed": 1784,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0135",
+      "group_id": "G023",
+      "split": "reference",
+      "fault_class": "Pod Failure",
+      "variant": "pod-failure",
+      "target": "user",
+      "traffic_profile": "checkout-low",
+      "replicate_index": 1,
+      "parameters": {
+        "action": "pod-kill",
+        "replicas": 1
+      },
+      "duration_seconds": 0,
+      "traffic_pause_seconds": 1.5,
+      "seed": 1797,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0136",
+      "group_id": "G023",
+      "split": "reference",
+      "fault_class": "Pod Failure",
+      "variant": "pod-failure",
+      "target": "user",
+      "traffic_profile": "checkout-medium",
+      "replicate_index": 1,
+      "parameters": {
+        "action": "pod-kill",
+        "replicas": 1
+      },
+      "duration_seconds": 0,
+      "traffic_pause_seconds": 0.75,
+      "seed": 1810,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0137",
+      "group_id": "G023",
+      "split": "reference",
+      "fault_class": "Pod Failure",
+      "variant": "pod-failure",
+      "target": "user",
+      "traffic_profile": "checkout-high",
+      "replicate_index": 1,
+      "parameters": {
+        "action": "pod-kill",
+        "replicas": 1
+      },
+      "duration_seconds": 0,
+      "traffic_pause_seconds": 0.25,
+      "seed": 1823,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0138",
+      "group_id": "G023",
+      "split": "reference",
+      "fault_class": "Pod Failure",
+      "variant": "pod-failure",
+      "target": "user",
+      "traffic_profile": "checkout-pause-0.10s",
+      "replicate_index": 1,
+      "parameters": {
+        "action": "pod-kill",
+        "replicas": 1
+      },
+      "duration_seconds": 0,
+      "traffic_pause_seconds": 0.1,
+      "seed": 1836,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0139",
+      "group_id": "G023",
+      "split": "reference",
+      "fault_class": "Pod Failure",
+      "variant": "pod-failure",
+      "target": "user",
+      "traffic_profile": "checkout-pause-0.40s",
+      "replicate_index": 1,
+      "parameters": {
+        "action": "pod-kill",
+        "replicas": 1
+      },
+      "duration_seconds": 0,
+      "traffic_pause_seconds": 0.4,
+      "seed": 1849,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0140",
+      "group_id": "G023",
+      "split": "reference",
+      "fault_class": "Pod Failure",
+      "variant": "pod-failure",
+      "target": "user",
+      "traffic_profile": "checkout-pause-0.60s",
+      "replicate_index": 1,
+      "parameters": {
+        "action": "pod-kill",
+        "replicas": 1
+      },
+      "duration_seconds": 0,
+      "traffic_pause_seconds": 0.6,
+      "seed": 1862,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0141",
+      "group_id": "G023",
+      "split": "reference",
+      "fault_class": "Pod Failure",
+      "variant": "pod-failure",
+      "target": "user",
+      "traffic_profile": "checkout-pause-0.90s",
+      "replicate_index": 1,
+      "parameters": {
+        "action": "pod-kill",
+        "replicas": 1
+      },
+      "duration_seconds": 0,
+      "traffic_pause_seconds": 0.9,
+      "seed": 1875,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0142",
+      "group_id": "G023",
+      "split": "reference",
+      "fault_class": "Pod Failure",
+      "variant": "pod-failure",
+      "target": "user",
+      "traffic_profile": "checkout-pause-1.10s",
+      "replicate_index": 1,
+      "parameters": {
+        "action": "pod-kill",
+        "replicas": 1
+      },
+      "duration_seconds": 0,
+      "traffic_pause_seconds": 1.1,
+      "seed": 1888,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0143",
+      "group_id": "G023",
+      "split": "reference",
+      "fault_class": "Pod Failure",
+      "variant": "pod-failure",
+      "target": "user",
+      "traffic_profile": "checkout-pause-1.30s",
+      "replicate_index": 1,
+      "parameters": {
+        "action": "pod-kill",
+        "replicas": 1
+      },
+      "duration_seconds": 0,
+      "traffic_pause_seconds": 1.3,
+      "seed": 1901,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0144",
+      "group_id": "G023",
+      "split": "reference",
+      "fault_class": "Pod Failure",
+      "variant": "pod-failure",
+      "target": "user",
+      "traffic_profile": "checkout-pause-1.70s",
+      "replicate_index": 1,
+      "parameters": {
+        "action": "pod-kill",
+        "replicas": 1
+      },
+      "duration_seconds": 0,
+      "traffic_pause_seconds": 1.7,
+      "seed": 1914,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0145",
+      "group_id": "G023",
+      "split": "reference",
+      "fault_class": "Pod Failure",
+      "variant": "pod-failure",
+      "target": "user",
+      "traffic_profile": "checkout-pause-1.90s",
+      "replicate_index": 1,
+      "parameters": {
+        "action": "pod-kill",
+        "replicas": 1
+      },
+      "duration_seconds": 0,
+      "traffic_pause_seconds": 1.9,
+      "seed": 1927,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0146",
+      "group_id": "G023",
+      "split": "reference",
+      "fault_class": "Pod Failure",
+      "variant": "pod-failure",
+      "target": "user",
+      "traffic_profile": "checkout-pause-2.10s",
+      "replicate_index": 1,
+      "parameters": {
+        "action": "pod-kill",
+        "replicas": 1
+      },
+      "duration_seconds": 0,
+      "traffic_pause_seconds": 2.1,
+      "seed": 1940,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0147",
+      "group_id": "G023",
+      "split": "reference",
+      "fault_class": "Pod Failure",
+      "variant": "pod-failure",
+      "target": "user",
+      "traffic_profile": "checkout-pause-2.30s",
+      "replicate_index": 1,
+      "parameters": {
+        "action": "pod-kill",
+        "replicas": 1
+      },
+      "duration_seconds": 0,
+      "traffic_pause_seconds": 2.3,
+      "seed": 1953,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0148",
+      "group_id": "G023",
+      "split": "reference",
+      "fault_class": "Pod Failure",
+      "variant": "pod-failure",
+      "target": "user",
+      "traffic_profile": "checkout-pause-2.50s",
+      "replicate_index": 1,
+      "parameters": {
+        "action": "pod-kill",
+        "replicas": 1
+      },
+      "duration_seconds": 0,
+      "traffic_pause_seconds": 2.5,
+      "seed": 1966,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0149",
+      "group_id": "G023",
+      "split": "reference",
+      "fault_class": "Pod Failure",
+      "variant": "pod-failure",
+      "target": "user",
+      "traffic_profile": "checkout-pause-2.70s",
+      "replicate_index": 1,
+      "parameters": {
+        "action": "pod-kill",
+        "replicas": 1
+      },
+      "duration_seconds": 0,
+      "traffic_pause_seconds": 2.7,
+      "seed": 1979,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0150",
+      "group_id": "G023",
+      "split": "reference",
+      "fault_class": "Pod Failure",
+      "variant": "pod-failure",
+      "target": "user",
+      "traffic_profile": "checkout-pause-2.90s",
+      "replicate_index": 1,
+      "parameters": {
+        "action": "pod-kill",
+        "replicas": 1
+      },
+      "duration_seconds": 0,
+      "traffic_pause_seconds": 2.9,
+      "seed": 1992,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0151",
+      "group_id": "G023",
+      "split": "reference",
+      "fault_class": "Pod Failure",
+      "variant": "pod-failure",
+      "target": "user",
+      "traffic_profile": "checkout-pause-3.10s",
+      "replicate_index": 1,
+      "parameters": {
+        "action": "pod-kill",
+        "replicas": 1
+      },
+      "duration_seconds": 0,
+      "traffic_pause_seconds": 3.1,
+      "seed": 2005,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0152",
+      "group_id": "G023",
+      "split": "reference",
+      "fault_class": "Pod Failure",
+      "variant": "pod-failure",
+      "target": "user",
+      "traffic_profile": "checkout-pause-3.30s",
+      "replicate_index": 1,
+      "parameters": {
+        "action": "pod-kill",
+        "replicas": 1
+      },
+      "duration_seconds": 0,
+      "traffic_pause_seconds": 3.3,
+      "seed": 2018,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0153",
+      "group_id": "G023",
+      "split": "reference",
+      "fault_class": "Pod Failure",
+      "variant": "pod-failure",
+      "target": "user",
+      "traffic_profile": "checkout-pause-3.50s",
+      "replicate_index": 1,
+      "parameters": {
+        "action": "pod-kill",
+        "replicas": 1
+      },
+      "duration_seconds": 0,
+      "traffic_pause_seconds": 3.5,
+      "seed": 2031,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0154",
+      "group_id": "G023",
+      "split": "reference",
+      "fault_class": "Pod Failure",
+      "variant": "pod-failure",
+      "target": "user",
+      "traffic_profile": "checkout-pause-3.70s",
+      "replicate_index": 1,
+      "parameters": {
+        "action": "pod-kill",
+        "replicas": 1
+      },
+      "duration_seconds": 0,
+      "traffic_pause_seconds": 3.7,
+      "seed": 2044,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0155",
+      "group_id": "G024",
+      "split": "reference",
+      "fault_class": "Pod Failure",
+      "variant": "pod-failure",
+      "target": "payment",
+      "traffic_profile": "checkout-low",
+      "replicate_index": 1,
+      "parameters": {
+        "action": "pod-kill",
+        "replicas": 1
+      },
+      "duration_seconds": 0,
+      "traffic_pause_seconds": 1.5,
+      "seed": 2057,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0156",
+      "group_id": "G024",
+      "split": "reference",
+      "fault_class": "Pod Failure",
+      "variant": "pod-failure",
+      "target": "payment",
+      "traffic_profile": "checkout-medium",
+      "replicate_index": 1,
+      "parameters": {
+        "action": "pod-kill",
+        "replicas": 1
+      },
+      "duration_seconds": 0,
+      "traffic_pause_seconds": 0.75,
+      "seed": 2070,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0157",
+      "group_id": "G024",
+      "split": "reference",
+      "fault_class": "Pod Failure",
+      "variant": "pod-failure",
+      "target": "payment",
+      "traffic_profile": "checkout-high",
+      "replicate_index": 1,
+      "parameters": {
+        "action": "pod-kill",
+        "replicas": 1
+      },
+      "duration_seconds": 0,
+      "traffic_pause_seconds": 0.25,
+      "seed": 2083,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0158",
+      "group_id": "G024",
+      "split": "reference",
+      "fault_class": "Pod Failure",
+      "variant": "pod-failure",
+      "target": "payment",
+      "traffic_profile": "checkout-pause-0.10s",
+      "replicate_index": 1,
+      "parameters": {
+        "action": "pod-kill",
+        "replicas": 1
+      },
+      "duration_seconds": 0,
+      "traffic_pause_seconds": 0.1,
+      "seed": 2096,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0159",
+      "group_id": "G024",
+      "split": "reference",
+      "fault_class": "Pod Failure",
+      "variant": "pod-failure",
+      "target": "payment",
+      "traffic_profile": "checkout-pause-0.40s",
+      "replicate_index": 1,
+      "parameters": {
+        "action": "pod-kill",
+        "replicas": 1
+      },
+      "duration_seconds": 0,
+      "traffic_pause_seconds": 0.4,
+      "seed": 2109,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0160",
+      "group_id": "G024",
+      "split": "reference",
+      "fault_class": "Pod Failure",
+      "variant": "pod-failure",
+      "target": "payment",
+      "traffic_profile": "checkout-pause-0.60s",
+      "replicate_index": 1,
+      "parameters": {
+        "action": "pod-kill",
+        "replicas": 1
+      },
+      "duration_seconds": 0,
+      "traffic_pause_seconds": 0.6,
+      "seed": 2122,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0161",
+      "group_id": "G024",
+      "split": "reference",
+      "fault_class": "Pod Failure",
+      "variant": "pod-failure",
+      "target": "payment",
+      "traffic_profile": "checkout-pause-0.90s",
+      "replicate_index": 1,
+      "parameters": {
+        "action": "pod-kill",
+        "replicas": 1
+      },
+      "duration_seconds": 0,
+      "traffic_pause_seconds": 0.9,
+      "seed": 2135,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0162",
+      "group_id": "G024",
+      "split": "reference",
+      "fault_class": "Pod Failure",
+      "variant": "pod-failure",
+      "target": "payment",
+      "traffic_profile": "checkout-pause-1.10s",
+      "replicate_index": 1,
+      "parameters": {
+        "action": "pod-kill",
+        "replicas": 1
+      },
+      "duration_seconds": 0,
+      "traffic_pause_seconds": 1.1,
+      "seed": 2148,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0163",
+      "group_id": "G024",
+      "split": "reference",
+      "fault_class": "Pod Failure",
+      "variant": "pod-failure",
+      "target": "payment",
+      "traffic_profile": "checkout-pause-1.30s",
+      "replicate_index": 1,
+      "parameters": {
+        "action": "pod-kill",
+        "replicas": 1
+      },
+      "duration_seconds": 0,
+      "traffic_pause_seconds": 1.3,
+      "seed": 2161,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0164",
+      "group_id": "G024",
+      "split": "reference",
+      "fault_class": "Pod Failure",
+      "variant": "pod-failure",
+      "target": "payment",
+      "traffic_profile": "checkout-pause-1.70s",
+      "replicate_index": 1,
+      "parameters": {
+        "action": "pod-kill",
+        "replicas": 1
+      },
+      "duration_seconds": 0,
+      "traffic_pause_seconds": 1.7,
+      "seed": 2174,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0165",
+      "group_id": "G024",
+      "split": "reference",
+      "fault_class": "Pod Failure",
+      "variant": "pod-failure",
+      "target": "payment",
+      "traffic_profile": "checkout-pause-1.90s",
+      "replicate_index": 1,
+      "parameters": {
+        "action": "pod-kill",
+        "replicas": 1
+      },
+      "duration_seconds": 0,
+      "traffic_pause_seconds": 1.9,
+      "seed": 2187,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0166",
+      "group_id": "G024",
+      "split": "reference",
+      "fault_class": "Pod Failure",
+      "variant": "pod-failure",
+      "target": "payment",
+      "traffic_profile": "checkout-pause-2.10s",
+      "replicate_index": 1,
+      "parameters": {
+        "action": "pod-kill",
+        "replicas": 1
+      },
+      "duration_seconds": 0,
+      "traffic_pause_seconds": 2.1,
+      "seed": 2200,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0167",
+      "group_id": "G024",
+      "split": "reference",
+      "fault_class": "Pod Failure",
+      "variant": "pod-failure",
+      "target": "payment",
+      "traffic_profile": "checkout-pause-2.30s",
+      "replicate_index": 1,
+      "parameters": {
+        "action": "pod-kill",
+        "replicas": 1
+      },
+      "duration_seconds": 0,
+      "traffic_pause_seconds": 2.3,
+      "seed": 2213,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0168",
+      "group_id": "G024",
+      "split": "reference",
+      "fault_class": "Pod Failure",
+      "variant": "pod-failure",
+      "target": "payment",
+      "traffic_profile": "checkout-pause-2.50s",
+      "replicate_index": 1,
+      "parameters": {
+        "action": "pod-kill",
+        "replicas": 1
+      },
+      "duration_seconds": 0,
+      "traffic_pause_seconds": 2.5,
+      "seed": 2226,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0169",
+      "group_id": "G024",
+      "split": "reference",
+      "fault_class": "Pod Failure",
+      "variant": "pod-failure",
+      "target": "payment",
+      "traffic_profile": "checkout-pause-2.70s",
+      "replicate_index": 1,
+      "parameters": {
+        "action": "pod-kill",
+        "replicas": 1
+      },
+      "duration_seconds": 0,
+      "traffic_pause_seconds": 2.7,
+      "seed": 2239,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0170",
+      "group_id": "G024",
+      "split": "reference",
+      "fault_class": "Pod Failure",
+      "variant": "pod-failure",
+      "target": "payment",
+      "traffic_profile": "checkout-pause-2.90s",
+      "replicate_index": 1,
+      "parameters": {
+        "action": "pod-kill",
+        "replicas": 1
+      },
+      "duration_seconds": 0,
+      "traffic_pause_seconds": 2.9,
+      "seed": 2252,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0171",
+      "group_id": "G024",
+      "split": "reference",
+      "fault_class": "Pod Failure",
+      "variant": "pod-failure",
+      "target": "payment",
+      "traffic_profile": "checkout-pause-3.10s",
+      "replicate_index": 1,
+      "parameters": {
+        "action": "pod-kill",
+        "replicas": 1
+      },
+      "duration_seconds": 0,
+      "traffic_pause_seconds": 3.1,
+      "seed": 2265,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0172",
+      "group_id": "G024",
+      "split": "reference",
+      "fault_class": "Pod Failure",
+      "variant": "pod-failure",
+      "target": "payment",
+      "traffic_profile": "checkout-pause-3.30s",
+      "replicate_index": 1,
+      "parameters": {
+        "action": "pod-kill",
+        "replicas": 1
+      },
+      "duration_seconds": 0,
+      "traffic_pause_seconds": 3.3,
+      "seed": 2278,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0173",
+      "group_id": "G024",
+      "split": "reference",
+      "fault_class": "Pod Failure",
+      "variant": "pod-failure",
+      "target": "payment",
+      "traffic_profile": "checkout-pause-3.50s",
+      "replicate_index": 1,
+      "parameters": {
+        "action": "pod-kill",
+        "replicas": 1
+      },
+      "duration_seconds": 0,
+      "traffic_pause_seconds": 3.5,
+      "seed": 2291,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0174",
+      "group_id": "G024",
+      "split": "reference",
+      "fault_class": "Pod Failure",
+      "variant": "pod-failure",
+      "target": "payment",
+      "traffic_profile": "checkout-pause-3.70s",
+      "replicate_index": 1,
+      "parameters": {
+        "action": "pod-kill",
+        "replicas": 1
+      },
+      "duration_seconds": 0,
+      "traffic_pause_seconds": 3.7,
+      "seed": 2304,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0175",
+      "group_id": "G025",
+      "split": "validation",
+      "fault_class": "Pod Failure",
+      "variant": "pod-failure",
+      "target": "shipping",
+      "traffic_profile": "checkout-low",
+      "replicate_index": 1,
+      "parameters": {
+        "action": "pod-kill",
+        "replicas": 1
+      },
+      "duration_seconds": 0,
+      "traffic_pause_seconds": 1.5,
+      "seed": 2317,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0176",
+      "group_id": "G025",
+      "split": "validation",
+      "fault_class": "Pod Failure",
+      "variant": "pod-failure",
+      "target": "shipping",
+      "traffic_profile": "checkout-medium",
+      "replicate_index": 1,
+      "parameters": {
+        "action": "pod-kill",
+        "replicas": 1
+      },
+      "duration_seconds": 0,
+      "traffic_pause_seconds": 0.75,
+      "seed": 2330,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0177",
+      "group_id": "G025",
+      "split": "validation",
+      "fault_class": "Pod Failure",
+      "variant": "pod-failure",
+      "target": "shipping",
+      "traffic_profile": "checkout-high",
+      "replicate_index": 1,
+      "parameters": {
+        "action": "pod-kill",
+        "replicas": 1
+      },
+      "duration_seconds": 0,
+      "traffic_pause_seconds": 0.25,
+      "seed": 2343,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0178",
+      "group_id": "G025",
+      "split": "validation",
+      "fault_class": "Pod Failure",
+      "variant": "pod-failure",
+      "target": "shipping",
+      "traffic_profile": "checkout-pause-0.10s",
+      "replicate_index": 1,
+      "parameters": {
+        "action": "pod-kill",
+        "replicas": 1
+      },
+      "duration_seconds": 0,
+      "traffic_pause_seconds": 0.1,
+      "seed": 2356,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0179",
+      "group_id": "G025",
+      "split": "validation",
+      "fault_class": "Pod Failure",
+      "variant": "pod-failure",
+      "target": "shipping",
+      "traffic_profile": "checkout-pause-0.40s",
+      "replicate_index": 1,
+      "parameters": {
+        "action": "pod-kill",
+        "replicas": 1
+      },
+      "duration_seconds": 0,
+      "traffic_pause_seconds": 0.4,
+      "seed": 2369,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0180",
+      "group_id": "G025",
+      "split": "validation",
+      "fault_class": "Pod Failure",
+      "variant": "pod-failure",
+      "target": "shipping",
+      "traffic_profile": "checkout-pause-0.60s",
+      "replicate_index": 1,
+      "parameters": {
+        "action": "pod-kill",
+        "replicas": 1
+      },
+      "duration_seconds": 0,
+      "traffic_pause_seconds": 0.6,
+      "seed": 2382,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0181",
+      "group_id": "G025",
+      "split": "validation",
+      "fault_class": "Pod Failure",
+      "variant": "pod-failure",
+      "target": "shipping",
+      "traffic_profile": "checkout-pause-0.90s",
+      "replicate_index": 1,
+      "parameters": {
+        "action": "pod-kill",
+        "replicas": 1
+      },
+      "duration_seconds": 0,
+      "traffic_pause_seconds": 0.9,
+      "seed": 2395,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0182",
+      "group_id": "G026",
+      "split": "validation",
+      "fault_class": "Pod Failure",
+      "variant": "pod-failure",
+      "target": "catalogue",
+      "traffic_profile": "checkout-low",
+      "replicate_index": 1,
+      "parameters": {
+        "action": "pod-kill",
+        "replicas": 1
+      },
+      "duration_seconds": 0,
+      "traffic_pause_seconds": 1.5,
+      "seed": 2408,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0183",
+      "group_id": "G026",
+      "split": "validation",
+      "fault_class": "Pod Failure",
+      "variant": "pod-failure",
+      "target": "catalogue",
+      "traffic_profile": "checkout-medium",
+      "replicate_index": 1,
+      "parameters": {
+        "action": "pod-kill",
+        "replicas": 1
+      },
+      "duration_seconds": 0,
+      "traffic_pause_seconds": 0.75,
+      "seed": 2421,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0184",
+      "group_id": "G026",
+      "split": "validation",
+      "fault_class": "Pod Failure",
+      "variant": "pod-failure",
+      "target": "catalogue",
+      "traffic_profile": "checkout-high",
+      "replicate_index": 1,
+      "parameters": {
+        "action": "pod-kill",
+        "replicas": 1
+      },
+      "duration_seconds": 0,
+      "traffic_pause_seconds": 0.25,
+      "seed": 2434,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0185",
+      "group_id": "G026",
+      "split": "validation",
+      "fault_class": "Pod Failure",
+      "variant": "pod-failure",
+      "target": "catalogue",
+      "traffic_profile": "checkout-pause-0.10s",
+      "replicate_index": 1,
+      "parameters": {
+        "action": "pod-kill",
+        "replicas": 1
+      },
+      "duration_seconds": 0,
+      "traffic_pause_seconds": 0.1,
+      "seed": 2447,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0186",
+      "group_id": "G026",
+      "split": "validation",
+      "fault_class": "Pod Failure",
+      "variant": "pod-failure",
+      "target": "catalogue",
+      "traffic_profile": "checkout-pause-0.40s",
+      "replicate_index": 1,
+      "parameters": {
+        "action": "pod-kill",
+        "replicas": 1
+      },
+      "duration_seconds": 0,
+      "traffic_pause_seconds": 0.4,
+      "seed": 2460,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0187",
+      "group_id": "G026",
+      "split": "validation",
+      "fault_class": "Pod Failure",
+      "variant": "pod-failure",
+      "target": "catalogue",
+      "traffic_profile": "checkout-pause-0.60s",
+      "replicate_index": 1,
+      "parameters": {
+        "action": "pod-kill",
+        "replicas": 1
+      },
+      "duration_seconds": 0,
+      "traffic_pause_seconds": 0.6,
+      "seed": 2473,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0188",
+      "group_id": "G027",
+      "split": "test",
+      "fault_class": "Pod Failure",
+      "variant": "pod-failure",
+      "target": "orders",
+      "traffic_profile": "checkout-low",
+      "replicate_index": 1,
+      "parameters": {
+        "action": "pod-kill",
+        "replicas": 1
+      },
+      "duration_seconds": 0,
+      "traffic_pause_seconds": 1.5,
+      "seed": 2486,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0189",
+      "group_id": "G027",
+      "split": "test",
+      "fault_class": "Pod Failure",
+      "variant": "pod-failure",
+      "target": "orders",
+      "traffic_profile": "checkout-medium",
+      "replicate_index": 1,
+      "parameters": {
+        "action": "pod-kill",
+        "replicas": 1
+      },
+      "duration_seconds": 0,
+      "traffic_pause_seconds": 0.75,
+      "seed": 2499,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0190",
+      "group_id": "G027",
+      "split": "test",
+      "fault_class": "Pod Failure",
+      "variant": "pod-failure",
+      "target": "orders",
+      "traffic_profile": "checkout-high",
+      "replicate_index": 1,
+      "parameters": {
+        "action": "pod-kill",
+        "replicas": 1
+      },
+      "duration_seconds": 0,
+      "traffic_pause_seconds": 0.25,
+      "seed": 2512,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0191",
+      "group_id": "G027",
+      "split": "test",
+      "fault_class": "Pod Failure",
+      "variant": "pod-failure",
+      "target": "orders",
+      "traffic_profile": "checkout-pause-0.10s",
+      "replicate_index": 1,
+      "parameters": {
+        "action": "pod-kill",
+        "replicas": 1
+      },
+      "duration_seconds": 0,
+      "traffic_pause_seconds": 0.1,
+      "seed": 2525,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0192",
+      "group_id": "G027",
+      "split": "test",
+      "fault_class": "Pod Failure",
+      "variant": "pod-failure",
+      "target": "orders",
+      "traffic_profile": "checkout-pause-0.40s",
+      "replicate_index": 1,
+      "parameters": {
+        "action": "pod-kill",
+        "replicas": 1
+      },
+      "duration_seconds": 0,
+      "traffic_pause_seconds": 0.4,
+      "seed": 2538,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0193",
+      "group_id": "G027",
+      "split": "test",
+      "fault_class": "Pod Failure",
+      "variant": "pod-failure",
+      "target": "orders",
+      "traffic_profile": "checkout-pause-0.60s",
+      "replicate_index": 1,
+      "parameters": {
+        "action": "pod-kill",
+        "replicas": 1
+      },
+      "duration_seconds": 0,
+      "traffic_pause_seconds": 0.6,
+      "seed": 2551,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0194",
+      "group_id": "G027",
+      "split": "test",
+      "fault_class": "Pod Failure",
+      "variant": "pod-failure",
+      "target": "orders",
+      "traffic_profile": "checkout-pause-0.90s",
+      "replicate_index": 1,
+      "parameters": {
+        "action": "pod-kill",
+        "replicas": 1
+      },
+      "duration_seconds": 0,
+      "traffic_pause_seconds": 0.9,
+      "seed": 2564,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0195",
+      "group_id": "G028",
+      "split": "test",
+      "fault_class": "Pod Failure",
+      "variant": "pod-failure",
+      "target": "carts",
+      "traffic_profile": "checkout-low",
+      "replicate_index": 1,
+      "parameters": {
+        "action": "pod-kill",
+        "replicas": 1
+      },
+      "duration_seconds": 0,
+      "traffic_pause_seconds": 1.5,
+      "seed": 2577,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0196",
+      "group_id": "G028",
+      "split": "test",
+      "fault_class": "Pod Failure",
+      "variant": "pod-failure",
+      "target": "carts",
+      "traffic_profile": "checkout-medium",
+      "replicate_index": 1,
+      "parameters": {
+        "action": "pod-kill",
+        "replicas": 1
+      },
+      "duration_seconds": 0,
+      "traffic_pause_seconds": 0.75,
+      "seed": 2590,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0197",
+      "group_id": "G028",
+      "split": "test",
+      "fault_class": "Pod Failure",
+      "variant": "pod-failure",
+      "target": "carts",
+      "traffic_profile": "checkout-high",
+      "replicate_index": 1,
+      "parameters": {
+        "action": "pod-kill",
+        "replicas": 1
+      },
+      "duration_seconds": 0,
+      "traffic_pause_seconds": 0.25,
+      "seed": 2603,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0198",
+      "group_id": "G028",
+      "split": "test",
+      "fault_class": "Pod Failure",
+      "variant": "pod-failure",
+      "target": "carts",
+      "traffic_profile": "checkout-pause-0.10s",
+      "replicate_index": 1,
+      "parameters": {
+        "action": "pod-kill",
+        "replicas": 1
+      },
+      "duration_seconds": 0,
+      "traffic_pause_seconds": 0.1,
+      "seed": 2616,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0199",
+      "group_id": "G028",
+      "split": "test",
+      "fault_class": "Pod Failure",
+      "variant": "pod-failure",
+      "target": "carts",
+      "traffic_profile": "checkout-pause-0.40s",
+      "replicate_index": 1,
+      "parameters": {
+        "action": "pod-kill",
+        "replicas": 1
+      },
+      "duration_seconds": 0,
+      "traffic_pause_seconds": 0.4,
+      "seed": 2629,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    },
+    {
+      "scenario_id": "S0200",
+      "group_id": "G028",
+      "split": "test",
+      "fault_class": "Pod Failure",
+      "variant": "pod-failure",
+      "target": "carts",
+      "traffic_profile": "checkout-pause-0.60s",
+      "replicate_index": 1,
+      "parameters": {
+        "action": "pod-kill",
+        "replicas": 1
+      },
+      "duration_seconds": 0,
+      "traffic_pause_seconds": 0.6,
+      "seed": 2642,
+      "execution_status": "planned_not_run",
+      "admission_status": "not_collected"
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+--- a/users/links.go
++++ b/users/links.go
+@@ -51,3 +51,3 @@
+ type Href struct {
+-	string `json:"href"`
++	URL string `json:"href"`
+ }

@@ -1,0 +1,29 @@
+replicas: 1
+resources:
+  requests: {cpu: 50m, memory: 64Mi}
+  limits: {cpu: 300m, memory: 256Mi}
+persistence:
+  enabled: true
+  size: 1Gi
+service:
+  type: ClusterIP
+datasources:
+  datasources.yaml:
+    apiVersion: 1
+    datasources:
+      - name: Prometheus
+        uid: prometheus
+        type: prometheus
+        access: proxy
+        url: http://prometheus-server.monitoring.svc.cluster.local
+        isDefault: true
+      - name: Loki
+        uid: loki
+        type: loki
+        access: proxy
+        url: http://loki.monitoring.svc.cluster.local:3100
+      - name: Jaeger
+        uid: jaeger
+        type: jaeger
+        access: proxy
+        url: http://jaeger.monitoring.svc.cluster.local:16686

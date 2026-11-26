@@ -1,0 +1,47 @@
+{
+  "enabled": true,
+  "status": "experimental_native_go",
+  "services": {
+    "payment": {
+      "status": "local_image_built_not_deployed",
+      "service": "payment",
+      "tag": "shyn-payment-native:923c8b030364-go1.23.12-23791e2ee5d1",
+      "image_id": "sha256:a8179991d7047b59deda7d43d41cfe383d67c73193a31dccd089a91924091c65",
+      "architecture": "arm64",
+      "os": "linux",
+      "source_commit": "923c8b030364fd4e217c54cd1e30150b7cad4266",
+      "binary_sha256": "23791e2ee5d107e291653ad509303870fcea84d481ba8aa2f2188fcf5239eeb3",
+      "published": false,
+      "compatibility_patches": []
+    },
+    "catalogue": {
+      "status": "local_image_built_not_deployed",
+      "service": "catalogue",
+      "tag": "shyn-catalogue-native:93452255c62c-go1.23.12-3ffc4f5e0b96",
+      "image_id": "sha256:02dc4cb635be73450eb97e73774de46a347b2cf8a73071df264999883757e032",
+      "architecture": "arm64",
+      "os": "linux",
+      "source_commit": "93452255c62cac6e44f5d86376d7cb3c5409e162",
+      "binary_sha256": "3ffc4f5e0b9658df4f3524f4c1c61501be58fd3ec1a23cbd943e1e0cd83000a6",
+      "published": false,
+      "compatibility_patches": []
+    },
+    "user": {
+      "status": "local_image_built_not_deployed",
+      "service": "user",
+      "tag": "shyn-user-native:1968fe09635e-go1.23.12-d7d49b890d04",
+      "image_id": "sha256:f1f6158346ef435fa522ceb3af4cbf8c5f1f4235d649569564f0719c9eb55eac",
+      "architecture": "arm64",
+      "os": "linux",
+      "source_commit": "1968fe09635e320bb573260a27711f08f7a4a43a",
+      "binary_sha256": "d7d49b890d046641e9e0cc7ce3362d3c982c803036a2aa962e2f13286349715f",
+      "published": false,
+      "compatibility_patches": [
+        {
+          "path": "infra/native/user-href-compat.patch",
+          "sha256": "66a28e70699d30da7bca9e4da6f557c8f00ae6ae8cdbd0f4fec553b6d8ec3ffc"
+        }
+      ]
+    }
+  }
+}

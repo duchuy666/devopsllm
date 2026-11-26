@@ -1,0 +1,8 @@
+{
+  "version": "frontend-zipkin-v1",
+  "enabled": true,
+  "status": "pinned_node_and_live_cross_service_verified",
+  "service": "front-end",
+  "export_url": "http://jaeger.monitoring.svc.cluster.local:9411/api/v1/spans",
+  "exported_content": "sanitized HTTP operation, status, trace IDs and peer hostname only"
+}

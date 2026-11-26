@@ -1,0 +1,8 @@
+{
+  "version": "mysql-memory-v1",
+  "enabled": true,
+  "status": "isolated_restore_cutover_and_startup_verified",
+  "target": "catalogue-db",
+  "image_version_change_allowed": false,
+  "memory_limit_increase_allowed": false
+}

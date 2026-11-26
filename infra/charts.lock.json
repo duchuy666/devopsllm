@@ -1,0 +1,7 @@
+{
+  "prometheus": {"chart": "prometheus-community/prometheus", "version": "29.47.2"},
+  "loki": {"chart": "grafana/loki", "version": "7.7.0"},
+  "alloy": {"chart": "grafana/alloy", "version": "1.16.0"},
+  "chaos-mesh": {"chart": "chaos-mesh/chaos-mesh", "version": "2.8.8"},
+  "grafana": {"chart": "grafana/grafana", "version": "10.5.15"}
+}

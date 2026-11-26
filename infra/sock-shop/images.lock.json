@@ -1,0 +1,113 @@
+{
+  "weaveworksdemos/carts:0.4.8": {
+    "selected_tag": "weaveworksdemos/carts:0.4.8",
+    "pinned_image": "weaveworksdemos/carts@sha256:434d2f5a6e0e8beef1f253fe96f45b8437a703125fc003434c5282ecf8969a4f",
+    "arm64_native": false
+  },
+  "mongo": {
+    "selected_tag": "mongo:3.4.24",
+    "pinned_image": "mongo@sha256:d314f7eca9d3f825d091b77c40d2f3c9d6fff4de88dde2962527353476f107ba",
+    "arm64_native": true
+  },
+  "weaveworksdemos/catalogue:0.3.5": {
+    "selected_tag": "weaveworksdemos/catalogue:0.3.5",
+    "pinned_image": "weaveworksdemos/catalogue@sha256:0147a65b7116569439eefb1a6dbed455fe022464ef70e0c3cab75bc4a226b39b",
+    "arm64_native": true,
+    "native_override": {
+      "status": "local_image_built_not_deployed",
+      "service": "catalogue",
+      "tag": "shyn-catalogue-native:93452255c62c-go1.23.12-3ffc4f5e0b96",
+      "image_id": "sha256:02dc4cb635be73450eb97e73774de46a347b2cf8a73071df264999883757e032",
+      "architecture": "arm64",
+      "os": "linux",
+      "source_commit": "93452255c62cac6e44f5d86376d7cb3c5409e162",
+      "binary_sha256": "3ffc4f5e0b9658df4f3524f4c1c61501be58fd3ec1a23cbd943e1e0cd83000a6",
+      "published": false,
+      "compatibility_patches": []
+    }
+  },
+  "weaveworksdemos/catalogue-db:0.3.0": {
+    "selected_tag": "weaveworksdemos/catalogue-db:0.3.0",
+    "pinned_image": "weaveworksdemos/catalogue-db@sha256:7ba74ec9adf88f6625b8d85d3323d1ee5232b39877e1590021ea485cf9457251",
+    "arm64_native": false
+  },
+  "weaveworksdemos/front-end:0.3.12": {
+    "selected_tag": "weaveworksdemos/front-end:0.3.12",
+    "pinned_image": "weaveworksdemos/front-end@sha256:26a2d9b6b291dee2dca32fca3f5bff6c2fa07bb5954359afcbc8001cc70eac71",
+    "arm64_native": false
+  },
+  "weaveworksdemos/orders:0.4.7": {
+    "selected_tag": "weaveworksdemos/orders:0.4.7",
+    "pinned_image": "weaveworksdemos/orders@sha256:b622e40e83433baf6374f15e076b53893f79958640fc6667dff597622eff03b9",
+    "arm64_native": false
+  },
+  "weaveworksdemos/payment:0.4.3": {
+    "selected_tag": "weaveworksdemos/payment:0.4.3",
+    "pinned_image": "weaveworksdemos/payment@sha256:5ab1c9877480a018d4dda10d6dfa382776e6bca9fc1c60bacbb80903fde8cfe0",
+    "arm64_native": true,
+    "native_override": {
+      "status": "local_image_built_not_deployed",
+      "service": "payment",
+      "tag": "shyn-payment-native:923c8b030364-go1.23.12-23791e2ee5d1",
+      "image_id": "sha256:a8179991d7047b59deda7d43d41cfe383d67c73193a31dccd089a91924091c65",
+      "architecture": "arm64",
+      "os": "linux",
+      "source_commit": "923c8b030364fd4e217c54cd1e30150b7cad4266",
+      "binary_sha256": "23791e2ee5d107e291653ad509303870fcea84d481ba8aa2f2188fcf5239eeb3",
+      "published": false,
+      "compatibility_patches": []
+    }
+  },
+  "weaveworksdemos/queue-master:0.3.1": {
+    "selected_tag": "weaveworksdemos/queue-master:0.3.1",
+    "pinned_image": "weaveworksdemos/queue-master@sha256:6292d3095f4c7aeed8d863527f8ef6d7a75d3128f20fc61e57f398c100142712",
+    "arm64_native": false
+  },
+  "rabbitmq:3.6.8-management": {
+    "selected_tag": "rabbitmq:3.6.8-management",
+    "pinned_image": "rabbitmq@sha256:0297618bd60270f03665448b02b3b1110dfc51fae60a3c6804005169f0904dad",
+    "arm64_native": false
+  },
+  "kbudde/rabbitmq-exporter": {
+    "selected_tag": "kbudde/rabbitmq-exporter",
+    "pinned_image": "kbudde/rabbitmq-exporter@sha256:12f27d6d84e6dbdd72c6bc2605e48af9910517394483c1dfa3230e49d3e32107",
+    "arm64_native": true
+  },
+  "redis:alpine": {
+    "selected_tag": "redis:4.0.14-alpine",
+    "pinned_image": "redis@sha256:aaf7c123077a5e45ab2328b5ef7e201b5720616efac498d55e65a7afbb96ae20",
+    "arm64_native": true
+  },
+  "weaveworksdemos/shipping:0.4.8": {
+    "selected_tag": "weaveworksdemos/shipping:0.4.8",
+    "pinned_image": "weaveworksdemos/shipping@sha256:983305c948fded487f4a4acdeab5f898e89d577b4bc1ca3de7750076469ccad4",
+    "arm64_native": false
+  },
+  "weaveworksdemos/user:0.4.7": {
+    "selected_tag": "weaveworksdemos/user:0.4.7",
+    "pinned_image": "weaveworksdemos/user@sha256:2ffccc332963c89e035fea52201012208bf62df43a55fe461ad6598a5c757ab7",
+    "arm64_native": true,
+    "native_override": {
+      "status": "local_image_built_not_deployed",
+      "service": "user",
+      "tag": "shyn-user-native:1968fe09635e-go1.23.12-d7d49b890d04",
+      "image_id": "sha256:f1f6158346ef435fa522ceb3af4cbf8c5f1f4235d649569564f0719c9eb55eac",
+      "architecture": "arm64",
+      "os": "linux",
+      "source_commit": "1968fe09635e320bb573260a27711f08f7a4a43a",
+      "binary_sha256": "d7d49b890d046641e9e0cc7ce3362d3c982c803036a2aa962e2f13286349715f",
+      "published": false,
+      "compatibility_patches": [
+        {
+          "path": "infra/native/user-href-compat.patch",
+          "sha256": "66a28e70699d30da7bca9e4da6f557c8f00ae6ae8cdbd0f4fec553b6d8ec3ffc"
+        }
+      ]
+    }
+  },
+  "weaveworksdemos/user-db:0.3.0": {
+    "selected_tag": "weaveworksdemos/user-db:0.3.0",
+    "pinned_image": "weaveworksdemos/user-db@sha256:695bc22c11396c7ae747118c56e619f3b3295d9d4cbec999d30230b3f399a389",
+    "arm64_native": false
+  }
+}

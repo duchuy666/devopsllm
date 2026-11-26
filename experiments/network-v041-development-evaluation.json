@@ -1,0 +1,51 @@
+{
+  "dataset_role": "development_pilot",
+  "modes": [
+    "B0",
+    "B1",
+    "B2",
+    "B3"
+  ],
+  "context_version": "0.4.1",
+  "prompt_version": "0.2.0",
+  "cases": [
+    {
+      "case_id": "CANDIDATE-20261123T020440486374-S0078",
+      "context_id": "CTX-589ea93ebde2cd7f",
+      "split": "reference",
+      "admission_status": "reviewed_for_development_scoring",
+      "expected": {
+        "target": [
+          "orders",
+          "shipping"
+        ],
+        "fault_type": "Network Delay / Packet Loss"
+      },
+      "reports": {
+        "B0": "results/baselines/b0-rules-0.1/CTX-589ea93ebde2cd7f/B0/result.json",
+        "B1": "results/diagnoses/CTX-589ea93ebde2cd7f/B1/result.json",
+        "B2": "results/diagnoses/CTX-589ea93ebde2cd7f/B2/result.json",
+        "B3": "results/diagnoses/CTX-589ea93ebde2cd7f/B3/result.json"
+      }
+    },
+    {
+      "case_id": "CANDIDATE-20261123T020815385720-S0071",
+      "context_id": "CTX-a48dc89acc015789",
+      "split": "reference",
+      "admission_status": "reviewed_for_development_scoring",
+      "expected": {
+        "target": [
+          "front-end",
+          "carts"
+        ],
+        "fault_type": "Network Delay / Packet Loss"
+      },
+      "reports": {
+        "B0": "results/baselines/b0-rules-0.1/CTX-a48dc89acc015789/B0/result.json",
+        "B1": "results/diagnoses/CTX-a48dc89acc015789/B1/result.json",
+        "B2": "results/diagnoses/CTX-a48dc89acc015789/B2/result.json",
+        "B3": "results/diagnoses/CTX-a48dc89acc015789/B3/result.json"
+      }
+    }
+  ]
+}

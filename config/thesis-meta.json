@@ -1,0 +1,16 @@
+{
+  "university": "ĐẠI HỌC KINH TẾ QUỐC DÂN",
+  "school": "TRƯỜNG CÔNG NGHỆ",
+  "faculty": "KHOA CÔNG NGHỆ THÔNG TIN",
+  "title": "HỆ THỐNG HỖ TRỢ PHÁT HIỆN VÀ CHẨN ĐOÁN SỰ CỐ DEVOPS SỬ DỤNG LLM KẾT HỢP RAG",
+  "title_en": "LLM-powered Incident Detection & Root Cause Assistant for DevOps",
+  "student": "Nguyễn Đức Huy",
+  "student_id": "11212608",
+  "class": "Khoa học máy tính K63",
+  "major": "KHOA HỌC MÁY TÍNH",
+  "supervisor": "Trần Quang Toàn",
+  "supervisor_title": "Thầy",
+  "place": "Hà Nội",
+  "academic_term": "2026-2027.1",
+  "logo": "docs/submission/assets/neu-logo.jpg"
+}

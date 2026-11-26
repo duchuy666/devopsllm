@@ -1,0 +1,47 @@
+controller:
+  type: deployment
+  replicas: 1
+alloy:
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 300m
+      memory: 192Mi
+  configMap:
+    content: |
+      discovery.kubernetes "sock_shop" {
+        role = "pod"
+        namespaces {
+          names = ["sock-shop"]
+        }
+      }
+      discovery.relabel "sock_shop" {
+        targets = discovery.kubernetes.sock_shop.targets
+        rule {
+          source_labels = ["__meta_kubernetes_namespace"]
+          target_label = "namespace"
+        }
+        rule {
+          source_labels = ["__meta_kubernetes_pod_name"]
+          target_label = "pod"
+        }
+        rule {
+          source_labels = ["__meta_kubernetes_pod_label_name"]
+          target_label = "service"
+        }
+        rule {
+          source_labels = ["__meta_kubernetes_pod_container_name"]
+          target_label = "container"
+        }
+      }
+      loki.source.kubernetes "sock_shop" {
+        targets = discovery.relabel.sock_shop.output
+        forward_to = [loki.write.local.receiver]
+      }
+      loki.write "local" {
+        endpoint {
+          url = "http://loki.monitoring.svc.cluster.local:3100/loki/api/v1/push"
+        }
+      }

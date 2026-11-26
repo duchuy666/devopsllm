@@ -1,0 +1,121 @@
+{
+  "started_at": "2026-11-20T08:44:34.035068+00:00",
+  "finished_at": "2026-11-20T08:44:37.820878+00:00",
+  "config": {
+    "url": "http://127.0.0.1:8080",
+    "profile": "browse",
+    "workers": 1,
+    "journeys": 3,
+    "pause": 1.0,
+    "seed": 42,
+    "output": "results/environment/smoke-browse.json"
+  },
+  "completed_journeys": 3,
+  "expected_journeys": 3,
+  "request_count": 10,
+  "failed_requests": 0,
+  "p95_request_latency_ms": 835.373,
+  "errors": [],
+  "requests": [
+    {
+      "worker": 0,
+      "timestamp": "2026-11-20T08:44:34.053890+00:00",
+      "method": "GET",
+      "path": "/",
+      "status": 200,
+      "latency_ms": 36.409,
+      "ok": true,
+      "error": null
+    },
+    {
+      "worker": 0,
+      "timestamp": "2026-11-20T08:44:34.090344+00:00",
+      "method": "GET",
+      "path": "/catalogue",
+      "status": 200,
+      "latency_ms": 835.373,
+      "ok": true,
+      "error": null
+    },
+    {
+      "worker": 0,
+      "timestamp": "2026-11-20T08:44:34.925856+00:00",
+      "method": "GET",
+      "path": "/catalogue/510a0d7e-8e83-4193-b483-e27e09ddc34d",
+      "status": 200,
+      "latency_ms": 465.24,
+      "ok": true,
+      "error": null
+    },
+    {
+      "worker": 0,
+      "timestamp": "2026-11-20T08:44:35.391159+00:00",
+      "method": "GET",
+      "path": "/tags",
+      "status": 200,
+      "latency_ms": 205.42,
+      "ok": true,
+      "error": null
+    },
+    {
+      "worker": 0,
+      "timestamp": "2026-11-20T08:44:36.601655+00:00",
+      "method": "GET",
+      "path": "/catalogue",
+      "status": 200,
+      "latency_ms": 42.64,
+      "ok": true,
+      "error": null
+    },
+    {
+      "worker": 0,
+      "timestamp": "2026-11-20T08:44:36.644396+00:00",
+      "method": "GET",
+      "path": "/catalogue/3395a43e-2d88-40de-b95f-e00e1502085b",
+      "status": 200,
+      "latency_ms": 87.17,
+      "ok": true,
+      "error": null
+    },
+    {
+      "worker": 0,
+      "timestamp": "2026-11-20T08:44:36.731809+00:00",
+      "method": "GET",
+      "path": "/tags",
+      "status": 200,
+      "latency_ms": 16.546,
+      "ok": true,
+      "error": null
+    },
+    {
+      "worker": 0,
+      "timestamp": "2026-11-20T08:44:37.751867+00:00",
+      "method": "GET",
+      "path": "/catalogue",
+      "status": 200,
+      "latency_ms": 37.839,
+      "ok": true,
+      "error": null
+    },
+    {
+      "worker": 0,
+      "timestamp": "2026-11-20T08:44:37.789964+00:00",
+      "method": "GET",
+      "path": "/catalogue/837ab141-399e-4c1f-9abc-bace40296bac",
+      "status": 200,
+      "latency_ms": 10.047,
+      "ok": true,
+      "error": null
+    },
+    {
+      "worker": 0,
+      "timestamp": "2026-11-20T08:44:37.800059+00:00",
+      "method": "GET",
+      "path": "/tags",
+      "status": 200,
+      "latency_ms": 20.523,
+      "ok": true,
+      "error": null
+    }
+  ]
+}

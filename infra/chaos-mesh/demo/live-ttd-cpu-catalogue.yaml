@@ -1,0 +1,20 @@
+# Demo fault for live TTD measurement only; not a dataset scenario (RB-18).
+apiVersion: chaos-mesh.org/v1alpha1
+kind: StressChaos
+metadata:
+  name: demo-live-ttd-cpu-catalogue
+  namespace: sock-shop
+  labels:
+    thesis.shyn/managed-by: demo-live-ttd
+spec:
+  mode: one
+  selector:
+    namespaces:
+    - sock-shop
+    labelSelectors:
+      name: catalogue
+  duration: 120s
+  stressors:
+    cpu:
+      workers: 2
+      load: 100

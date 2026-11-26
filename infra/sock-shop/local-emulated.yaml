@@ -1,0 +1,1292 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: sock-shop
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: carts
+  labels:
+    name: carts
+  namespace: sock-shop
+  annotations:
+    thesis.shyn/execution-mode: mixed-native-go-arm64-and-amd64-emulation
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: carts
+  template:
+    metadata:
+      labels:
+        name: carts
+    spec:
+      containers:
+      - name: carts
+        image: weaveworksdemos/carts@sha256:434d2f5a6e0e8beef1f253fe96f45b8437a703125fc003434c5282ecf8969a4f
+        env:
+        - name: JAVA_OPTS
+          value: -Xms64m -Xmx128m -XX:+UseG1GC -Djava.security.egd=file:/dev/urandom
+            -Dspring.zipkin.enabled=true -Dspring.zipkin.base-url=http://jaeger.monitoring.svc.cluster.local:9411
+            -Dspring.sleuth.sampler.percentage=1.0 -XX:TieredStopAtLevel=1
+        resources:
+          limits:
+            cpu: 1000m
+            memory: 500Mi
+          requests:
+            cpu: 100m
+            memory: 200Mi
+        ports:
+        - containerPort: 80
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 10001
+          capabilities:
+            drop:
+            - all
+            add:
+            - NET_BIND_SERVICE
+          readOnlyRootFilesystem: true
+        volumeMounts:
+        - mountPath: /tmp
+          name: tmp-volume
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 80
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+      volumes:
+      - name: tmp-volume
+        emptyDir:
+          medium: Memory
+      nodeSelector:
+        kubernetes.io/os: linux
+  strategy:
+    type: Recreate
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: carts
+  annotations:
+    prometheus.io/scrape: 'true'
+  labels:
+    name: carts
+  namespace: sock-shop
+spec:
+  ports:
+  - port: 80
+    targetPort: 80
+  selector:
+    name: carts
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: carts-db
+  labels:
+    name: carts-db
+  namespace: sock-shop
+  annotations:
+    thesis.shyn/execution-mode: mixed-native-go-arm64-and-amd64-emulation
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: carts-db
+  template:
+    metadata:
+      labels:
+        name: carts-db
+      annotations:
+        thesis.shyn/db-cache-hook-sha256: 39d44049314edd9529897d12988a2899dba0b278a01dc2ea3984426ee2ee40fa
+    spec:
+      containers:
+      - name: carts-db
+        image: mongo@sha256:d314f7eca9d3f825d091b77c40d2f3c9d6fff4de88dde2962527353476f107ba
+        ports:
+        - name: mongo
+          containerPort: 27017
+        securityContext:
+          capabilities:
+            drop:
+            - all
+            add:
+            - CHOWN
+            - SETGID
+            - SETUID
+          readOnlyRootFilesystem: true
+        volumeMounts:
+        - mountPath: /tmp
+          name: tmp-volume
+        - name: shyn-db-cache-policy
+          mountPath: /opt/shyn-cache
+          readOnly: true
+        resources:
+          requests:
+            cpu: 50m
+            memory: 64Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
+        lifecycle:
+          postStart:
+            exec:
+              command:
+              - sh
+              - /opt/shyn-cache/init.sh
+      volumes:
+      - name: tmp-volume
+        emptyDir:
+          medium: Memory
+      - name: shyn-db-cache-policy
+        configMap:
+          name: shyn-db-cache-policy
+          defaultMode: 292
+      nodeSelector:
+        kubernetes.io/os: linux
+  strategy:
+    type: Recreate
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: carts-db
+  labels:
+    name: carts-db
+  namespace: sock-shop
+spec:
+  ports:
+  - port: 27017
+    targetPort: 27017
+  selector:
+    name: carts-db
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: catalogue
+  labels:
+    name: catalogue
+  namespace: sock-shop
+  annotations:
+    thesis.shyn/execution-mode: mixed-native-go-arm64-and-amd64-emulation
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: catalogue
+  template:
+    metadata:
+      labels:
+        name: catalogue
+      annotations:
+        thesis.shyn/source-commit: 93452255c62cac6e44f5d86376d7cb3c5409e162
+        thesis.shyn/binary-sha256: 3ffc4f5e0b9658df4f3524f4c1c61501be58fd3ec1a23cbd943e1e0cd83000a6
+        thesis.shyn/execution-mode: native-arm64-go1.23.12
+    spec:
+      containers:
+      - name: catalogue
+        image: shyn-catalogue-native:93452255c62c-go1.23.12-3ffc4f5e0b96
+        command:
+        - /app
+        args:
+        - -port=80
+        - -zipkin=http://jaeger.monitoring.svc.cluster.local:9411/api/v1/spans
+        resources:
+          limits:
+            cpu: 500m
+            memory: 384Mi
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        ports:
+        - containerPort: 80
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 10001
+          capabilities:
+            drop:
+            - all
+            add:
+            - NET_BIND_SERVICE
+          readOnlyRootFilesystem: true
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 80
+          initialDelaySeconds: 300
+          periodSeconds: 10
+          timeoutSeconds: 3
+          failureThreshold: 6
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 3
+        imagePullPolicy: Never
+      nodeSelector:
+        kubernetes.io/os: linux
+  strategy:
+    type: Recreate
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: catalogue
+  annotations:
+    prometheus.io/scrape: 'true'
+  labels:
+    name: catalogue
+  namespace: sock-shop
+spec:
+  ports:
+  - port: 80
+    targetPort: 80
+  selector:
+    name: catalogue
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: catalogue-db
+  labels:
+    name: catalogue-db
+  namespace: sock-shop
+  annotations:
+    thesis.shyn/execution-mode: mixed-native-go-arm64-and-amd64-emulation
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: catalogue-db
+  template:
+    metadata:
+      labels:
+        name: catalogue-db
+      annotations:
+        thesis.shyn/mysql-memory-sha256: c7013eaaf4239c720f8425c667f0673d59118e6302a02256a263a993fc62abde
+    spec:
+      containers:
+      - name: catalogue-db
+        image: weaveworksdemos/catalogue-db@sha256:7ba74ec9adf88f6625b8d85d3323d1ee5232b39877e1590021ea485cf9457251
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: fake_password
+        - name: MYSQL_DATABASE
+          value: socksdb
+        ports:
+        - name: mysql
+          containerPort: 3306
+        resources:
+          requests:
+            cpu: 50m
+            memory: 64Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
+        readinessProbe:
+          tcpSocket:
+            port: 3306
+          initialDelaySeconds: 2
+          periodSeconds: 2
+          timeoutSeconds: 2
+          failureThreshold: 60
+        volumeMounts:
+        - name: shyn-mysql-memory
+          mountPath: /etc/mysql/conf.d/shyn-memory.cnf
+          subPath: shyn-memory.cnf
+          readOnly: true
+      nodeSelector:
+        kubernetes.io/os: linux
+      volumes:
+      - name: shyn-mysql-memory
+        configMap:
+          name: shyn-mysql-memory
+          defaultMode: 292
+  strategy:
+    type: Recreate
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: catalogue-db
+  labels:
+    name: catalogue-db
+  namespace: sock-shop
+spec:
+  ports:
+  - port: 3306
+    targetPort: 3306
+  selector:
+    name: catalogue-db
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: front-end
+  namespace: sock-shop
+  annotations:
+    thesis.shyn/execution-mode: mixed-native-go-arm64-and-amd64-emulation
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: front-end
+  template:
+    metadata:
+      labels:
+        name: front-end
+      annotations:
+        thesis.shyn/frontend-tracing-sha256: 5f893fcbd50a1438bd1e1cd58bf42374747b480f88b22501e04fd46b84e513a7
+    spec:
+      containers:
+      - name: front-end
+        image: weaveworksdemos/front-end@sha256:26a2d9b6b291dee2dca32fca3f5bff6c2fa07bb5954359afcbc8001cc70eac71
+        resources:
+          limits:
+            cpu: 300m
+            memory: 1000Mi
+          requests:
+            cpu: 100m
+            memory: 300Mi
+        ports:
+        - containerPort: 8079
+        env:
+        - name: SESSION_REDIS
+          value: 'true'
+        - name: SHYN_ZIPKIN_URL
+          value: http://jaeger.monitoring.svc.cluster.local:9411/api/v1/spans
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 10001
+          capabilities:
+            drop:
+            - all
+          readOnlyRootFilesystem: true
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8079
+          initialDelaySeconds: 300
+          periodSeconds: 10
+          timeoutSeconds: 3
+          failureThreshold: 6
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8079
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 3
+        command:
+        - node
+        - --require
+        - /opt/shyn-tracing/frontend-tracing.js
+        - server.js
+        args: []
+        workingDir: /usr/src/app
+        volumeMounts:
+        - name: shyn-frontend-tracing
+          mountPath: /opt/shyn-tracing
+          readOnly: true
+      nodeSelector:
+        kubernetes.io/os: linux
+      volumes:
+      - name: shyn-frontend-tracing
+        configMap:
+          name: shyn-frontend-tracing
+          defaultMode: 292
+  strategy:
+    type: Recreate
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: front-end
+  annotations:
+    prometheus.io/scrape: 'true'
+  labels:
+    name: front-end
+  namespace: sock-shop
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: 8079
+  selector:
+    name: front-end
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: orders
+  labels:
+    name: orders
+  namespace: sock-shop
+  annotations:
+    thesis.shyn/execution-mode: mixed-native-go-arm64-and-amd64-emulation
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: orders
+  template:
+    metadata:
+      labels:
+        name: orders
+    spec:
+      containers:
+      - name: orders
+        image: weaveworksdemos/orders@sha256:b622e40e83433baf6374f15e076b53893f79958640fc6667dff597622eff03b9
+        env:
+        - name: JAVA_OPTS
+          value: -Xms64m -Xmx128m -XX:+UseG1GC -Djava.security.egd=file:/dev/urandom
+            -Dspring.zipkin.enabled=true -Dspring.zipkin.base-url=http://jaeger.monitoring.svc.cluster.local:9411
+            -Dspring.sleuth.sampler.percentage=1.0 -XX:TieredStopAtLevel=1
+        resources:
+          limits:
+            cpu: 1000m
+            memory: 500Mi
+          requests:
+            cpu: 100m
+            memory: 300Mi
+        ports:
+        - containerPort: 80
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 10001
+          capabilities:
+            drop:
+            - all
+            add:
+            - NET_BIND_SERVICE
+          readOnlyRootFilesystem: true
+        volumeMounts:
+        - mountPath: /tmp
+          name: tmp-volume
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 80
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+      volumes:
+      - name: tmp-volume
+        emptyDir:
+          medium: Memory
+      nodeSelector:
+        kubernetes.io/os: linux
+  strategy:
+    type: Recreate
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: orders
+  annotations:
+    prometheus.io/scrape: 'true'
+  labels:
+    name: orders
+  namespace: sock-shop
+spec:
+  ports:
+  - port: 80
+    targetPort: 80
+  selector:
+    name: orders
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: orders-db
+  labels:
+    name: orders-db
+  namespace: sock-shop
+  annotations:
+    thesis.shyn/execution-mode: mixed-native-go-arm64-and-amd64-emulation
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: orders-db
+  template:
+    metadata:
+      labels:
+        name: orders-db
+      annotations:
+        thesis.shyn/db-cache-hook-sha256: 39d44049314edd9529897d12988a2899dba0b278a01dc2ea3984426ee2ee40fa
+    spec:
+      containers:
+      - name: orders-db
+        image: mongo@sha256:d314f7eca9d3f825d091b77c40d2f3c9d6fff4de88dde2962527353476f107ba
+        ports:
+        - name: mongo
+          containerPort: 27017
+        securityContext:
+          capabilities:
+            drop:
+            - all
+            add:
+            - CHOWN
+            - SETGID
+            - SETUID
+          readOnlyRootFilesystem: true
+        volumeMounts:
+        - mountPath: /tmp
+          name: tmp-volume
+        - name: shyn-db-cache-policy
+          mountPath: /opt/shyn-cache
+          readOnly: true
+        resources:
+          requests:
+            cpu: 50m
+            memory: 64Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
+        lifecycle:
+          postStart:
+            exec:
+              command:
+              - sh
+              - /opt/shyn-cache/init.sh
+      volumes:
+      - name: tmp-volume
+        emptyDir:
+          medium: Memory
+      - name: shyn-db-cache-policy
+        configMap:
+          name: shyn-db-cache-policy
+          defaultMode: 292
+      nodeSelector:
+        kubernetes.io/os: linux
+  strategy:
+    type: Recreate
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: orders-db
+  labels:
+    name: orders-db
+  namespace: sock-shop
+spec:
+  ports:
+  - port: 27017
+    targetPort: 27017
+  selector:
+    name: orders-db
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payment
+  labels:
+    name: payment
+  namespace: sock-shop
+  annotations:
+    thesis.shyn/execution-mode: mixed-native-go-arm64-and-amd64-emulation
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: payment
+  template:
+    metadata:
+      labels:
+        name: payment
+      annotations:
+        thesis.shyn/source-commit: 923c8b030364fd4e217c54cd1e30150b7cad4266
+        thesis.shyn/binary-sha256: 23791e2ee5d107e291653ad509303870fcea84d481ba8aa2f2188fcf5239eeb3
+        thesis.shyn/execution-mode: native-arm64-go1.23.12
+    spec:
+      containers:
+      - name: payment
+        image: shyn-payment-native:923c8b030364-go1.23.12-23791e2ee5d1
+        resources:
+          limits:
+            cpu: 200m
+            memory: 200Mi
+          requests:
+            cpu: 99m
+            memory: 100Mi
+        ports:
+        - containerPort: 80
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 10001
+          capabilities:
+            drop:
+            - all
+            add:
+            - NET_BIND_SERVICE
+          readOnlyRootFilesystem: true
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 80
+          initialDelaySeconds: 300
+          periodSeconds: 10
+          timeoutSeconds: 3
+          failureThreshold: 6
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 3
+        imagePullPolicy: Never
+        command:
+        - /app
+        args:
+        - -port=80
+        - -zipkin=http://jaeger.monitoring.svc.cluster.local:9411/api/v1/spans
+      nodeSelector:
+        kubernetes.io/os: linux
+  strategy:
+    type: Recreate
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: payment
+  annotations:
+    prometheus.io/scrape: 'true'
+  labels:
+    name: payment
+  namespace: sock-shop
+spec:
+  ports:
+  - port: 80
+    targetPort: 80
+  selector:
+    name: payment
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: queue-master
+  labels:
+    name: queue-master
+  namespace: sock-shop
+  annotations:
+    thesis.shyn/execution-mode: mixed-native-go-arm64-and-amd64-emulation
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: queue-master
+  template:
+    metadata:
+      labels:
+        name: queue-master
+    spec:
+      containers:
+      - name: queue-master
+        image: weaveworksdemos/queue-master@sha256:6292d3095f4c7aeed8d863527f8ef6d7a75d3128f20fc61e57f398c100142712
+        env:
+        - name: JAVA_OPTS
+          value: -Xms64m -Xmx128m -XX:+UseG1GC -Djava.security.egd=file:/dev/urandom
+            -Dspring.zipkin.enabled=false
+        resources:
+          limits:
+            cpu: 300m
+            memory: 500Mi
+          requests:
+            cpu: 100m
+            memory: 300Mi
+        ports:
+        - containerPort: 80
+      nodeSelector:
+        kubernetes.io/os: linux
+  strategy:
+    type: Recreate
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: queue-master
+  annotations:
+    prometheus.io/scrape: 'true'
+  labels:
+    name: queue-master
+  namespace: sock-shop
+spec:
+  ports:
+  - port: 80
+    targetPort: 80
+  selector:
+    name: queue-master
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rabbitmq
+  labels:
+    name: rabbitmq
+  namespace: sock-shop
+  annotations:
+    thesis.shyn/execution-mode: mixed-native-go-arm64-and-amd64-emulation
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: rabbitmq
+  template:
+    metadata:
+      labels:
+        name: rabbitmq
+      annotations:
+        prometheus.io/scrape: 'false'
+    spec:
+      containers:
+      - name: rabbitmq
+        image: rabbitmq@sha256:0297618bd60270f03665448b02b3b1110dfc51fae60a3c6804005169f0904dad
+        ports:
+        - containerPort: 15672
+          name: management
+        - containerPort: 5672
+          name: rabbitmq
+        securityContext:
+          capabilities:
+            drop:
+            - all
+            add:
+            - CHOWN
+            - SETGID
+            - SETUID
+            - DAC_OVERRIDE
+          readOnlyRootFilesystem: true
+        resources:
+          requests:
+            cpu: 50m
+            memory: 64Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
+      - name: rabbitmq-exporter
+        image: kbudde/rabbitmq-exporter@sha256:12f27d6d84e6dbdd72c6bc2605e48af9910517394483c1dfa3230e49d3e32107
+        ports:
+        - containerPort: 9090
+          name: exporter
+        resources:
+          requests:
+            cpu: 50m
+            memory: 64Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
+      nodeSelector:
+        kubernetes.io/os: linux
+  strategy:
+    type: Recreate
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbitmq
+  annotations:
+    prometheus.io/scrape: 'true'
+    prometheus.io/port: '9090'
+  labels:
+    name: rabbitmq
+  namespace: sock-shop
+spec:
+  ports:
+  - port: 5672
+    name: rabbitmq
+    targetPort: 5672
+  - port: 9090
+    name: exporter
+    targetPort: exporter
+    protocol: TCP
+  selector:
+    name: rabbitmq
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: session-db
+  labels:
+    name: session-db
+  namespace: sock-shop
+  annotations:
+    thesis.shyn/execution-mode: mixed-native-go-arm64-and-amd64-emulation
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: session-db
+  template:
+    metadata:
+      labels:
+        name: session-db
+      annotations:
+        prometheus.io.scrape: 'false'
+    spec:
+      containers:
+      - name: session-db
+        image: redis@sha256:aaf7c123077a5e45ab2328b5ef7e201b5720616efac498d55e65a7afbb96ae20
+        ports:
+        - name: redis
+          containerPort: 6379
+        securityContext:
+          capabilities:
+            drop:
+            - all
+            add:
+            - CHOWN
+            - SETGID
+            - SETUID
+          readOnlyRootFilesystem: true
+        resources:
+          requests:
+            cpu: 50m
+            memory: 64Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
+      nodeSelector:
+        kubernetes.io/os: linux
+  strategy:
+    type: Recreate
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: session-db
+  labels:
+    name: session-db
+  namespace: sock-shop
+spec:
+  ports:
+  - port: 6379
+    targetPort: 6379
+  selector:
+    name: session-db
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shipping
+  labels:
+    name: shipping
+  namespace: sock-shop
+  annotations:
+    thesis.shyn/execution-mode: mixed-native-go-arm64-and-amd64-emulation
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: shipping
+  template:
+    metadata:
+      labels:
+        name: shipping
+    spec:
+      containers:
+      - name: shipping
+        image: weaveworksdemos/shipping@sha256:983305c948fded487f4a4acdeab5f898e89d577b4bc1ca3de7750076469ccad4
+        env:
+        - name: ZIPKIN
+          value: zipkin.jaeger.svc.cluster.local
+        - name: JAVA_OPTS
+          value: -Xms64m -Xmx128m -XX:+UseG1GC -Djava.security.egd=file:/dev/urandom
+            -Dspring.zipkin.enabled=true -Dspring.zipkin.base-url=http://jaeger.monitoring.svc.cluster.local:9411
+            -Dspring.sleuth.sampler.percentage=1.0 -XX:TieredStopAtLevel=1
+        resources:
+          limits:
+            cpu: 1000m
+            memory: 500Mi
+          requests:
+            cpu: 100m
+            memory: 300Mi
+        ports:
+        - containerPort: 80
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 10001
+          capabilities:
+            drop:
+            - all
+            add:
+            - NET_BIND_SERVICE
+          readOnlyRootFilesystem: true
+        volumeMounts:
+        - mountPath: /tmp
+          name: tmp-volume
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 80
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+      volumes:
+      - name: tmp-volume
+        emptyDir:
+          medium: Memory
+      nodeSelector:
+        kubernetes.io/os: linux
+  strategy:
+    type: Recreate
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: shipping
+  annotations:
+    prometheus.io/scrape: 'true'
+  labels:
+    name: shipping
+  namespace: sock-shop
+spec:
+  ports:
+  - port: 80
+    targetPort: 80
+  selector:
+    name: shipping
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user
+  labels:
+    name: user
+  namespace: sock-shop
+  annotations:
+    thesis.shyn/execution-mode: mixed-native-go-arm64-and-amd64-emulation
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: user
+  template:
+    metadata:
+      labels:
+        name: user
+      annotations:
+        thesis.shyn/source-commit: 1968fe09635e320bb573260a27711f08f7a4a43a
+        thesis.shyn/binary-sha256: d7d49b890d046641e9e0cc7ce3362d3c982c803036a2aa962e2f13286349715f
+        thesis.shyn/execution-mode: native-arm64-go1.23.12
+    spec:
+      containers:
+      - name: user
+        image: shyn-user-native:1968fe09635e-go1.23.12-d7d49b890d04
+        resources:
+          limits:
+            cpu: 300m
+            memory: 384Mi
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        ports:
+        - containerPort: 80
+        env:
+        - name: mongo
+          value: user-db:27017
+        - name: USER_DATABASE
+          value: mongodb
+        - name: MONGO_HOST
+          value: user-db
+        - name: HATEAOS
+          value: user
+        - name: ZIPKIN
+          value: http://jaeger.monitoring.svc.cluster.local:9411/api/v1/spans
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 10001
+          capabilities:
+            drop:
+            - all
+            add:
+            - NET_BIND_SERVICE
+          readOnlyRootFilesystem: true
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 80
+          initialDelaySeconds: 300
+          periodSeconds: 10
+          timeoutSeconds: 3
+          failureThreshold: 6
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 3
+        imagePullPolicy: Never
+      nodeSelector:
+        kubernetes.io/os: linux
+  strategy:
+    type: Recreate
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: user
+  annotations:
+    prometheus.io/scrape: 'true'
+  labels:
+    name: user
+  namespace: sock-shop
+spec:
+  ports:
+  - port: 80
+    targetPort: 80
+  selector:
+    name: user
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-db
+  labels:
+    name: user-db
+  namespace: sock-shop
+  annotations:
+    thesis.shyn/execution-mode: mixed-native-go-arm64-and-amd64-emulation
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: user-db
+  template:
+    metadata:
+      labels:
+        name: user-db
+      annotations:
+        thesis.shyn/db-cache-hook-sha256: 39d44049314edd9529897d12988a2899dba0b278a01dc2ea3984426ee2ee40fa
+    spec:
+      containers:
+      - name: user-db
+        image: weaveworksdemos/user-db@sha256:695bc22c11396c7ae747118c56e619f3b3295d9d4cbec999d30230b3f399a389
+        ports:
+        - name: mongo
+          containerPort: 27017
+        securityContext:
+          capabilities:
+            drop:
+            - all
+            add:
+            - CHOWN
+            - SETGID
+            - SETUID
+          readOnlyRootFilesystem: true
+        volumeMounts:
+        - mountPath: /tmp
+          name: tmp-volume
+        - name: shyn-db-cache-policy
+          mountPath: /opt/shyn-cache
+          readOnly: true
+        resources:
+          requests:
+            cpu: 50m
+            memory: 64Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
+        lifecycle:
+          postStart:
+            exec:
+              command:
+              - sh
+              - /opt/shyn-cache/init.sh
+      volumes:
+      - name: tmp-volume
+        emptyDir:
+          medium: Memory
+      - name: shyn-db-cache-policy
+        configMap:
+          name: shyn-db-cache-policy
+          defaultMode: 292
+      nodeSelector:
+        kubernetes.io/os: linux
+  strategy:
+    type: Recreate
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-db
+  labels:
+    name: user-db
+  namespace: sock-shop
+spec:
+  ports:
+  - port: 27017
+    targetPort: 27017
+  selector:
+    name: user-db
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: shyn-db-cache-policy
+  namespace: sock-shop
+  annotations:
+    thesis.shyn/source-sha256: 39d44049314edd9529897d12988a2899dba0b278a01dc2ea3984426ee2ee40fa
+data:
+  init.sh: "#!/bin/sh\n# A bounded postStart hook. Do not change mongod's startup\
+    \ or seed-data command.\nset -eu\ncommand -v timeout >/dev/null 2>&1 || { echo\
+    \ 'SHYN cache hook requires timeout' >&2; exit 78; }\ncommand -v mongo >/dev/null\
+    \ 2>&1 || { echo 'SHYN cache hook requires mongo' >&2; exit 78; }\nattempt=0\n\
+    while [ \"$attempt\" -lt 30 ]; do\n    attempt=$((attempt + 1))\n    if timeout\
+    \ 5s mongo --quiet --host 127.0.0.1 --eval '\n        var r=db.adminCommand({setParameter:1,wiredTigerEngineRuntimeConfig:\"\
+    cache_size=128M\"});\n        if (r.ok !== 1) quit(2);\n        var size=db.serverStatus().wiredTiger.cache[\"\
+    maximum bytes configured\"];\n        if (size !== 134217728) quit(3);\n     \
+    \   print(\"SHYN_DB_CACHE_READY bytes=\"+size);\n    '; then\n        exit 0\n\
+    \    fi\n    sleep 1\ndone\necho 'SHYN cache hook did not obtain verified 128MiB\
+    \ within bounded attempts' >&2\nexit 1\n"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: shyn-mysql-memory
+  namespace: sock-shop
+  annotations:
+    thesis.shyn/source-sha256: c7013eaaf4239c720f8425c667f0673d59118e6302a02256a263a993fc62abde
+data:
+  shyn-memory.cnf: '[mysqld]
+
+    performance_schema=OFF
+
+    innodb_buffer_pool_size=64M
+
+    innodb_buffer_pool_chunk_size=64M
+
+    innodb_buffer_pool_instances=1
+
+    key_buffer_size=8M
+
+    max_connections=30
+
+    thread_cache_size=4
+
+    table_open_cache=128
+
+    table_definition_cache=400
+
+    tmp_table_size=8M
+
+    max_heap_table_size=8M
+
+    query_cache_type=0
+
+    query_cache_size=0
+
+    '
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: shyn-frontend-tracing
+  namespace: sock-shop
+  annotations:
+    thesis.shyn/source-sha256: 5f893fcbd50a1438bd1e1cd58bf42374747b480f88b22501e04fd46b84e513a7
+data:
+  frontend-tracing.js: "/* ES5-compatible, dependency-free Zipkin v1/B3 instrumentation\
+    \ for Sock Shop.\n * Export HTTP metadata only. Never export headers, query strings\
+    \ or bodies.\n */\n'use strict';\nvar http = require('http');\nvar url = require('url');\n\
+    var crypto = require('crypto');\nvar domain = require('domain');\nvar originalRequest\
+    \ = http.request;\nvar originalGet = http.get;\nvar originalServerEmit = http.Server.prototype.emit;\n\
+    var collector = url.parse(process.env.SHYN_ZIPKIN_URL || 'http://jaeger.monitoring.svc.cluster.local:9411/api/v1/spans');\n\
+    if (collector.protocol !== 'http:' || !collector.hostname || collector.auth) throw\
+    \ new Error('Invalid local tracing endpoint');\nvar endpoint = {serviceName: 'front-end'};\n\
+    var queue = [];\nvar dropped = 0;\nvar inflight = false;\n\nfunction id() { return\
+    \ crypto.randomBytes(8).toString('hex'); }\nfunction valid(value, trace) {\n \
+    \ return typeof value === 'string' && (trace ? /^(?:[a-f0-9]{16}|[a-f0-9]{32})$/\
+    \ : /^[a-f0-9]{16}$/).test(value) && !/^0+$/.test(value);\n}\nfunction safePath(value)\
+    \ {\n  var path = url.parse(String(value || '/')).pathname || '/';\n  var segments\
+    \ = path.split('/').filter(function(part) {return part.length>0;});\n  if (!segments.length)\
+    \ return '/';\n  var routes = ['catalogue','cart','orders','login','register','cards','addresses','customers','tags','health','metrics'];\n\
+    \  if (routes.indexOf(segments[0])<0) return '/:route';\n  return '/'+segments.map(function(part,index)\
+    \ {\n    if (index===0) return part;\n    return index===2 && ['cards','addresses','items'].indexOf(part)>=0\
+    \ ? part : ':id';\n  }).join('/').slice(0,150);\n}\nfunction safePeer(value) {\n\
+    \  var peer = String(value || '').toLowerCase().replace(/:\\d+$/,'');\n  var parts\
+    \ = peer.split('.');\n  if (parts.length>1 && ['sock-shop','sock-shop.svc','sock-shop.svc.cluster.local'].indexOf(parts.slice(1).join('.'))<0)\
+    \ return null;\n  var allowed = ['front-end','catalogue','user','carts','orders','payment','shipping','user-db','carts-db','orders-db','catalogue-db','rabbitmq','session-db','queue-master'];\n\
+    \  return allowed.indexOf(parts[0])>=0 ? parts[0] : null;\n}\nfunction copy(object)\
+    \ {\n  var result = {};\n  Object.keys(object || {}).forEach(function(key) { result[key]\
+    \ = object[key]; });\n  return result;\n}\nfunction incoming(headers) {\n  var\
+    \ trace = headers['x-b3-traceid'];\n  var parent = headers['x-b3-spanid'];\n \
+    \ var sampled = headers['x-b3-sampled'] !== '0' && headers['x-b3-sampled'] !==\
+    \ 'false';\n  var debug = headers['x-b3-flags'] === '1';\n  var single = headers.b3;\n\
+    \  if (single === '0') sampled = false;\n  else if (single === '1' || single ===\
+    \ 'd') { sampled = true; debug = single === 'd'; }\n  else if (typeof single ===\
+    \ 'string') {\n    var fields = single.split('-');\n    if (valid(fields[0],true)\
+    \ && valid(fields[1],false)) {\n      trace = fields[0]; parent = fields[1]; sampled\
+    \ = fields[2] !== '0'; debug = fields[2] === 'd';\n    }\n  }\n  if (!valid(trace,true)\
+    \ || !valid(parent,false)) { trace = id(); parent = null; }\n  return {traceId:trace,spanId:id(),parentId:parent,sampled:debug\
+    \ || sampled,debug:debug};\n}\nfunction timer() { return {timestamp:Date.now()*1000,monotonic:process.hrtime()};\
+    \ }\nfunction record(context,clock,name,kind,status,error,remote) {\n  if (!context.sampled)\
+    \ return;\n  var elapsed = process.hrtime(clock.monotonic);\n  var duration =\
+    \ Math.max(1,Math.round(elapsed[0]*1000000+elapsed[1]/1000));\n  var span = {traceId:context.traceId,id:context.spanId,name:name,timestamp:clock.timestamp,duration:duration,\n\
+    \    annotations:[{timestamp:clock.timestamp,value:kind === 'server' ? 'sr' :\
+    \ 'cs',endpoint:endpoint},\n                 {timestamp:clock.timestamp+duration,value:kind\
+    \ === 'server' ? 'ss' : 'cr',endpoint:endpoint}],\n    binaryAnnotations:[{key:'http.status_code',value:String(status\
+    \ || 0),endpoint:endpoint}]};\n  if (context.parentId) span.parentId = context.parentId;\n\
+    \  if (error || status >= 500) span.binaryAnnotations.push({key:'error',value:true,endpoint:endpoint});\n\
+    \  var peer=safePeer(remote);\n  if (peer) span.binaryAnnotations.push({key:'peer.service',value:peer,endpoint:endpoint});\n\
+    \  if (queue.length < 1000) queue.push(span); else dropped++;\n}\nfunction flush()\
+    \ {\n  if (inflight || !queue.length) return;\n  var batch = queue.splice(0,128);\n\
+    \  var data = JSON.stringify(batch);\n  inflight = true;\n  var request = originalRequest.call(http,{hostname:collector.hostname,port:collector.port\
+    \ || 80,\n    path:collector.path,method:'POST',headers:{'Content-Type':'application/json','Content-Length':Buffer.byteLength(data)}},function(response)\
+    \ {\n      response.resume();\n      response.on('end',function() { if (response.statusCode\
+    \ < 200 || response.statusCode >= 300) dropped += batch.length; inflight = false;\
+    \ });\n      response.on('error',function() { dropped += batch.length; inflight\
+    \ = false; });\n    });\n  request.setTimeout(3000,function() { request.destroy();\
+    \ });\n  request.on('error',function() { dropped += batch.length; inflight = false;\
+    \ });\n  request.end(data);\n}\n\nhttp.Server.prototype.emit = function(event,request,response)\
+    \ {\n  if (event !== 'request') return originalServerEmit.apply(this,arguments);\n\
+    \  var server = this;\n  var context = incoming(request.headers);\n  var clock\
+    \ = timer();\n  var active = domain.create();\n  active.shynTrace = context;\n\
+    \  var result;\n  active.run(function() {\n    var finished = false;\n    function\
+    \ finish(error) {\n      if (finished) return; finished = true;\n      record(context,clock,String(request.method\
+    \ || 'GET')+' '+safePath(request.url),'server',response.statusCode,error);\n \
+    \   }\n    response.once('finish',function() { finish(false); });\n    response.once('close',function()\
+    \ { finish(true); });\n    result = originalServerEmit.call(server,event,request,response);\n\
+    \  });\n  return result;\n};\n\nhttp.request = function(input) {\n  var parent\
+    \ = domain.active && domain.active.shynTrace;\n  if (!parent) return originalRequest.apply(http,arguments);\n\
+    \  var args = arguments;\n  var options = typeof input === 'string' ? url.parse(input)\
+    \ : copy(input);\n  if (typeof args[1] === 'object') {\n    Object.keys(args[1]).forEach(function(key)\
+    \ { options[key] = args[1][key]; });\n  }\n  if (Array.isArray(options.headers))\
+    \ return originalRequest.apply(http,args);\n  options.headers = copy(options.headers);\n\
+    \  Object.keys(options.headers).forEach(function(key) { if (/^x-b3-/i.test(key)\
+    \ || key.toLowerCase() === 'b3') delete options.headers[key]; });\n  var context\
+    \ = {traceId:parent.traceId,spanId:id(),parentId:parent.spanId,sampled:parent.sampled,debug:parent.debug};\n\
+    \  options.headers['x-b3-traceid'] = context.traceId;\n  options.headers['x-b3-spanid']\
+    \ = context.spanId;\n  options.headers['x-b3-parentspanid'] = context.parentId;\n\
+    \  if (context.debug) options.headers['x-b3-flags'] = '1';\n  else options.headers['x-b3-sampled']\
+    \ = context.sampled ? '1' : '0';\n  var callback = typeof args[args.length-1]\
+    \ === 'function' ? args[args.length-1] : undefined;\n  var clock = timer();\n\
+    \  var finished = false;\n  function finish(status,error) {\n    if (finished)\
+    \ return; finished = true;\n    record(context,clock,'http:'+safePath(options.path),'client',status,error,options.hostname\
+    \ || options.host);\n  }\n  var request = originalRequest.call(http,options,callback);\n\
+    \  request.once('response',function(response) {\n    response.once('end',function()\
+    \ { finish(response.statusCode,false); });\n    response.once('aborted',function()\
+    \ { finish(response.statusCode,true); });\n  });\n  // Preserve Node's original\
+    \ error handling, including an unhandled error throw.\n  var emit = request.emit;\n\
+    \  request.emit = function(event) {\n    if (event === 'error' || event === 'abort')\
+    \ finish(0,true);\n    return emit.apply(this,arguments);\n  };\n  return request;\n\
+    };\nhttp.get = function() {\n  if (!(domain.active && domain.active.shynTrace))\
+    \ return originalGet.apply(http,arguments);\n  var request = http.request.apply(http,arguments);\
+    \ request.end(); return request;\n};\nvar interval = Number(process.env.SHYN_TRACE_FLUSH_MS\
+    \ || 1000);\nif (!(interval >= 100 && interval <= 5000)) interval = 1000;\nsetInterval(flush,interval).unref();\n\
+    var lastReportedDrop = 0;\nsetInterval(function() {\n  if (dropped !== lastReportedDrop)\
+    \ {\n    console.error('SHYN_TRACE_EXPORT_DROPPED total='+dropped);\n    lastReportedDrop\
+    \ = dropped;\n  }\n},30000).unref();\nmodule.exports = {safePath:safePath,safePeer:safePeer,flush:flush,diagnostics:function()\
+    \ { return {queued:queue.length,dropped:dropped}; }};\n"

@@ -1,0 +1,7 @@
+{
+  "provider": "gemini",
+  "model": "models/gemini-3.8-flash",
+  "embedding_model": "models/gemini-embedding-001",
+  "generation_called": false,
+  "checked_at": "2026-11-20T13:56:59.747632+00:00"
+}

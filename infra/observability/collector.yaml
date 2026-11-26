@@ -1,0 +1,56 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: collector-data
+  namespace: monitoring
+spec:
+  accessModes: [ReadWriteOnce]
+  resources:
+    requests:
+      storage: 2Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: incident-collector
+  namespace: monitoring
+spec:
+  replicas: 1
+  strategy: {type: Recreate}
+  selector:
+    matchLabels: {app: incident-collector}
+  template:
+    metadata:
+      labels: {app: incident-collector}
+    spec:
+      securityContext:
+        fsGroup: 10001
+      containers:
+        - name: collector
+          image: shyn-collector:0.3.1
+          imagePullPolicy: Never
+          env:
+            - {name: TRACE_FRONTEND_ENABLED, value: "true"}
+          ports:
+            - {name: http, containerPort: 8000}
+          readinessProbe:
+            httpGet: {path: /health, port: http}
+          resources:
+            requests: {cpu: 50m, memory: 128Mi}
+            limits: {cpu: 300m, memory: 512Mi}
+          volumeMounts:
+            - {name: data, mountPath: /data}
+      volumes:
+        - name: data
+          persistentVolumeClaim: {claimName: collector-data}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: incident-collector
+  namespace: monitoring
+spec:
+  type: ClusterIP
+  selector: {app: incident-collector}
+  ports:
+    - {name: http, port: 8000, targetPort: http}

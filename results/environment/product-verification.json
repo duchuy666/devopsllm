@@ -1,0 +1,87 @@
+{
+  "recorded_at": "2026-11-24T15:56:12.970018+00:00",
+  "frontend_tracing": {
+    "status": "live_verified",
+    "node": "v4.8.0",
+    "observed_peers": [
+      "carts",
+      "catalogue",
+      "orders",
+      "user"
+    ],
+    "proof": "results/frontend-tracing-rollout/20261123T015021Z/result.json"
+  },
+  "collector": {
+    "version": "0.3.1",
+    "status": "three_serialized_captures_and_short_soak_verified",
+    "unique_spans": 569,
+    "export_incomplete": false,
+    "proof": "results/collector-oom-recovery/20261124T154439Z/concurrent-capture-verification-02.json",
+    "memory_limit_mib": 512,
+    "concurrent_capture_jobs": 1,
+    "manual_capture_probe": "passed_three_serialized_manual_captures",
+    "observed_peak_memory_mib": 108.7578125
+  },
+  "context": {
+    "version": "0.4.1",
+    "observed_edges": 8,
+    "cloud_validation": "two_reference_network_cases_completed"
+  },
+  "python_tests": {
+    "passed": 97,
+    "failed": 0,
+    "proof": "results/evaluation/python-tests-20261124-collector-recovery.log"
+  },
+  "post_rollout_soak": {
+    "status": "passed_short_soak",
+    "result": "results/stability/20261124T154551Z/result.json",
+    "completed_journeys": 318,
+    "failed_requests": 0,
+    "temporal_status": "passed"
+  },
+  "gemini_generation_reports": 25,
+  "official_admitted": 0,
+  "network_calibration": {
+    "status": "two_reference_cases_verified",
+    "attempts": 10,
+    "captured": 9,
+    "official_admitted": 0,
+    "proof": "results/calibration-batches/20261123T020440392094Z/batch.json"
+  },
+  "network_llm_comparison": {
+    "status": "development_only",
+    "B0_top1": "0/2",
+    "B1_top1": "0/2",
+    "B2_top1": "0/2",
+    "B3_top1": "2/2",
+    "independent_grounding_review": "pending",
+    "proof": "results/evaluation/network-v041-b0-b3-development.json"
+  },
+  "benchmark_readiness": {
+    "status": "not_ready",
+    "proof": "results/evaluation/benchmark-readiness.json"
+  },
+  "ui_browser_refresh": {
+    "status": "verified_eight_tabs_and_blind_timing_waiting_state",
+    "verified_at": "2026-11-23T12:41:15.118926+00:00",
+    "human_forms_submitted": false
+  },
+  "prospective_collection": {
+    "status": "running",
+    "target": 200,
+    "journal": "results/dataset-collection/20261124T155554Z/journal.json",
+    "release": "results/collection-releases/20261124-prospective-v3/release.json",
+    "admission": "independent_review_pending",
+    "inherited_captures": 10,
+    "distinct_nominal_settings": 200
+  },
+  "human_study": {
+    "status": "precommitted_waiting_for_test_observations_and_reports",
+    "planned_tasks": 14,
+    "participants_recorded": 0,
+    "measured_sessions": 0,
+    "test_ground_truth_hidden": true,
+    "input_snapshots": "per-task context/report with SHA256",
+    "timing_summary_tool": "scripts/summarize_human_study.py"
+  }
+}

@@ -1,0 +1,11 @@
+7516192768
+7139581952
+low 0
+high 0
+max 30992841
+oom 6
+oom_kill 12
+oom_group_kill 6
+sock_throttled 8925
+some avg10=0.00 avg60=5.76 avg300=14.83 total=1019252291
+full avg10=0.00 avg60=4.67 avg300=11.79 total=817931784

@@ -1,0 +1,29 @@
+{
+  "checked_at": "2026-11-20T09:30:26.550203+00:00",
+  "images": [
+    {
+      "image": "qdrant/qdrant:v1.20.2",
+      "digest": "sha256:d277592721d2e3b73f9b797b53cf05e6a5bb2134f6d13fdbda4ca51782afbcac",
+      "platforms": [
+        {
+          "architecture": "amd64",
+          "os": "linux"
+        },
+        {
+          "architecture": "arm64",
+          "os": "linux"
+        },
+        {
+          "architecture": "unknown",
+          "os": "unknown"
+        },
+        {
+          "architecture": "unknown",
+          "os": "unknown"
+        }
+      ],
+      "arm64_native": true,
+      "status": "ok"
+    }
+  ]
+}

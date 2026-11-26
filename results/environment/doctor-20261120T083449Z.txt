@@ -1,0 +1,31 @@
+Fri Nov 20 08:34:49 UTC 2026
+ProductName:		macOS
+ProductVersion:		27.0.1
+BuildVersion:		26A434
+arm64
+sysctl: sysctl fmt -1 1024 1: Operation not permitted
+Filesystem      Size    Used   Avail Capacity iused ifree %iused  Mounted on
+/dev/disk3s5   228Gi    78Gi   119Gi    40%    706k  1.3G    0%   /System/Volumes/Data
+/usr/bin/git
+git version 2.39.2 (Apple Git-143)
+MISSING: docker
+/opt/homebrew/bin/minikube
+
+X Exiting due to HOST_HOME_MKDIR: Error creating minikube directory: mkdir /Users/cloudino/.minikube: operation not permitted
+* 
+╭────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│                                                                                                                            │
+│    * If the above advice does not help, please let us know:                                                                │
+│      https://github.com/kubernetes/minikube/issues/new/choose                                                              │
+│                                                                                                                            │
+│    * Please run `minikube logs --file=logs.txt` and attach logs.txt to the GitHub issue.                                   │
+│    * Please also attach the following file to the GitHub issue:                                                            │
+│    * - /var/folders/mg/0r495bq10rndg3_04366q96h0000gn/T/minikube_version_7a02de8485bdef1e78b1fcdec952af868d2a0936_0.log    │
+│                                                                                                                            │
+╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+
+/opt/homebrew/bin/kubectl
+Client Version: v1.37.1
+Kustomize Version: v5.8.1
+/opt/homebrew/bin/helm
+v4.3.1+gc0d08d0

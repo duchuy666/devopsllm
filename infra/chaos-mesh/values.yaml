@@ -1,0 +1,29 @@
+clusterScoped: false
+controllerManager:
+  replicaCount: 1
+  leaderElection:
+    enabled: false
+  targetNamespace: sock-shop
+  enableFilterNamespace: true
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 300m
+      memory: 256Mi
+chaosDaemon:
+  runtime: containerd
+  socketPath: /run/containerd/containerd.sock
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 300m
+      memory: 256Mi
+dashboard:
+  create: false
+dnsServer:
+  create: false
+  targetNamespace: sock-shop

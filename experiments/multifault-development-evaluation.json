@@ -1,0 +1,81 @@
+{
+  "dataset_role": "development_pilot",
+  "modes": [
+    "B0",
+    "B1",
+    "B2",
+    "B3"
+  ],
+  "cases": [
+    {
+      "case_id": "CANDIDATE-20261122T031320436780-S0004",
+      "context_id": "CTX-8f385b6a07071d0d",
+      "admission_status": "reviewed_for_development_scoring",
+      "split": "reference",
+      "expected": {
+        "target": "payment",
+        "fault_type": "Resource Exhaustion"
+      },
+      "reports": {
+        "B0": "results/baselines/b0-rules-0.1/CTX-8f385b6a07071d0d/B0/result.json",
+        "B1": "results/diagnoses/CTX-8f385b6a07071d0d/B1/result.json",
+        "B2": "results/diagnoses/CTX-8f385b6a07071d0d/B2/result.json",
+        "B3": "results/diagnoses/CTX-8f385b6a07071d0d/B3/result.json"
+      }
+    },
+    {
+      "case_id": "CANDIDATE-20261122T055258324101-S0078",
+      "context_id": "CTX-f750400084273882",
+      "admission_status": "reviewed_for_development_scoring",
+      "split": "reference",
+      "expected": {
+        "target": [
+          "orders",
+          "shipping"
+        ],
+        "fault_type": "Network Delay / Packet Loss"
+      },
+      "reports": {
+        "B0": "results/baselines/b0-rules-0.1/CTX-f750400084273882/B0/result.json",
+        "B1": "results/diagnoses/CTX-f750400084273882/B1/result.json",
+        "B2": "results/diagnoses/CTX-f750400084273882/B2/result.json",
+        "B3": "results/diagnoses/CTX-f750400084273882/B3/result.json"
+      }
+    },
+    {
+      "case_id": "CANDIDATE-20261122T055630561438-S0071",
+      "context_id": "CTX-55900040e696d704",
+      "admission_status": "reviewed_for_development_scoring",
+      "split": "reference",
+      "expected": {
+        "target": [
+          "front-end",
+          "carts"
+        ],
+        "fault_type": "Network Delay / Packet Loss"
+      },
+      "reports": {
+        "B0": "results/baselines/b0-rules-0.1/CTX-55900040e696d704/B0/result.json",
+        "B1": "results/diagnoses/CTX-55900040e696d704/B1/result.json",
+        "B2": "results/diagnoses/CTX-55900040e696d704/B2/result.json",
+        "B3": "results/diagnoses/CTX-55900040e696d704/B3/result.json"
+      }
+    },
+    {
+      "case_id": "CANDIDATE-20261122T032359740841-S0135",
+      "context_id": "CTX-190e2e42dbc74c04",
+      "admission_status": "reviewed_for_development_scoring",
+      "split": "reference",
+      "expected": {
+        "target": "user",
+        "fault_type": "Pod Failure"
+      },
+      "reports": {
+        "B0": "results/baselines/b0-rules-0.1/CTX-190e2e42dbc74c04/B0/result.json",
+        "B1": "results/diagnoses/CTX-190e2e42dbc74c04/B1/result.json",
+        "B2": "results/diagnoses/CTX-190e2e42dbc74c04/B2/result.json",
+        "B3": "results/diagnoses/CTX-190e2e42dbc74c04/B3/result.json"
+      }
+    }
+  ]
+}

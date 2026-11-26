@@ -1,0 +1,17 @@
+{
+  "source": "https://aistudio.google.com/docs/pricing",
+  "verified_on": "2026-11-20",
+  "valid_through": "2026-12-31",
+  "tier": "paid_standard_equivalent",
+  "billing_verified": false,
+  "models": {
+    "gemini-3.8-flash": {
+      "input_usd_per_million": 0.75,
+      "cached_input_usd_per_million": 0.075,
+      "output_including_thinking_usd_per_million": 3.75
+    },
+    "gemini-embedding-001": {
+      "input_usd_per_million": 0.15
+    }
+  }
+}

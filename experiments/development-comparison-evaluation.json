@@ -1,0 +1,45 @@
+{
+  "dataset_role": "development_pilot",
+  "modes": [
+    "B1",
+    "B2",
+    "B3"
+  ],
+  "note": "Two illustrative CPU development cases across different environment/context versions. Descriptive counts only; not a frozen test benchmark. Do not include the earlier duplicate B3 generation as a third case.",
+  "cases": [
+    {
+      "case_id": "CPU-COMPARISON-ONE",
+      "context_id": "CTX-0043135a9e0a5209",
+      "admission_status": "reviewed_for_development_scoring",
+      "split": "development",
+      "expected": {
+        "target": "payment",
+        "fault_type": "Resource Exhaustion"
+      },
+      "reports": {
+        "B1": "../results/diagnoses/CTX-0043135a9e0a5209/B1/result.json",
+        "B2": "../results/diagnoses/CTX-0043135a9e0a5209/B2/result.json",
+        "B3": "../results/diagnoses/CTX-0043135a9e0a5209/B3/result.json"
+      },
+      "context_version": "0.2.0",
+      "environment": "archived_legacy_emulated_cpu_pilot"
+    },
+    {
+      "case_id": "S0011-SHIPPING-CALIBRATION",
+      "context_id": "CTX-f7afb08ddfe940b4",
+      "admission_status": "reviewed_for_development_scoring",
+      "split": "reference_calibration",
+      "expected": {
+        "target": "shipping",
+        "fault_type": "Resource Exhaustion"
+      },
+      "context_version": "0.3.0",
+      "environment": "native_go3_mixed_remaining_emulation_node7GiB",
+      "reports": {
+        "B1": "../results/diagnoses/CTX-f7afb08ddfe940b4/B1/result.json",
+        "B2": "../results/diagnoses/CTX-f7afb08ddfe940b4/B2/result.json",
+        "B3": "../results/diagnoses/CTX-f7afb08ddfe940b4/B3/result.json"
+      }
+    }
+  ]
+}

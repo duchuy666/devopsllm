@@ -1,0 +1,12 @@
+{
+  "version": "db-cache-poststart-v1",
+  "enabled": true,
+  "status": "poststart_rollout_and_restore_verified",
+  "cache_mib": 128,
+  "targets": [
+    "user-db",
+    "carts-db",
+    "orders-db"
+  ],
+  "activation_requirement": "Back up databases, quiesce writers, verify hook tools and test restore before rollout."
+}

@@ -1,0 +1,1895 @@
+{
+    "apiVersion": "v1",
+    "items": [
+        {
+            "apiVersion": "apps/v1",
+            "kind": "Deployment",
+            "metadata": {
+                "annotations": {
+                    "deployment.kubernetes.io/revision": "3",
+                    "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"apps/v1\",\"kind\":\"Deployment\",\"metadata\":{\"annotations\":{\"thesis.shyn/execution-mode\":\"mixed-arm64-amd64-emulation\"},\"labels\":{\"name\":\"carts\"},\"name\":\"carts\",\"namespace\":\"sock-shop\"},\"spec\":{\"replicas\":1,\"selector\":{\"matchLabels\":{\"name\":\"carts\"}},\"strategy\":{\"type\":\"Recreate\"},\"template\":{\"metadata\":{\"labels\":{\"name\":\"carts\"}},\"spec\":{\"containers\":[{\"env\":[{\"name\":\"JAVA_OPTS\",\"value\":\"-Xms64m -Xmx128m -XX:+UseG1GC -Djava.security.egd=file:/dev/urandom -Dspring.zipkin.enabled=true -Dspring.zipkin.base-url=http://jaeger.monitoring.svc.cluster.local:9411 -Dspring.sleuth.sampler.percentage=1.0 -XX:TieredStopAtLevel=1\"}],\"image\":\"weaveworksdemos/carts@sha256:434d2f5a6e0e8beef1f253fe96f45b8437a703125fc003434c5282ecf8969a4f\",\"name\":\"carts\",\"ports\":[{\"containerPort\":80}],\"readinessProbe\":{\"failureThreshold\":3,\"httpGet\":{\"path\":\"/health\",\"port\":80},\"initialDelaySeconds\":10,\"periodSeconds\":5,\"timeoutSeconds\":3},\"resources\":{\"limits\":{\"cpu\":\"1000m\",\"memory\":\"500Mi\"},\"requests\":{\"cpu\":\"100m\",\"memory\":\"200Mi\"}},\"securityContext\":{\"capabilities\":{\"add\":[\"NET_BIND_SERVICE\"],\"drop\":[\"all\"]},\"readOnlyRootFilesystem\":true,\"runAsNonRoot\":true,\"runAsUser\":10001},\"volumeMounts\":[{\"mountPath\":\"/tmp\",\"name\":\"tmp-volume\"}]}],\"nodeSelector\":{\"kubernetes.io/os\":\"linux\"},\"volumes\":[{\"emptyDir\":{\"medium\":\"Memory\"},\"name\":\"tmp-volume\"}]}}}}\n",
+                    "thesis.shyn/execution-mode": "mixed-arm64-amd64-emulation"
+                },
+                "creationTimestamp": "2026-11-20T08:43:12Z",
+                "generation": 3,
+                "labels": {
+                    "name": "carts"
+                },
+                "name": "carts",
+                "namespace": "sock-shop",
+                "resourceVersion": "2812",
+                "uid": "91d4283b-c30e-4d1b-ac2b-bbd194dcce0c"
+            },
+            "spec": {
+                "progressDeadlineSeconds": 600,
+                "replicas": 1,
+                "revisionHistoryLimit": 10,
+                "selector": {
+                    "matchLabels": {
+                        "name": "carts"
+                    }
+                },
+                "strategy": {
+                    "type": "Recreate"
+                },
+                "template": {
+                    "metadata": {
+                        "labels": {
+                            "name": "carts"
+                        }
+                    },
+                    "spec": {
+                        "containers": [
+                            {
+                                "env": [
+                                    {
+                                        "name": "JAVA_OPTS",
+                                        "value": "-Xms64m -Xmx128m -XX:+UseG1GC -Djava.security.egd=file:/dev/urandom -Dspring.zipkin.enabled=true -Dspring.zipkin.base-url=http://jaeger.monitoring.svc.cluster.local:9411 -Dspring.sleuth.sampler.percentage=1.0 -XX:TieredStopAtLevel=1"
+                                    }
+                                ],
+                                "image": "weaveworksdemos/carts@sha256:434d2f5a6e0e8beef1f253fe96f45b8437a703125fc003434c5282ecf8969a4f",
+                                "imagePullPolicy": "IfNotPresent",
+                                "name": "carts",
+                                "ports": [
+                                    {
+                                        "containerPort": 80,
+                                        "protocol": "TCP"
+                                    }
+                                ],
+                                "readinessProbe": {
+                                    "failureThreshold": 3,
+                                    "httpGet": {
+                                        "path": "/health",
+                                        "port": 80,
+                                        "scheme": "HTTP"
+                                    },
+                                    "initialDelaySeconds": 10,
+                                    "periodSeconds": 5,
+                                    "successThreshold": 1,
+                                    "timeoutSeconds": 3
+                                },
+                                "resources": {
+                                    "limits": {
+                                        "cpu": "1",
+                                        "memory": "500Mi"
+                                    },
+                                    "requests": {
+                                        "cpu": "100m",
+                                        "memory": "200Mi"
+                                    }
+                                },
+                                "securityContext": {
+                                    "capabilities": {
+                                        "add": [
+                                            "NET_BIND_SERVICE"
+                                        ],
+                                        "drop": [
+                                            "all"
+                                        ]
+                                    },
+                                    "readOnlyRootFilesystem": true,
+                                    "runAsNonRoot": true,
+                                    "runAsUser": 10001
+                                },
+                                "terminationMessagePath": "/dev/termination-log",
+                                "terminationMessagePolicy": "File",
+                                "volumeMounts": [
+                                    {
+                                        "mountPath": "/tmp",
+                                        "name": "tmp-volume"
+                                    }
+                                ]
+                            }
+                        ],
+                        "dnsPolicy": "ClusterFirst",
+                        "nodeSelector": {
+                            "kubernetes.io/os": "linux"
+                        },
+                        "restartPolicy": "Always",
+                        "schedulerName": "default-scheduler",
+                        "securityContext": {},
+                        "terminationGracePeriodSeconds": 30,
+                        "volumes": [
+                            {
+                                "emptyDir": {
+                                    "medium": "Memory"
+                                },
+                                "name": "tmp-volume"
+                            }
+                        ]
+                    }
+                }
+            },
+            "status": {
+                "availableReplicas": 1,
+                "conditions": [
+                    {
+                        "lastTransitionTime": "2026-11-20T09:04:45Z",
+                        "lastUpdateTime": "2026-11-20T09:04:45Z",
+                        "message": "Deployment has minimum availability.",
+                        "reason": "MinimumReplicasAvailable",
+                        "status": "True",
+                        "type": "Available"
+                    },
+                    {
+                        "lastTransitionTime": "2026-11-20T08:43:12Z",
+                        "lastUpdateTime": "2026-11-20T09:04:45Z",
+                        "message": "ReplicaSet \"carts-68c5f7858d\" has successfully progressed.",
+                        "reason": "NewReplicaSetAvailable",
+                        "status": "True",
+                        "type": "Progressing"
+                    }
+                ],
+                "observedGeneration": 3,
+                "readyReplicas": 1,
+                "replicas": 1,
+                "terminatingReplicas": 0,
+                "updatedReplicas": 1
+            }
+        },
+        {
+            "apiVersion": "apps/v1",
+            "kind": "Deployment",
+            "metadata": {
+                "annotations": {
+                    "deployment.kubernetes.io/revision": "1",
+                    "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"apps/v1\",\"kind\":\"Deployment\",\"metadata\":{\"annotations\":{\"thesis.shyn/execution-mode\":\"mixed-arm64-amd64-emulation\"},\"labels\":{\"name\":\"carts-db\"},\"name\":\"carts-db\",\"namespace\":\"sock-shop\"},\"spec\":{\"replicas\":1,\"selector\":{\"matchLabels\":{\"name\":\"carts-db\"}},\"strategy\":{\"type\":\"Recreate\"},\"template\":{\"metadata\":{\"labels\":{\"name\":\"carts-db\"}},\"spec\":{\"containers\":[{\"image\":\"mongo@sha256:d314f7eca9d3f825d091b77c40d2f3c9d6fff4de88dde2962527353476f107ba\",\"name\":\"carts-db\",\"ports\":[{\"containerPort\":27017,\"name\":\"mongo\"}],\"resources\":{\"limits\":{\"cpu\":\"500m\",\"memory\":\"512Mi\"},\"requests\":{\"cpu\":\"50m\",\"memory\":\"64Mi\"}},\"securityContext\":{\"capabilities\":{\"add\":[\"CHOWN\",\"SETGID\",\"SETUID\"],\"drop\":[\"all\"]},\"readOnlyRootFilesystem\":true},\"volumeMounts\":[{\"mountPath\":\"/tmp\",\"name\":\"tmp-volume\"}]}],\"nodeSelector\":{\"kubernetes.io/os\":\"linux\"},\"volumes\":[{\"emptyDir\":{\"medium\":\"Memory\"},\"name\":\"tmp-volume\"}]}}}}\n",
+                    "thesis.shyn/execution-mode": "mixed-arm64-amd64-emulation"
+                },
+                "creationTimestamp": "2026-11-20T08:43:12Z",
+                "generation": 2,
+                "labels": {
+                    "name": "carts-db"
+                },
+                "name": "carts-db",
+                "namespace": "sock-shop",
+                "resourceVersion": "2394",
+                "uid": "cc7ed006-dd94-430a-ab44-ea3dc5184ab7"
+            },
+            "spec": {
+                "progressDeadlineSeconds": 600,
+                "replicas": 1,
+                "revisionHistoryLimit": 10,
+                "selector": {
+                    "matchLabels": {
+                        "name": "carts-db"
+                    }
+                },
+                "strategy": {
+                    "type": "Recreate"
+                },
+                "template": {
+                    "metadata": {
+                        "labels": {
+                            "name": "carts-db"
+                        }
+                    },
+                    "spec": {
+                        "containers": [
+                            {
+                                "image": "mongo@sha256:d314f7eca9d3f825d091b77c40d2f3c9d6fff4de88dde2962527353476f107ba",
+                                "imagePullPolicy": "IfNotPresent",
+                                "name": "carts-db",
+                                "ports": [
+                                    {
+                                        "containerPort": 27017,
+                                        "name": "mongo",
+                                        "protocol": "TCP"
+                                    }
+                                ],
+                                "resources": {
+                                    "limits": {
+                                        "cpu": "500m",
+                                        "memory": "512Mi"
+                                    },
+                                    "requests": {
+                                        "cpu": "50m",
+                                        "memory": "64Mi"
+                                    }
+                                },
+                                "securityContext": {
+                                    "capabilities": {
+                                        "add": [
+                                            "CHOWN",
+                                            "SETGID",
+                                            "SETUID"
+                                        ],
+                                        "drop": [
+                                            "all"
+                                        ]
+                                    },
+                                    "readOnlyRootFilesystem": true
+                                },
+                                "terminationMessagePath": "/dev/termination-log",
+                                "terminationMessagePolicy": "File",
+                                "volumeMounts": [
+                                    {
+                                        "mountPath": "/tmp",
+                                        "name": "tmp-volume"
+                                    }
+                                ]
+                            }
+                        ],
+                        "dnsPolicy": "ClusterFirst",
+                        "nodeSelector": {
+                            "kubernetes.io/os": "linux"
+                        },
+                        "restartPolicy": "Always",
+                        "schedulerName": "default-scheduler",
+                        "securityContext": {},
+                        "terminationGracePeriodSeconds": 30,
+                        "volumes": [
+                            {
+                                "emptyDir": {
+                                    "medium": "Memory"
+                                },
+                                "name": "tmp-volume"
+                            }
+                        ]
+                    }
+                }
+            },
+            "status": {
+                "availableReplicas": 1,
+                "conditions": [
+                    {
+                        "lastTransitionTime": "2026-11-20T08:43:24Z",
+                        "lastUpdateTime": "2026-11-20T08:43:24Z",
+                        "message": "Deployment has minimum availability.",
+                        "reason": "MinimumReplicasAvailable",
+                        "status": "True",
+                        "type": "Available"
+                    },
+                    {
+                        "lastTransitionTime": "2026-11-20T08:43:12Z",
+                        "lastUpdateTime": "2026-11-20T08:43:24Z",
+                        "message": "ReplicaSet \"carts-db-595877897\" has successfully progressed.",
+                        "reason": "NewReplicaSetAvailable",
+                        "status": "True",
+                        "type": "Progressing"
+                    }
+                ],
+                "observedGeneration": 2,
+                "readyReplicas": 1,
+                "replicas": 1,
+                "terminatingReplicas": 0,
+                "updatedReplicas": 1
+            }
+        },
+        {
+            "apiVersion": "apps/v1",
+            "kind": "Deployment",
+            "metadata": {
+                "annotations": {
+                    "deployment.kubernetes.io/revision": "4",
+                    "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"apps/v1\",\"kind\":\"Deployment\",\"metadata\":{\"annotations\":{\"thesis.shyn/execution-mode\":\"mixed-arm64-amd64-emulation\"},\"labels\":{\"name\":\"catalogue\"},\"name\":\"catalogue\",\"namespace\":\"sock-shop\"},\"spec\":{\"replicas\":1,\"selector\":{\"matchLabels\":{\"name\":\"catalogue\"}},\"strategy\":{\"type\":\"Recreate\"},\"template\":{\"metadata\":{\"labels\":{\"name\":\"catalogue\"}},\"spec\":{\"containers\":[{\"args\":[\"-port=80\",\"-zipkin=http://jaeger.monitoring.svc.cluster.local:9411/api/v1/spans\"],\"command\":[\"/app\"],\"image\":\"weaveworksdemos/catalogue@sha256:0147a65b7116569439eefb1a6dbed455fe022464ef70e0c3cab75bc4a226b39b\",\"livenessProbe\":{\"failureThreshold\":6,\"httpGet\":{\"path\":\"/health\",\"port\":80},\"initialDelaySeconds\":300,\"periodSeconds\":10,\"timeoutSeconds\":3},\"name\":\"catalogue\",\"ports\":[{\"containerPort\":80}],\"readinessProbe\":{\"httpGet\":{\"path\":\"/health\",\"port\":80},\"initialDelaySeconds\":5,\"periodSeconds\":5,\"timeoutSeconds\":3},\"resources\":{\"limits\":{\"cpu\":\"500m\",\"memory\":\"384Mi\"},\"requests\":{\"cpu\":\"100m\",\"memory\":\"100Mi\"}},\"securityContext\":{\"capabilities\":{\"add\":[\"NET_BIND_SERVICE\"],\"drop\":[\"all\"]},\"readOnlyRootFilesystem\":true,\"runAsNonRoot\":true,\"runAsUser\":10001}}],\"nodeSelector\":{\"kubernetes.io/os\":\"linux\"}}}}}\n",
+                    "thesis.shyn/execution-mode": "mixed-arm64-amd64-emulation"
+                },
+                "creationTimestamp": "2026-11-20T08:43:12Z",
+                "generation": 4,
+                "labels": {
+                    "name": "catalogue"
+                },
+                "name": "catalogue",
+                "namespace": "sock-shop",
+                "resourceVersion": "99674",
+                "uid": "74ed672c-e8fb-404a-9fa5-616319624878"
+            },
+            "spec": {
+                "progressDeadlineSeconds": 600,
+                "replicas": 1,
+                "revisionHistoryLimit": 10,
+                "selector": {
+                    "matchLabels": {
+                        "name": "catalogue"
+                    }
+                },
+                "strategy": {
+                    "type": "Recreate"
+                },
+                "template": {
+                    "metadata": {
+                        "labels": {
+                            "name": "catalogue"
+                        }
+                    },
+                    "spec": {
+                        "containers": [
+                            {
+                                "args": [
+                                    "-port=80",
+                                    "-zipkin=http://jaeger.monitoring.svc.cluster.local:9411/api/v1/spans"
+                                ],
+                                "command": [
+                                    "/app"
+                                ],
+                                "image": "weaveworksdemos/catalogue@sha256:0147a65b7116569439eefb1a6dbed455fe022464ef70e0c3cab75bc4a226b39b",
+                                "imagePullPolicy": "IfNotPresent",
+                                "livenessProbe": {
+                                    "failureThreshold": 6,
+                                    "httpGet": {
+                                        "path": "/health",
+                                        "port": 80,
+                                        "scheme": "HTTP"
+                                    },
+                                    "initialDelaySeconds": 300,
+                                    "periodSeconds": 10,
+                                    "successThreshold": 1,
+                                    "timeoutSeconds": 3
+                                },
+                                "name": "catalogue",
+                                "ports": [
+                                    {
+                                        "containerPort": 80,
+                                        "protocol": "TCP"
+                                    }
+                                ],
+                                "readinessProbe": {
+                                    "failureThreshold": 3,
+                                    "httpGet": {
+                                        "path": "/health",
+                                        "port": 80,
+                                        "scheme": "HTTP"
+                                    },
+                                    "initialDelaySeconds": 5,
+                                    "periodSeconds": 5,
+                                    "successThreshold": 1,
+                                    "timeoutSeconds": 3
+                                },
+                                "resources": {
+                                    "limits": {
+                                        "cpu": "500m",
+                                        "memory": "384Mi"
+                                    },
+                                    "requests": {
+                                        "cpu": "100m",
+                                        "memory": "100Mi"
+                                    }
+                                },
+                                "securityContext": {
+                                    "capabilities": {
+                                        "add": [
+                                            "NET_BIND_SERVICE"
+                                        ],
+                                        "drop": [
+                                            "all"
+                                        ]
+                                    },
+                                    "readOnlyRootFilesystem": true,
+                                    "runAsNonRoot": true,
+                                    "runAsUser": 10001
+                                },
+                                "terminationMessagePath": "/dev/termination-log",
+                                "terminationMessagePolicy": "File"
+                            }
+                        ],
+                        "dnsPolicy": "ClusterFirst",
+                        "nodeSelector": {
+                            "kubernetes.io/os": "linux"
+                        },
+                        "restartPolicy": "Always",
+                        "schedulerName": "default-scheduler",
+                        "securityContext": {},
+                        "terminationGracePeriodSeconds": 30
+                    }
+                }
+            },
+            "status": {
+                "availableReplicas": 1,
+                "conditions": [
+                    {
+                        "lastTransitionTime": "2026-11-20T08:43:12Z",
+                        "lastUpdateTime": "2026-11-20T23:55:45Z",
+                        "message": "ReplicaSet \"catalogue-84fc5779db\" has successfully progressed.",
+                        "reason": "NewReplicaSetAvailable",
+                        "status": "True",
+                        "type": "Progressing"
+                    },
+                    {
+                        "lastTransitionTime": "2026-11-21T22:27:58Z",
+                        "lastUpdateTime": "2026-11-21T22:27:58Z",
+                        "message": "Deployment has minimum availability.",
+                        "reason": "MinimumReplicasAvailable",
+                        "status": "True",
+                        "type": "Available"
+                    }
+                ],
+                "observedGeneration": 4,
+                "readyReplicas": 1,
+                "replicas": 1,
+                "terminatingReplicas": 0,
+                "updatedReplicas": 1
+            }
+        },
+        {
+            "apiVersion": "apps/v1",
+            "kind": "Deployment",
+            "metadata": {
+                "annotations": {
+                    "deployment.kubernetes.io/revision": "1",
+                    "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"apps/v1\",\"kind\":\"Deployment\",\"metadata\":{\"annotations\":{\"thesis.shyn/execution-mode\":\"mixed-arm64-amd64-emulation\"},\"labels\":{\"name\":\"catalogue-db\"},\"name\":\"catalogue-db\",\"namespace\":\"sock-shop\"},\"spec\":{\"replicas\":1,\"selector\":{\"matchLabels\":{\"name\":\"catalogue-db\"}},\"strategy\":{\"type\":\"Recreate\"},\"template\":{\"metadata\":{\"labels\":{\"name\":\"catalogue-db\"}},\"spec\":{\"containers\":[{\"env\":[{\"name\":\"MYSQL_ROOT_PASSWORD\",\"value\":\"fake_password\"},{\"name\":\"MYSQL_DATABASE\",\"value\":\"socksdb\"}],\"image\":\"weaveworksdemos/catalogue-db@sha256:7ba74ec9adf88f6625b8d85d3323d1ee5232b39877e1590021ea485cf9457251\",\"name\":\"catalogue-db\",\"ports\":[{\"containerPort\":3306,\"name\":\"mysql\"}],\"resources\":{\"limits\":{\"cpu\":\"500m\",\"memory\":\"512Mi\"},\"requests\":{\"cpu\":\"50m\",\"memory\":\"64Mi\"}}}],\"nodeSelector\":{\"kubernetes.io/os\":\"linux\"}}}}}\n",
+                    "thesis.shyn/execution-mode": "mixed-arm64-amd64-emulation"
+                },
+                "creationTimestamp": "2026-11-20T08:43:12Z",
+                "generation": 2,
+                "labels": {
+                    "name": "catalogue-db"
+                },
+                "name": "catalogue-db",
+                "namespace": "sock-shop",
+                "resourceVersion": "74450",
+                "uid": "b6d0249a-2f50-4e7d-a515-557d0a4d6ec2"
+            },
+            "spec": {
+                "progressDeadlineSeconds": 600,
+                "replicas": 1,
+                "revisionHistoryLimit": 10,
+                "selector": {
+                    "matchLabels": {
+                        "name": "catalogue-db"
+                    }
+                },
+                "strategy": {
+                    "type": "Recreate"
+                },
+                "template": {
+                    "metadata": {
+                        "labels": {
+                            "name": "catalogue-db"
+                        }
+                    },
+                    "spec": {
+                        "containers": [
+                            {
+                                "env": [
+                                    {
+                                        "name": "MYSQL_ROOT_PASSWORD",
+                                        "value": "fake_password"
+                                    },
+                                    {
+                                        "name": "MYSQL_DATABASE",
+                                        "value": "socksdb"
+                                    }
+                                ],
+                                "image": "weaveworksdemos/catalogue-db@sha256:7ba74ec9adf88f6625b8d85d3323d1ee5232b39877e1590021ea485cf9457251",
+                                "imagePullPolicy": "IfNotPresent",
+                                "name": "catalogue-db",
+                                "ports": [
+                                    {
+                                        "containerPort": 3306,
+                                        "name": "mysql",
+                                        "protocol": "TCP"
+                                    }
+                                ],
+                                "resources": {
+                                    "limits": {
+                                        "cpu": "500m",
+                                        "memory": "512Mi"
+                                    },
+                                    "requests": {
+                                        "cpu": "50m",
+                                        "memory": "64Mi"
+                                    }
+                                },
+                                "terminationMessagePath": "/dev/termination-log",
+                                "terminationMessagePolicy": "File"
+                            }
+                        ],
+                        "dnsPolicy": "ClusterFirst",
+                        "nodeSelector": {
+                            "kubernetes.io/os": "linux"
+                        },
+                        "restartPolicy": "Always",
+                        "schedulerName": "default-scheduler",
+                        "securityContext": {},
+                        "terminationGracePeriodSeconds": 30
+                    }
+                }
+            },
+            "status": {
+                "availableReplicas": 1,
+                "conditions": [
+                    {
+                        "lastTransitionTime": "2026-11-20T08:43:12Z",
+                        "lastUpdateTime": "2026-11-20T08:43:47Z",
+                        "message": "ReplicaSet \"catalogue-db-85f89d9d55\" has successfully progressed.",
+                        "reason": "NewReplicaSetAvailable",
+                        "status": "True",
+                        "type": "Progressing"
+                    },
+                    {
+                        "lastTransitionTime": "2026-11-21T14:45:36Z",
+                        "lastUpdateTime": "2026-11-21T14:45:36Z",
+                        "message": "Deployment has minimum availability.",
+                        "reason": "MinimumReplicasAvailable",
+                        "status": "True",
+                        "type": "Available"
+                    }
+                ],
+                "observedGeneration": 2,
+                "readyReplicas": 1,
+                "replicas": 1,
+                "terminatingReplicas": 0,
+                "updatedReplicas": 1
+            }
+        },
+        {
+            "apiVersion": "apps/v1",
+            "kind": "Deployment",
+            "metadata": {
+                "annotations": {
+                    "deployment.kubernetes.io/revision": "2",
+                    "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"apps/v1\",\"kind\":\"Deployment\",\"metadata\":{\"annotations\":{\"thesis.shyn/execution-mode\":\"mixed-arm64-amd64-emulation\"},\"name\":\"front-end\",\"namespace\":\"sock-shop\"},\"spec\":{\"replicas\":1,\"selector\":{\"matchLabels\":{\"name\":\"front-end\"}},\"strategy\":{\"type\":\"Recreate\"},\"template\":{\"metadata\":{\"labels\":{\"name\":\"front-end\"}},\"spec\":{\"containers\":[{\"env\":[{\"name\":\"SESSION_REDIS\",\"value\":\"true\"}],\"image\":\"weaveworksdemos/front-end@sha256:26a2d9b6b291dee2dca32fca3f5bff6c2fa07bb5954359afcbc8001cc70eac71\",\"livenessProbe\":{\"failureThreshold\":6,\"httpGet\":{\"path\":\"/\",\"port\":8079},\"initialDelaySeconds\":300,\"periodSeconds\":10,\"timeoutSeconds\":3},\"name\":\"front-end\",\"ports\":[{\"containerPort\":8079}],\"readinessProbe\":{\"httpGet\":{\"path\":\"/\",\"port\":8079},\"initialDelaySeconds\":5,\"periodSeconds\":5,\"timeoutSeconds\":3},\"resources\":{\"limits\":{\"cpu\":\"300m\",\"memory\":\"1000Mi\"},\"requests\":{\"cpu\":\"100m\",\"memory\":\"300Mi\"}},\"securityContext\":{\"capabilities\":{\"drop\":[\"all\"]},\"readOnlyRootFilesystem\":true,\"runAsNonRoot\":true,\"runAsUser\":10001}}],\"nodeSelector\":{\"kubernetes.io/os\":\"linux\"}}}}}\n",
+                    "thesis.shyn/execution-mode": "mixed-arm64-amd64-emulation"
+                },
+                "creationTimestamp": "2026-11-20T08:43:12Z",
+                "generation": 3,
+                "name": "front-end",
+                "namespace": "sock-shop",
+                "resourceVersion": "20154",
+                "uid": "cb8c2941-6171-4a02-80c1-0a391ad529f7"
+            },
+            "spec": {
+                "progressDeadlineSeconds": 600,
+                "replicas": 1,
+                "revisionHistoryLimit": 10,
+                "selector": {
+                    "matchLabels": {
+                        "name": "front-end"
+                    }
+                },
+                "strategy": {
+                    "type": "Recreate"
+                },
+                "template": {
+                    "metadata": {
+                        "labels": {
+                            "name": "front-end"
+                        }
+                    },
+                    "spec": {
+                        "containers": [
+                            {
+                                "env": [
+                                    {
+                                        "name": "SESSION_REDIS",
+                                        "value": "true"
+                                    }
+                                ],
+                                "image": "weaveworksdemos/front-end@sha256:26a2d9b6b291dee2dca32fca3f5bff6c2fa07bb5954359afcbc8001cc70eac71",
+                                "imagePullPolicy": "IfNotPresent",
+                                "livenessProbe": {
+                                    "failureThreshold": 6,
+                                    "httpGet": {
+                                        "path": "/",
+                                        "port": 8079,
+                                        "scheme": "HTTP"
+                                    },
+                                    "initialDelaySeconds": 300,
+                                    "periodSeconds": 10,
+                                    "successThreshold": 1,
+                                    "timeoutSeconds": 3
+                                },
+                                "name": "front-end",
+                                "ports": [
+                                    {
+                                        "containerPort": 8079,
+                                        "protocol": "TCP"
+                                    }
+                                ],
+                                "readinessProbe": {
+                                    "failureThreshold": 3,
+                                    "httpGet": {
+                                        "path": "/",
+                                        "port": 8079,
+                                        "scheme": "HTTP"
+                                    },
+                                    "initialDelaySeconds": 5,
+                                    "periodSeconds": 5,
+                                    "successThreshold": 1,
+                                    "timeoutSeconds": 3
+                                },
+                                "resources": {
+                                    "limits": {
+                                        "cpu": "300m",
+                                        "memory": "1000Mi"
+                                    },
+                                    "requests": {
+                                        "cpu": "100m",
+                                        "memory": "300Mi"
+                                    }
+                                },
+                                "securityContext": {
+                                    "capabilities": {
+                                        "drop": [
+                                            "all"
+                                        ]
+                                    },
+                                    "readOnlyRootFilesystem": true,
+                                    "runAsNonRoot": true,
+                                    "runAsUser": 10001
+                                },
+                                "terminationMessagePath": "/dev/termination-log",
+                                "terminationMessagePolicy": "File"
+                            }
+                        ],
+                        "dnsPolicy": "ClusterFirst",
+                        "nodeSelector": {
+                            "kubernetes.io/os": "linux"
+                        },
+                        "restartPolicy": "Always",
+                        "schedulerName": "default-scheduler",
+                        "securityContext": {},
+                        "terminationGracePeriodSeconds": 30
+                    }
+                }
+            },
+            "status": {
+                "availableReplicas": 1,
+                "conditions": [
+                    {
+                        "lastTransitionTime": "2026-11-20T14:30:15Z",
+                        "lastUpdateTime": "2026-11-20T14:30:15Z",
+                        "message": "Deployment has minimum availability.",
+                        "reason": "MinimumReplicasAvailable",
+                        "status": "True",
+                        "type": "Available"
+                    },
+                    {
+                        "lastTransitionTime": "2026-11-20T08:43:12Z",
+                        "lastUpdateTime": "2026-11-20T14:30:15Z",
+                        "message": "ReplicaSet \"front-end-6fbf7c6bbd\" has successfully progressed.",
+                        "reason": "NewReplicaSetAvailable",
+                        "status": "True",
+                        "type": "Progressing"
+                    }
+                ],
+                "observedGeneration": 3,
+                "readyReplicas": 1,
+                "replicas": 1,
+                "terminatingReplicas": 0,
+                "updatedReplicas": 1
+            }
+        },
+        {
+            "apiVersion": "apps/v1",
+            "kind": "Deployment",
+            "metadata": {
+                "annotations": {
+                    "deployment.kubernetes.io/revision": "3",
+                    "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"apps/v1\",\"kind\":\"Deployment\",\"metadata\":{\"annotations\":{\"thesis.shyn/execution-mode\":\"mixed-arm64-amd64-emulation\"},\"labels\":{\"name\":\"orders\"},\"name\":\"orders\",\"namespace\":\"sock-shop\"},\"spec\":{\"replicas\":1,\"selector\":{\"matchLabels\":{\"name\":\"orders\"}},\"strategy\":{\"type\":\"Recreate\"},\"template\":{\"metadata\":{\"labels\":{\"name\":\"orders\"}},\"spec\":{\"containers\":[{\"env\":[{\"name\":\"JAVA_OPTS\",\"value\":\"-Xms64m -Xmx128m -XX:+UseG1GC -Djava.security.egd=file:/dev/urandom -Dspring.zipkin.enabled=true -Dspring.zipkin.base-url=http://jaeger.monitoring.svc.cluster.local:9411 -Dspring.sleuth.sampler.percentage=1.0 -XX:TieredStopAtLevel=1\"}],\"image\":\"weaveworksdemos/orders@sha256:b622e40e83433baf6374f15e076b53893f79958640fc6667dff597622eff03b9\",\"name\":\"orders\",\"ports\":[{\"containerPort\":80}],\"readinessProbe\":{\"failureThreshold\":3,\"httpGet\":{\"path\":\"/health\",\"port\":80},\"initialDelaySeconds\":10,\"periodSeconds\":5,\"timeoutSeconds\":3},\"resources\":{\"limits\":{\"cpu\":\"1000m\",\"memory\":\"500Mi\"},\"requests\":{\"cpu\":\"100m\",\"memory\":\"300Mi\"}},\"securityContext\":{\"capabilities\":{\"add\":[\"NET_BIND_SERVICE\"],\"drop\":[\"all\"]},\"readOnlyRootFilesystem\":true,\"runAsNonRoot\":true,\"runAsUser\":10001},\"volumeMounts\":[{\"mountPath\":\"/tmp\",\"name\":\"tmp-volume\"}]}],\"nodeSelector\":{\"kubernetes.io/os\":\"linux\"},\"volumes\":[{\"emptyDir\":{\"medium\":\"Memory\"},\"name\":\"tmp-volume\"}]}}}}\n",
+                    "thesis.shyn/execution-mode": "mixed-arm64-amd64-emulation"
+                },
+                "creationTimestamp": "2026-11-20T08:43:12Z",
+                "generation": 3,
+                "labels": {
+                    "name": "orders"
+                },
+                "name": "orders",
+                "namespace": "sock-shop",
+                "resourceVersion": "2818",
+                "uid": "e5394141-83e5-4a63-aa1a-7ff651230189"
+            },
+            "spec": {
+                "progressDeadlineSeconds": 600,
+                "replicas": 1,
+                "revisionHistoryLimit": 10,
+                "selector": {
+                    "matchLabels": {
+                        "name": "orders"
+                    }
+                },
+                "strategy": {
+                    "type": "Recreate"
+                },
+                "template": {
+                    "metadata": {
+                        "labels": {
+                            "name": "orders"
+                        }
+                    },
+                    "spec": {
+                        "containers": [
+                            {
+                                "env": [
+                                    {
+                                        "name": "JAVA_OPTS",
+                                        "value": "-Xms64m -Xmx128m -XX:+UseG1GC -Djava.security.egd=file:/dev/urandom -Dspring.zipkin.enabled=true -Dspring.zipkin.base-url=http://jaeger.monitoring.svc.cluster.local:9411 -Dspring.sleuth.sampler.percentage=1.0 -XX:TieredStopAtLevel=1"
+                                    }
+                                ],
+                                "image": "weaveworksdemos/orders@sha256:b622e40e83433baf6374f15e076b53893f79958640fc6667dff597622eff03b9",
+                                "imagePullPolicy": "IfNotPresent",
+                                "name": "orders",
+                                "ports": [
+                                    {
+                                        "containerPort": 80,
+                                        "protocol": "TCP"
+                                    }
+                                ],
+                                "readinessProbe": {
+                                    "failureThreshold": 3,
+                                    "httpGet": {
+                                        "path": "/health",
+                                        "port": 80,
+                                        "scheme": "HTTP"
+                                    },
+                                    "initialDelaySeconds": 10,
+                                    "periodSeconds": 5,
+                                    "successThreshold": 1,
+                                    "timeoutSeconds": 3
+                                },
+                                "resources": {
+                                    "limits": {
+                                        "cpu": "1",
+                                        "memory": "500Mi"
+                                    },
+                                    "requests": {
+                                        "cpu": "100m",
+                                        "memory": "300Mi"
+                                    }
+                                },
+                                "securityContext": {
+                                    "capabilities": {
+                                        "add": [
+                                            "NET_BIND_SERVICE"
+                                        ],
+                                        "drop": [
+                                            "all"
+                                        ]
+                                    },
+                                    "readOnlyRootFilesystem": true,
+                                    "runAsNonRoot": true,
+                                    "runAsUser": 10001
+                                },
+                                "terminationMessagePath": "/dev/termination-log",
+                                "terminationMessagePolicy": "File",
+                                "volumeMounts": [
+                                    {
+                                        "mountPath": "/tmp",
+                                        "name": "tmp-volume"
+                                    }
+                                ]
+                            }
+                        ],
+                        "dnsPolicy": "ClusterFirst",
+                        "nodeSelector": {
+                            "kubernetes.io/os": "linux"
+                        },
+                        "restartPolicy": "Always",
+                        "schedulerName": "default-scheduler",
+                        "securityContext": {},
+                        "terminationGracePeriodSeconds": 30,
+                        "volumes": [
+                            {
+                                "emptyDir": {
+                                    "medium": "Memory"
+                                },
+                                "name": "tmp-volume"
+                            }
+                        ]
+                    }
+                }
+            },
+            "status": {
+                "availableReplicas": 1,
+                "conditions": [
+                    {
+                        "lastTransitionTime": "2026-11-20T09:04:45Z",
+                        "lastUpdateTime": "2026-11-20T09:04:45Z",
+                        "message": "Deployment has minimum availability.",
+                        "reason": "MinimumReplicasAvailable",
+                        "status": "True",
+                        "type": "Available"
+                    },
+                    {
+                        "lastTransitionTime": "2026-11-20T08:43:12Z",
+                        "lastUpdateTime": "2026-11-20T09:04:45Z",
+                        "message": "ReplicaSet \"orders-5d8998f69f\" has successfully progressed.",
+                        "reason": "NewReplicaSetAvailable",
+                        "status": "True",
+                        "type": "Progressing"
+                    }
+                ],
+                "observedGeneration": 3,
+                "readyReplicas": 1,
+                "replicas": 1,
+                "terminatingReplicas": 0,
+                "updatedReplicas": 1
+            }
+        },
+        {
+            "apiVersion": "apps/v1",
+            "kind": "Deployment",
+            "metadata": {
+                "annotations": {
+                    "deployment.kubernetes.io/revision": "1",
+                    "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"apps/v1\",\"kind\":\"Deployment\",\"metadata\":{\"annotations\":{\"thesis.shyn/execution-mode\":\"mixed-arm64-amd64-emulation\"},\"labels\":{\"name\":\"orders-db\"},\"name\":\"orders-db\",\"namespace\":\"sock-shop\"},\"spec\":{\"replicas\":1,\"selector\":{\"matchLabels\":{\"name\":\"orders-db\"}},\"strategy\":{\"type\":\"Recreate\"},\"template\":{\"metadata\":{\"labels\":{\"name\":\"orders-db\"}},\"spec\":{\"containers\":[{\"image\":\"mongo@sha256:d314f7eca9d3f825d091b77c40d2f3c9d6fff4de88dde2962527353476f107ba\",\"name\":\"orders-db\",\"ports\":[{\"containerPort\":27017,\"name\":\"mongo\"}],\"resources\":{\"limits\":{\"cpu\":\"500m\",\"memory\":\"512Mi\"},\"requests\":{\"cpu\":\"50m\",\"memory\":\"64Mi\"}},\"securityContext\":{\"capabilities\":{\"add\":[\"CHOWN\",\"SETGID\",\"SETUID\"],\"drop\":[\"all\"]},\"readOnlyRootFilesystem\":true},\"volumeMounts\":[{\"mountPath\":\"/tmp\",\"name\":\"tmp-volume\"}]}],\"nodeSelector\":{\"kubernetes.io/os\":\"linux\"},\"volumes\":[{\"emptyDir\":{\"medium\":\"Memory\"},\"name\":\"tmp-volume\"}]}}}}\n",
+                    "thesis.shyn/execution-mode": "mixed-arm64-amd64-emulation"
+                },
+                "creationTimestamp": "2026-11-20T08:43:12Z",
+                "generation": 2,
+                "labels": {
+                    "name": "orders-db"
+                },
+                "name": "orders-db",
+                "namespace": "sock-shop",
+                "resourceVersion": "2441",
+                "uid": "388267e4-dd38-4a87-b264-ecdcca19bdee"
+            },
+            "spec": {
+                "progressDeadlineSeconds": 600,
+                "replicas": 1,
+                "revisionHistoryLimit": 10,
+                "selector": {
+                    "matchLabels": {
+                        "name": "orders-db"
+                    }
+                },
+                "strategy": {
+                    "type": "Recreate"
+                },
+                "template": {
+                    "metadata": {
+                        "labels": {
+                            "name": "orders-db"
+                        }
+                    },
+                    "spec": {
+                        "containers": [
+                            {
+                                "image": "mongo@sha256:d314f7eca9d3f825d091b77c40d2f3c9d6fff4de88dde2962527353476f107ba",
+                                "imagePullPolicy": "IfNotPresent",
+                                "name": "orders-db",
+                                "ports": [
+                                    {
+                                        "containerPort": 27017,
+                                        "name": "mongo",
+                                        "protocol": "TCP"
+                                    }
+                                ],
+                                "resources": {
+                                    "limits": {
+                                        "cpu": "500m",
+                                        "memory": "512Mi"
+                                    },
+                                    "requests": {
+                                        "cpu": "50m",
+                                        "memory": "64Mi"
+                                    }
+                                },
+                                "securityContext": {
+                                    "capabilities": {
+                                        "add": [
+                                            "CHOWN",
+                                            "SETGID",
+                                            "SETUID"
+                                        ],
+                                        "drop": [
+                                            "all"
+                                        ]
+                                    },
+                                    "readOnlyRootFilesystem": true
+                                },
+                                "terminationMessagePath": "/dev/termination-log",
+                                "terminationMessagePolicy": "File",
+                                "volumeMounts": [
+                                    {
+                                        "mountPath": "/tmp",
+                                        "name": "tmp-volume"
+                                    }
+                                ]
+                            }
+                        ],
+                        "dnsPolicy": "ClusterFirst",
+                        "nodeSelector": {
+                            "kubernetes.io/os": "linux"
+                        },
+                        "restartPolicy": "Always",
+                        "schedulerName": "default-scheduler",
+                        "securityContext": {},
+                        "terminationGracePeriodSeconds": 30,
+                        "volumes": [
+                            {
+                                "emptyDir": {
+                                    "medium": "Memory"
+                                },
+                                "name": "tmp-volume"
+                            }
+                        ]
+                    }
+                }
+            },
+            "status": {
+                "availableReplicas": 1,
+                "conditions": [
+                    {
+                        "lastTransitionTime": "2026-11-20T08:44:00Z",
+                        "lastUpdateTime": "2026-11-20T08:44:00Z",
+                        "message": "Deployment has minimum availability.",
+                        "reason": "MinimumReplicasAvailable",
+                        "status": "True",
+                        "type": "Available"
+                    },
+                    {
+                        "lastTransitionTime": "2026-11-20T08:43:12Z",
+                        "lastUpdateTime": "2026-11-20T08:44:00Z",
+                        "message": "ReplicaSet \"orders-db-6f8478f7\" has successfully progressed.",
+                        "reason": "NewReplicaSetAvailable",
+                        "status": "True",
+                        "type": "Progressing"
+                    }
+                ],
+                "observedGeneration": 2,
+                "readyReplicas": 1,
+                "replicas": 1,
+                "terminatingReplicas": 0,
+                "updatedReplicas": 1
+            }
+        },
+        {
+            "apiVersion": "apps/v1",
+            "kind": "Deployment",
+            "metadata": {
+                "annotations": {
+                    "deployment.kubernetes.io/revision": "3",
+                    "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"apps/v1\",\"kind\":\"Deployment\",\"metadata\":{\"annotations\":{\"thesis.shyn/execution-mode\":\"mixed-arm64-amd64-emulation\"},\"labels\":{\"name\":\"payment\"},\"name\":\"payment\",\"namespace\":\"sock-shop\"},\"spec\":{\"replicas\":1,\"selector\":{\"matchLabels\":{\"name\":\"payment\"}},\"strategy\":{\"type\":\"Recreate\"},\"template\":{\"metadata\":{\"labels\":{\"name\":\"payment\"}},\"spec\":{\"containers\":[{\"args\":[\"-port=80\",\"-zipkin=http://jaeger.monitoring.svc.cluster.local:9411/api/v1/spans\"],\"command\":[\"/app\"],\"image\":\"weaveworksdemos/payment@sha256:5ab1c9877480a018d4dda10d6dfa382776e6bca9fc1c60bacbb80903fde8cfe0\",\"livenessProbe\":{\"failureThreshold\":6,\"httpGet\":{\"path\":\"/health\",\"port\":80},\"initialDelaySeconds\":300,\"periodSeconds\":10,\"timeoutSeconds\":3},\"name\":\"payment\",\"ports\":[{\"containerPort\":80}],\"readinessProbe\":{\"httpGet\":{\"path\":\"/health\",\"port\":80},\"initialDelaySeconds\":5,\"periodSeconds\":5,\"timeoutSeconds\":3},\"resources\":{\"limits\":{\"cpu\":\"200m\",\"memory\":\"200Mi\"},\"requests\":{\"cpu\":\"99m\",\"memory\":\"100Mi\"}},\"securityContext\":{\"capabilities\":{\"add\":[\"NET_BIND_SERVICE\"],\"drop\":[\"all\"]},\"readOnlyRootFilesystem\":true,\"runAsNonRoot\":true,\"runAsUser\":10001}}],\"nodeSelector\":{\"kubernetes.io/os\":\"linux\"}}}}}\n",
+                    "thesis.shyn/execution-mode": "mixed-arm64-amd64-emulation"
+                },
+                "creationTimestamp": "2026-11-20T08:43:12Z",
+                "generation": 3,
+                "labels": {
+                    "name": "payment"
+                },
+                "name": "payment",
+                "namespace": "sock-shop",
+                "resourceVersion": "101482",
+                "uid": "1ac70be4-90b2-4ce2-b7c7-c911e905041d"
+            },
+            "spec": {
+                "progressDeadlineSeconds": 600,
+                "replicas": 1,
+                "revisionHistoryLimit": 10,
+                "selector": {
+                    "matchLabels": {
+                        "name": "payment"
+                    }
+                },
+                "strategy": {
+                    "type": "Recreate"
+                },
+                "template": {
+                    "metadata": {
+                        "labels": {
+                            "name": "payment"
+                        }
+                    },
+                    "spec": {
+                        "containers": [
+                            {
+                                "args": [
+                                    "-port=80",
+                                    "-zipkin=http://jaeger.monitoring.svc.cluster.local:9411/api/v1/spans"
+                                ],
+                                "command": [
+                                    "/app"
+                                ],
+                                "image": "weaveworksdemos/payment@sha256:5ab1c9877480a018d4dda10d6dfa382776e6bca9fc1c60bacbb80903fde8cfe0",
+                                "imagePullPolicy": "IfNotPresent",
+                                "livenessProbe": {
+                                    "failureThreshold": 6,
+                                    "httpGet": {
+                                        "path": "/health",
+                                        "port": 80,
+                                        "scheme": "HTTP"
+                                    },
+                                    "initialDelaySeconds": 300,
+                                    "periodSeconds": 10,
+                                    "successThreshold": 1,
+                                    "timeoutSeconds": 3
+                                },
+                                "name": "payment",
+                                "ports": [
+                                    {
+                                        "containerPort": 80,
+                                        "protocol": "TCP"
+                                    }
+                                ],
+                                "readinessProbe": {
+                                    "failureThreshold": 3,
+                                    "httpGet": {
+                                        "path": "/health",
+                                        "port": 80,
+                                        "scheme": "HTTP"
+                                    },
+                                    "initialDelaySeconds": 5,
+                                    "periodSeconds": 5,
+                                    "successThreshold": 1,
+                                    "timeoutSeconds": 3
+                                },
+                                "resources": {
+                                    "limits": {
+                                        "cpu": "200m",
+                                        "memory": "200Mi"
+                                    },
+                                    "requests": {
+                                        "cpu": "99m",
+                                        "memory": "100Mi"
+                                    }
+                                },
+                                "securityContext": {
+                                    "capabilities": {
+                                        "add": [
+                                            "NET_BIND_SERVICE"
+                                        ],
+                                        "drop": [
+                                            "all"
+                                        ]
+                                    },
+                                    "readOnlyRootFilesystem": true,
+                                    "runAsNonRoot": true,
+                                    "runAsUser": 10001
+                                },
+                                "terminationMessagePath": "/dev/termination-log",
+                                "terminationMessagePolicy": "File"
+                            }
+                        ],
+                        "dnsPolicy": "ClusterFirst",
+                        "nodeSelector": {
+                            "kubernetes.io/os": "linux"
+                        },
+                        "restartPolicy": "Always",
+                        "schedulerName": "default-scheduler",
+                        "securityContext": {},
+                        "terminationGracePeriodSeconds": 30
+                    }
+                }
+            },
+            "status": {
+                "availableReplicas": 1,
+                "conditions": [
+                    {
+                        "lastTransitionTime": "2026-11-20T08:43:12Z",
+                        "lastUpdateTime": "2026-11-20T14:29:31Z",
+                        "message": "ReplicaSet \"payment-74cfb8489f\" has successfully progressed.",
+                        "reason": "NewReplicaSetAvailable",
+                        "status": "True",
+                        "type": "Progressing"
+                    },
+                    {
+                        "lastTransitionTime": "2026-11-21T23:00:59Z",
+                        "lastUpdateTime": "2026-11-21T23:00:59Z",
+                        "message": "Deployment has minimum availability.",
+                        "reason": "MinimumReplicasAvailable",
+                        "status": "True",
+                        "type": "Available"
+                    }
+                ],
+                "observedGeneration": 3,
+                "readyReplicas": 1,
+                "replicas": 1,
+                "terminatingReplicas": 0,
+                "updatedReplicas": 1
+            }
+        },
+        {
+            "apiVersion": "apps/v1",
+            "kind": "Deployment",
+            "metadata": {
+                "annotations": {
+                    "deployment.kubernetes.io/revision": "1",
+                    "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"apps/v1\",\"kind\":\"Deployment\",\"metadata\":{\"annotations\":{\"thesis.shyn/execution-mode\":\"mixed-arm64-amd64-emulation\"},\"labels\":{\"name\":\"queue-master\"},\"name\":\"queue-master\",\"namespace\":\"sock-shop\"},\"spec\":{\"replicas\":1,\"selector\":{\"matchLabels\":{\"name\":\"queue-master\"}},\"strategy\":{\"type\":\"Recreate\"},\"template\":{\"metadata\":{\"labels\":{\"name\":\"queue-master\"}},\"spec\":{\"containers\":[{\"env\":[{\"name\":\"JAVA_OPTS\",\"value\":\"-Xms64m -Xmx128m -XX:+UseG1GC -Djava.security.egd=file:/dev/urandom -Dspring.zipkin.enabled=false\"}],\"image\":\"weaveworksdemos/queue-master@sha256:6292d3095f4c7aeed8d863527f8ef6d7a75d3128f20fc61e57f398c100142712\",\"name\":\"queue-master\",\"ports\":[{\"containerPort\":80}],\"resources\":{\"limits\":{\"cpu\":\"300m\",\"memory\":\"500Mi\"},\"requests\":{\"cpu\":\"100m\",\"memory\":\"300Mi\"}}}],\"nodeSelector\":{\"kubernetes.io/os\":\"linux\"}}}}}\n",
+                    "thesis.shyn/execution-mode": "mixed-arm64-amd64-emulation"
+                },
+                "creationTimestamp": "2026-11-20T08:43:12Z",
+                "generation": 2,
+                "labels": {
+                    "name": "queue-master"
+                },
+                "name": "queue-master",
+                "namespace": "sock-shop",
+                "resourceVersion": "2457",
+                "uid": "4af063a2-a68b-4a3f-bf38-b0a338af209c"
+            },
+            "spec": {
+                "progressDeadlineSeconds": 600,
+                "replicas": 1,
+                "revisionHistoryLimit": 10,
+                "selector": {
+                    "matchLabels": {
+                        "name": "queue-master"
+                    }
+                },
+                "strategy": {
+                    "type": "Recreate"
+                },
+                "template": {
+                    "metadata": {
+                        "labels": {
+                            "name": "queue-master"
+                        }
+                    },
+                    "spec": {
+                        "containers": [
+                            {
+                                "env": [
+                                    {
+                                        "name": "JAVA_OPTS",
+                                        "value": "-Xms64m -Xmx128m -XX:+UseG1GC -Djava.security.egd=file:/dev/urandom -Dspring.zipkin.enabled=false"
+                                    }
+                                ],
+                                "image": "weaveworksdemos/queue-master@sha256:6292d3095f4c7aeed8d863527f8ef6d7a75d3128f20fc61e57f398c100142712",
+                                "imagePullPolicy": "IfNotPresent",
+                                "name": "queue-master",
+                                "ports": [
+                                    {
+                                        "containerPort": 80,
+                                        "protocol": "TCP"
+                                    }
+                                ],
+                                "resources": {
+                                    "limits": {
+                                        "cpu": "300m",
+                                        "memory": "500Mi"
+                                    },
+                                    "requests": {
+                                        "cpu": "100m",
+                                        "memory": "300Mi"
+                                    }
+                                },
+                                "terminationMessagePath": "/dev/termination-log",
+                                "terminationMessagePolicy": "File"
+                            }
+                        ],
+                        "dnsPolicy": "ClusterFirst",
+                        "nodeSelector": {
+                            "kubernetes.io/os": "linux"
+                        },
+                        "restartPolicy": "Always",
+                        "schedulerName": "default-scheduler",
+                        "securityContext": {},
+                        "terminationGracePeriodSeconds": 30
+                    }
+                }
+            },
+            "status": {
+                "availableReplicas": 1,
+                "conditions": [
+                    {
+                        "lastTransitionTime": "2026-11-20T08:44:05Z",
+                        "lastUpdateTime": "2026-11-20T08:44:05Z",
+                        "message": "Deployment has minimum availability.",
+                        "reason": "MinimumReplicasAvailable",
+                        "status": "True",
+                        "type": "Available"
+                    },
+                    {
+                        "lastTransitionTime": "2026-11-20T08:43:13Z",
+                        "lastUpdateTime": "2026-11-20T08:44:05Z",
+                        "message": "ReplicaSet \"queue-master-5d5d8fb6b8\" has successfully progressed.",
+                        "reason": "NewReplicaSetAvailable",
+                        "status": "True",
+                        "type": "Progressing"
+                    }
+                ],
+                "observedGeneration": 2,
+                "readyReplicas": 1,
+                "replicas": 1,
+                "terminatingReplicas": 0,
+                "updatedReplicas": 1
+            }
+        },
+        {
+            "apiVersion": "apps/v1",
+            "kind": "Deployment",
+            "metadata": {
+                "annotations": {
+                    "deployment.kubernetes.io/revision": "1",
+                    "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"apps/v1\",\"kind\":\"Deployment\",\"metadata\":{\"annotations\":{\"thesis.shyn/execution-mode\":\"mixed-arm64-amd64-emulation\"},\"labels\":{\"name\":\"rabbitmq\"},\"name\":\"rabbitmq\",\"namespace\":\"sock-shop\"},\"spec\":{\"replicas\":1,\"selector\":{\"matchLabels\":{\"name\":\"rabbitmq\"}},\"strategy\":{\"type\":\"Recreate\"},\"template\":{\"metadata\":{\"annotations\":{\"prometheus.io/scrape\":\"false\"},\"labels\":{\"name\":\"rabbitmq\"}},\"spec\":{\"containers\":[{\"image\":\"rabbitmq@sha256:0297618bd60270f03665448b02b3b1110dfc51fae60a3c6804005169f0904dad\",\"name\":\"rabbitmq\",\"ports\":[{\"containerPort\":15672,\"name\":\"management\"},{\"containerPort\":5672,\"name\":\"rabbitmq\"}],\"resources\":{\"limits\":{\"cpu\":\"500m\",\"memory\":\"512Mi\"},\"requests\":{\"cpu\":\"50m\",\"memory\":\"64Mi\"}},\"securityContext\":{\"capabilities\":{\"add\":[\"CHOWN\",\"SETGID\",\"SETUID\",\"DAC_OVERRIDE\"],\"drop\":[\"all\"]},\"readOnlyRootFilesystem\":true}},{\"image\":\"kbudde/rabbitmq-exporter@sha256:12f27d6d84e6dbdd72c6bc2605e48af9910517394483c1dfa3230e49d3e32107\",\"name\":\"rabbitmq-exporter\",\"ports\":[{\"containerPort\":9090,\"name\":\"exporter\"}],\"resources\":{\"limits\":{\"cpu\":\"500m\",\"memory\":\"512Mi\"},\"requests\":{\"cpu\":\"50m\",\"memory\":\"64Mi\"}}}],\"nodeSelector\":{\"kubernetes.io/os\":\"linux\"}}}}}\n",
+                    "thesis.shyn/execution-mode": "mixed-arm64-amd64-emulation"
+                },
+                "creationTimestamp": "2026-11-20T08:43:12Z",
+                "generation": 2,
+                "labels": {
+                    "name": "rabbitmq"
+                },
+                "name": "rabbitmq",
+                "namespace": "sock-shop",
+                "resourceVersion": "2472",
+                "uid": "790a3ded-94af-47fb-a700-5a609a7f015f"
+            },
+            "spec": {
+                "progressDeadlineSeconds": 600,
+                "replicas": 1,
+                "revisionHistoryLimit": 10,
+                "selector": {
+                    "matchLabels": {
+                        "name": "rabbitmq"
+                    }
+                },
+                "strategy": {
+                    "type": "Recreate"
+                },
+                "template": {
+                    "metadata": {
+                        "annotations": {
+                            "prometheus.io/scrape": "false"
+                        },
+                        "labels": {
+                            "name": "rabbitmq"
+                        }
+                    },
+                    "spec": {
+                        "containers": [
+                            {
+                                "image": "rabbitmq@sha256:0297618bd60270f03665448b02b3b1110dfc51fae60a3c6804005169f0904dad",
+                                "imagePullPolicy": "IfNotPresent",
+                                "name": "rabbitmq",
+                                "ports": [
+                                    {
+                                        "containerPort": 15672,
+                                        "name": "management",
+                                        "protocol": "TCP"
+                                    },
+                                    {
+                                        "containerPort": 5672,
+                                        "name": "rabbitmq",
+                                        "protocol": "TCP"
+                                    }
+                                ],
+                                "resources": {
+                                    "limits": {
+                                        "cpu": "500m",
+                                        "memory": "512Mi"
+                                    },
+                                    "requests": {
+                                        "cpu": "50m",
+                                        "memory": "64Mi"
+                                    }
+                                },
+                                "securityContext": {
+                                    "capabilities": {
+                                        "add": [
+                                            "CHOWN",
+                                            "SETGID",
+                                            "SETUID",
+                                            "DAC_OVERRIDE"
+                                        ],
+                                        "drop": [
+                                            "all"
+                                        ]
+                                    },
+                                    "readOnlyRootFilesystem": true
+                                },
+                                "terminationMessagePath": "/dev/termination-log",
+                                "terminationMessagePolicy": "File"
+                            },
+                            {
+                                "image": "kbudde/rabbitmq-exporter@sha256:12f27d6d84e6dbdd72c6bc2605e48af9910517394483c1dfa3230e49d3e32107",
+                                "imagePullPolicy": "IfNotPresent",
+                                "name": "rabbitmq-exporter",
+                                "ports": [
+                                    {
+                                        "containerPort": 9090,
+                                        "name": "exporter",
+                                        "protocol": "TCP"
+                                    }
+                                ],
+                                "resources": {
+                                    "limits": {
+                                        "cpu": "500m",
+                                        "memory": "512Mi"
+                                    },
+                                    "requests": {
+                                        "cpu": "50m",
+                                        "memory": "64Mi"
+                                    }
+                                },
+                                "terminationMessagePath": "/dev/termination-log",
+                                "terminationMessagePolicy": "File"
+                            }
+                        ],
+                        "dnsPolicy": "ClusterFirst",
+                        "nodeSelector": {
+                            "kubernetes.io/os": "linux"
+                        },
+                        "restartPolicy": "Always",
+                        "schedulerName": "default-scheduler",
+                        "securityContext": {},
+                        "terminationGracePeriodSeconds": 30
+                    }
+                }
+            },
+            "status": {
+                "availableReplicas": 1,
+                "conditions": [
+                    {
+                        "lastTransitionTime": "2026-11-20T08:44:47Z",
+                        "lastUpdateTime": "2026-11-20T08:44:47Z",
+                        "message": "Deployment has minimum availability.",
+                        "reason": "MinimumReplicasAvailable",
+                        "status": "True",
+                        "type": "Available"
+                    },
+                    {
+                        "lastTransitionTime": "2026-11-20T08:43:13Z",
+                        "lastUpdateTime": "2026-11-20T08:44:47Z",
+                        "message": "ReplicaSet \"rabbitmq-59c8db85bc\" has successfully progressed.",
+                        "reason": "NewReplicaSetAvailable",
+                        "status": "True",
+                        "type": "Progressing"
+                    }
+                ],
+                "observedGeneration": 2,
+                "readyReplicas": 1,
+                "replicas": 1,
+                "terminatingReplicas": 0,
+                "updatedReplicas": 1
+            }
+        },
+        {
+            "apiVersion": "apps/v1",
+            "kind": "Deployment",
+            "metadata": {
+                "annotations": {
+                    "deployment.kubernetes.io/revision": "1",
+                    "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"apps/v1\",\"kind\":\"Deployment\",\"metadata\":{\"annotations\":{\"thesis.shyn/execution-mode\":\"mixed-arm64-amd64-emulation\"},\"labels\":{\"name\":\"session-db\"},\"name\":\"session-db\",\"namespace\":\"sock-shop\"},\"spec\":{\"replicas\":1,\"selector\":{\"matchLabels\":{\"name\":\"session-db\"}},\"strategy\":{\"type\":\"Recreate\"},\"template\":{\"metadata\":{\"annotations\":{\"prometheus.io.scrape\":\"false\"},\"labels\":{\"name\":\"session-db\"}},\"spec\":{\"containers\":[{\"image\":\"redis@sha256:aaf7c123077a5e45ab2328b5ef7e201b5720616efac498d55e65a7afbb96ae20\",\"name\":\"session-db\",\"ports\":[{\"containerPort\":6379,\"name\":\"redis\"}],\"resources\":{\"limits\":{\"cpu\":\"500m\",\"memory\":\"512Mi\"},\"requests\":{\"cpu\":\"50m\",\"memory\":\"64Mi\"}},\"securityContext\":{\"capabilities\":{\"add\":[\"CHOWN\",\"SETGID\",\"SETUID\"],\"drop\":[\"all\"]},\"readOnlyRootFilesystem\":true}}],\"nodeSelector\":{\"kubernetes.io/os\":\"linux\"}}}}}\n",
+                    "thesis.shyn/execution-mode": "mixed-arm64-amd64-emulation"
+                },
+                "creationTimestamp": "2026-11-20T08:43:12Z",
+                "generation": 2,
+                "labels": {
+                    "name": "session-db"
+                },
+                "name": "session-db",
+                "namespace": "sock-shop",
+                "resourceVersion": "2480",
+                "uid": "ce531984-4c8a-440f-b5e6-0e3a84355d15"
+            },
+            "spec": {
+                "progressDeadlineSeconds": 600,
+                "replicas": 1,
+                "revisionHistoryLimit": 10,
+                "selector": {
+                    "matchLabels": {
+                        "name": "session-db"
+                    }
+                },
+                "strategy": {
+                    "type": "Recreate"
+                },
+                "template": {
+                    "metadata": {
+                        "annotations": {
+                            "prometheus.io.scrape": "false"
+                        },
+                        "labels": {
+                            "name": "session-db"
+                        }
+                    },
+                    "spec": {
+                        "containers": [
+                            {
+                                "image": "redis@sha256:aaf7c123077a5e45ab2328b5ef7e201b5720616efac498d55e65a7afbb96ae20",
+                                "imagePullPolicy": "IfNotPresent",
+                                "name": "session-db",
+                                "ports": [
+                                    {
+                                        "containerPort": 6379,
+                                        "name": "redis",
+                                        "protocol": "TCP"
+                                    }
+                                ],
+                                "resources": {
+                                    "limits": {
+                                        "cpu": "500m",
+                                        "memory": "512Mi"
+                                    },
+                                    "requests": {
+                                        "cpu": "50m",
+                                        "memory": "64Mi"
+                                    }
+                                },
+                                "securityContext": {
+                                    "capabilities": {
+                                        "add": [
+                                            "CHOWN",
+                                            "SETGID",
+                                            "SETUID"
+                                        ],
+                                        "drop": [
+                                            "all"
+                                        ]
+                                    },
+                                    "readOnlyRootFilesystem": true
+                                },
+                                "terminationMessagePath": "/dev/termination-log",
+                                "terminationMessagePolicy": "File"
+                            }
+                        ],
+                        "dnsPolicy": "ClusterFirst",
+                        "nodeSelector": {
+                            "kubernetes.io/os": "linux"
+                        },
+                        "restartPolicy": "Always",
+                        "schedulerName": "default-scheduler",
+                        "securityContext": {},
+                        "terminationGracePeriodSeconds": 30
+                    }
+                }
+            },
+            "status": {
+                "availableReplicas": 1,
+                "conditions": [
+                    {
+                        "lastTransitionTime": "2026-11-20T08:44:18Z",
+                        "lastUpdateTime": "2026-11-20T08:44:18Z",
+                        "message": "Deployment has minimum availability.",
+                        "reason": "MinimumReplicasAvailable",
+                        "status": "True",
+                        "type": "Available"
+                    },
+                    {
+                        "lastTransitionTime": "2026-11-20T08:43:13Z",
+                        "lastUpdateTime": "2026-11-20T08:44:18Z",
+                        "message": "ReplicaSet \"session-db-6b8b78c54c\" has successfully progressed.",
+                        "reason": "NewReplicaSetAvailable",
+                        "status": "True",
+                        "type": "Progressing"
+                    }
+                ],
+                "observedGeneration": 2,
+                "readyReplicas": 1,
+                "replicas": 1,
+                "terminatingReplicas": 0,
+                "updatedReplicas": 1
+            }
+        },
+        {
+            "apiVersion": "apps/v1",
+            "kind": "Deployment",
+            "metadata": {
+                "annotations": {
+                    "deployment.kubernetes.io/revision": "3",
+                    "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"apps/v1\",\"kind\":\"Deployment\",\"metadata\":{\"annotations\":{\"thesis.shyn/execution-mode\":\"mixed-arm64-amd64-emulation\"},\"labels\":{\"name\":\"shipping\"},\"name\":\"shipping\",\"namespace\":\"sock-shop\"},\"spec\":{\"replicas\":1,\"selector\":{\"matchLabels\":{\"name\":\"shipping\"}},\"strategy\":{\"type\":\"Recreate\"},\"template\":{\"metadata\":{\"labels\":{\"name\":\"shipping\"}},\"spec\":{\"containers\":[{\"env\":[{\"name\":\"ZIPKIN\",\"value\":\"zipkin.jaeger.svc.cluster.local\"},{\"name\":\"JAVA_OPTS\",\"value\":\"-Xms64m -Xmx128m -XX:+UseG1GC -Djava.security.egd=file:/dev/urandom -Dspring.zipkin.enabled=true -Dspring.zipkin.base-url=http://jaeger.monitoring.svc.cluster.local:9411 -Dspring.sleuth.sampler.percentage=1.0 -XX:TieredStopAtLevel=1\"}],\"image\":\"weaveworksdemos/shipping@sha256:983305c948fded487f4a4acdeab5f898e89d577b4bc1ca3de7750076469ccad4\",\"name\":\"shipping\",\"ports\":[{\"containerPort\":80}],\"readinessProbe\":{\"failureThreshold\":3,\"httpGet\":{\"path\":\"/health\",\"port\":80},\"initialDelaySeconds\":10,\"periodSeconds\":5,\"timeoutSeconds\":3},\"resources\":{\"limits\":{\"cpu\":\"1000m\",\"memory\":\"500Mi\"},\"requests\":{\"cpu\":\"100m\",\"memory\":\"300Mi\"}},\"securityContext\":{\"capabilities\":{\"add\":[\"NET_BIND_SERVICE\"],\"drop\":[\"all\"]},\"readOnlyRootFilesystem\":true,\"runAsNonRoot\":true,\"runAsUser\":10001},\"volumeMounts\":[{\"mountPath\":\"/tmp\",\"name\":\"tmp-volume\"}]}],\"nodeSelector\":{\"kubernetes.io/os\":\"linux\"},\"volumes\":[{\"emptyDir\":{\"medium\":\"Memory\"},\"name\":\"tmp-volume\"}]}}}}\n",
+                    "thesis.shyn/execution-mode": "mixed-arm64-amd64-emulation"
+                },
+                "creationTimestamp": "2026-11-20T08:43:12Z",
+                "generation": 3,
+                "labels": {
+                    "name": "shipping"
+                },
+                "name": "shipping",
+                "namespace": "sock-shop",
+                "resourceVersion": "2823",
+                "uid": "0f51bddc-b756-4315-857d-3b557459077b"
+            },
+            "spec": {
+                "progressDeadlineSeconds": 600,
+                "replicas": 1,
+                "revisionHistoryLimit": 10,
+                "selector": {
+                    "matchLabels": {
+                        "name": "shipping"
+                    }
+                },
+                "strategy": {
+                    "type": "Recreate"
+                },
+                "template": {
+                    "metadata": {
+                        "labels": {
+                            "name": "shipping"
+                        }
+                    },
+                    "spec": {
+                        "containers": [
+                            {
+                                "env": [
+                                    {
+                                        "name": "ZIPKIN",
+                                        "value": "zipkin.jaeger.svc.cluster.local"
+                                    },
+                                    {
+                                        "name": "JAVA_OPTS",
+                                        "value": "-Xms64m -Xmx128m -XX:+UseG1GC -Djava.security.egd=file:/dev/urandom -Dspring.zipkin.enabled=true -Dspring.zipkin.base-url=http://jaeger.monitoring.svc.cluster.local:9411 -Dspring.sleuth.sampler.percentage=1.0 -XX:TieredStopAtLevel=1"
+                                    }
+                                ],
+                                "image": "weaveworksdemos/shipping@sha256:983305c948fded487f4a4acdeab5f898e89d577b4bc1ca3de7750076469ccad4",
+                                "imagePullPolicy": "IfNotPresent",
+                                "name": "shipping",
+                                "ports": [
+                                    {
+                                        "containerPort": 80,
+                                        "protocol": "TCP"
+                                    }
+                                ],
+                                "readinessProbe": {
+                                    "failureThreshold": 3,
+                                    "httpGet": {
+                                        "path": "/health",
+                                        "port": 80,
+                                        "scheme": "HTTP"
+                                    },
+                                    "initialDelaySeconds": 10,
+                                    "periodSeconds": 5,
+                                    "successThreshold": 1,
+                                    "timeoutSeconds": 3
+                                },
+                                "resources": {
+                                    "limits": {
+                                        "cpu": "1",
+                                        "memory": "500Mi"
+                                    },
+                                    "requests": {
+                                        "cpu": "100m",
+                                        "memory": "300Mi"
+                                    }
+                                },
+                                "securityContext": {
+                                    "capabilities": {
+                                        "add": [
+                                            "NET_BIND_SERVICE"
+                                        ],
+                                        "drop": [
+                                            "all"
+                                        ]
+                                    },
+                                    "readOnlyRootFilesystem": true,
+                                    "runAsNonRoot": true,
+                                    "runAsUser": 10001
+                                },
+                                "terminationMessagePath": "/dev/termination-log",
+                                "terminationMessagePolicy": "File",
+                                "volumeMounts": [
+                                    {
+                                        "mountPath": "/tmp",
+                                        "name": "tmp-volume"
+                                    }
+                                ]
+                            }
+                        ],
+                        "dnsPolicy": "ClusterFirst",
+                        "nodeSelector": {
+                            "kubernetes.io/os": "linux"
+                        },
+                        "restartPolicy": "Always",
+                        "schedulerName": "default-scheduler",
+                        "securityContext": {},
+                        "terminationGracePeriodSeconds": 30,
+                        "volumes": [
+                            {
+                                "emptyDir": {
+                                    "medium": "Memory"
+                                },
+                                "name": "tmp-volume"
+                            }
+                        ]
+                    }
+                }
+            },
+            "status": {
+                "availableReplicas": 1,
+                "conditions": [
+                    {
+                        "lastTransitionTime": "2026-11-20T09:04:45Z",
+                        "lastUpdateTime": "2026-11-20T09:04:45Z",
+                        "message": "Deployment has minimum availability.",
+                        "reason": "MinimumReplicasAvailable",
+                        "status": "True",
+                        "type": "Available"
+                    },
+                    {
+                        "lastTransitionTime": "2026-11-20T08:43:13Z",
+                        "lastUpdateTime": "2026-11-20T09:04:45Z",
+                        "message": "ReplicaSet \"shipping-6555c699fd\" has successfully progressed.",
+                        "reason": "NewReplicaSetAvailable",
+                        "status": "True",
+                        "type": "Progressing"
+                    }
+                ],
+                "observedGeneration": 3,
+                "readyReplicas": 1,
+                "replicas": 1,
+                "terminatingReplicas": 0,
+                "updatedReplicas": 1
+            }
+        },
+        {
+            "apiVersion": "apps/v1",
+            "kind": "Deployment",
+            "metadata": {
+                "annotations": {
+                    "deployment.kubernetes.io/revision": "4",
+                    "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"apps/v1\",\"kind\":\"Deployment\",\"metadata\":{\"annotations\":{\"thesis.shyn/execution-mode\":\"mixed-arm64-amd64-emulation\"},\"labels\":{\"name\":\"user\"},\"name\":\"user\",\"namespace\":\"sock-shop\"},\"spec\":{\"replicas\":1,\"selector\":{\"matchLabels\":{\"name\":\"user\"}},\"strategy\":{\"type\":\"Recreate\"},\"template\":{\"metadata\":{\"labels\":{\"name\":\"user\"}},\"spec\":{\"containers\":[{\"env\":[{\"name\":\"mongo\",\"value\":\"user-db:27017\"}],\"image\":\"weaveworksdemos/user@sha256:2ffccc332963c89e035fea52201012208bf62df43a55fe461ad6598a5c757ab7\",\"livenessProbe\":{\"failureThreshold\":6,\"httpGet\":{\"path\":\"/health\",\"port\":80},\"initialDelaySeconds\":300,\"periodSeconds\":10,\"timeoutSeconds\":3},\"name\":\"user\",\"ports\":[{\"containerPort\":80}],\"readinessProbe\":{\"httpGet\":{\"path\":\"/health\",\"port\":80},\"initialDelaySeconds\":5,\"periodSeconds\":5,\"timeoutSeconds\":3},\"resources\":{\"limits\":{\"cpu\":\"300m\",\"memory\":\"384Mi\"},\"requests\":{\"cpu\":\"100m\",\"memory\":\"100Mi\"}},\"securityContext\":{\"capabilities\":{\"add\":[\"NET_BIND_SERVICE\"],\"drop\":[\"all\"]},\"readOnlyRootFilesystem\":true,\"runAsNonRoot\":true,\"runAsUser\":10001}}],\"nodeSelector\":{\"kubernetes.io/os\":\"linux\"}}}}}\n",
+                    "thesis.shyn/execution-mode": "mixed-arm64-amd64-emulation"
+                },
+                "creationTimestamp": "2026-11-20T08:43:12Z",
+                "generation": 4,
+                "labels": {
+                    "name": "user"
+                },
+                "name": "user",
+                "namespace": "sock-shop",
+                "resourceVersion": "78027",
+                "uid": "efe57c8e-7343-4f41-9a06-3d30d4812139"
+            },
+            "spec": {
+                "progressDeadlineSeconds": 600,
+                "replicas": 1,
+                "revisionHistoryLimit": 10,
+                "selector": {
+                    "matchLabels": {
+                        "name": "user"
+                    }
+                },
+                "strategy": {
+                    "type": "Recreate"
+                },
+                "template": {
+                    "metadata": {
+                        "labels": {
+                            "name": "user"
+                        }
+                    },
+                    "spec": {
+                        "containers": [
+                            {
+                                "env": [
+                                    {
+                                        "name": "mongo",
+                                        "value": "user-db:27017"
+                                    }
+                                ],
+                                "image": "weaveworksdemos/user@sha256:2ffccc332963c89e035fea52201012208bf62df43a55fe461ad6598a5c757ab7",
+                                "imagePullPolicy": "IfNotPresent",
+                                "livenessProbe": {
+                                    "failureThreshold": 6,
+                                    "httpGet": {
+                                        "path": "/health",
+                                        "port": 80,
+                                        "scheme": "HTTP"
+                                    },
+                                    "initialDelaySeconds": 300,
+                                    "periodSeconds": 10,
+                                    "successThreshold": 1,
+                                    "timeoutSeconds": 3
+                                },
+                                "name": "user",
+                                "ports": [
+                                    {
+                                        "containerPort": 80,
+                                        "protocol": "TCP"
+                                    }
+                                ],
+                                "readinessProbe": {
+                                    "failureThreshold": 3,
+                                    "httpGet": {
+                                        "path": "/health",
+                                        "port": 80,
+                                        "scheme": "HTTP"
+                                    },
+                                    "initialDelaySeconds": 5,
+                                    "periodSeconds": 5,
+                                    "successThreshold": 1,
+                                    "timeoutSeconds": 3
+                                },
+                                "resources": {
+                                    "limits": {
+                                        "cpu": "300m",
+                                        "memory": "384Mi"
+                                    },
+                                    "requests": {
+                                        "cpu": "100m",
+                                        "memory": "100Mi"
+                                    }
+                                },
+                                "securityContext": {
+                                    "capabilities": {
+                                        "add": [
+                                            "NET_BIND_SERVICE"
+                                        ],
+                                        "drop": [
+                                            "all"
+                                        ]
+                                    },
+                                    "readOnlyRootFilesystem": true,
+                                    "runAsNonRoot": true,
+                                    "runAsUser": 10001
+                                },
+                                "terminationMessagePath": "/dev/termination-log",
+                                "terminationMessagePolicy": "File"
+                            }
+                        ],
+                        "dnsPolicy": "ClusterFirst",
+                        "nodeSelector": {
+                            "kubernetes.io/os": "linux"
+                        },
+                        "restartPolicy": "Always",
+                        "schedulerName": "default-scheduler",
+                        "securityContext": {},
+                        "terminationGracePeriodSeconds": 30
+                    }
+                }
+            },
+            "status": {
+                "availableReplicas": 1,
+                "conditions": [
+                    {
+                        "lastTransitionTime": "2026-11-20T08:43:13Z",
+                        "lastUpdateTime": "2026-11-20T14:29:31Z",
+                        "message": "ReplicaSet \"user-66897b6496\" has successfully progressed.",
+                        "reason": "NewReplicaSetAvailable",
+                        "status": "True",
+                        "type": "Progressing"
+                    },
+                    {
+                        "lastTransitionTime": "2026-11-21T15:50:13Z",
+                        "lastUpdateTime": "2026-11-21T15:50:13Z",
+                        "message": "Deployment has minimum availability.",
+                        "reason": "MinimumReplicasAvailable",
+                        "status": "True",
+                        "type": "Available"
+                    }
+                ],
+                "observedGeneration": 4,
+                "readyReplicas": 1,
+                "replicas": 1,
+                "terminatingReplicas": 0,
+                "updatedReplicas": 1
+            }
+        },
+        {
+            "apiVersion": "apps/v1",
+            "kind": "Deployment",
+            "metadata": {
+                "annotations": {
+                    "deployment.kubernetes.io/revision": "1",
+                    "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"apps/v1\",\"kind\":\"Deployment\",\"metadata\":{\"annotations\":{\"thesis.shyn/execution-mode\":\"mixed-arm64-amd64-emulation\"},\"labels\":{\"name\":\"user-db\"},\"name\":\"user-db\",\"namespace\":\"sock-shop\"},\"spec\":{\"replicas\":1,\"selector\":{\"matchLabels\":{\"name\":\"user-db\"}},\"strategy\":{\"type\":\"Recreate\"},\"template\":{\"metadata\":{\"labels\":{\"name\":\"user-db\"}},\"spec\":{\"containers\":[{\"image\":\"weaveworksdemos/user-db@sha256:695bc22c11396c7ae747118c56e619f3b3295d9d4cbec999d30230b3f399a389\",\"name\":\"user-db\",\"ports\":[{\"containerPort\":27017,\"name\":\"mongo\"}],\"resources\":{\"limits\":{\"cpu\":\"500m\",\"memory\":\"512Mi\"},\"requests\":{\"cpu\":\"50m\",\"memory\":\"64Mi\"}},\"securityContext\":{\"capabilities\":{\"add\":[\"CHOWN\",\"SETGID\",\"SETUID\"],\"drop\":[\"all\"]},\"readOnlyRootFilesystem\":true},\"volumeMounts\":[{\"mountPath\":\"/tmp\",\"name\":\"tmp-volume\"}]}],\"nodeSelector\":{\"kubernetes.io/os\":\"linux\"},\"volumes\":[{\"emptyDir\":{\"medium\":\"Memory\"},\"name\":\"tmp-volume\"}]}}}}\n",
+                    "thesis.shyn/execution-mode": "mixed-arm64-amd64-emulation"
+                },
+                "creationTimestamp": "2026-11-20T08:43:12Z",
+                "generation": 2,
+                "labels": {
+                    "name": "user-db"
+                },
+                "name": "user-db",
+                "namespace": "sock-shop",
+                "resourceVersion": "57259",
+                "uid": "8168f2ff-70fb-4d49-8623-756e750d0ef4"
+            },
+            "spec": {
+                "progressDeadlineSeconds": 600,
+                "replicas": 1,
+                "revisionHistoryLimit": 10,
+                "selector": {
+                    "matchLabels": {
+                        "name": "user-db"
+                    }
+                },
+                "strategy": {
+                    "type": "Recreate"
+                },
+                "template": {
+                    "metadata": {
+                        "labels": {
+                            "name": "user-db"
+                        }
+                    },
+                    "spec": {
+                        "containers": [
+                            {
+                                "image": "weaveworksdemos/user-db@sha256:695bc22c11396c7ae747118c56e619f3b3295d9d4cbec999d30230b3f399a389",
+                                "imagePullPolicy": "IfNotPresent",
+                                "name": "user-db",
+                                "ports": [
+                                    {
+                                        "containerPort": 27017,
+                                        "name": "mongo",
+                                        "protocol": "TCP"
+                                    }
+                                ],
+                                "resources": {
+                                    "limits": {
+                                        "cpu": "500m",
+                                        "memory": "512Mi"
+                                    },
+                                    "requests": {
+                                        "cpu": "50m",
+                                        "memory": "64Mi"
+                                    }
+                                },
+                                "securityContext": {
+                                    "capabilities": {
+                                        "add": [
+                                            "CHOWN",
+                                            "SETGID",
+                                            "SETUID"
+                                        ],
+                                        "drop": [
+                                            "all"
+                                        ]
+                                    },
+                                    "readOnlyRootFilesystem": true
+                                },
+                                "terminationMessagePath": "/dev/termination-log",
+                                "terminationMessagePolicy": "File",
+                                "volumeMounts": [
+                                    {
+                                        "mountPath": "/tmp",
+                                        "name": "tmp-volume"
+                                    }
+                                ]
+                            }
+                        ],
+                        "dnsPolicy": "ClusterFirst",
+                        "nodeSelector": {
+                            "kubernetes.io/os": "linux"
+                        },
+                        "restartPolicy": "Always",
+                        "schedulerName": "default-scheduler",
+                        "securityContext": {},
+                        "terminationGracePeriodSeconds": 30,
+                        "volumes": [
+                            {
+                                "emptyDir": {
+                                    "medium": "Memory"
+                                },
+                                "name": "tmp-volume"
+                            }
+                        ]
+                    }
+                }
+            },
+            "status": {
+                "availableReplicas": 1,
+                "conditions": [
+                    {
+                        "lastTransitionTime": "2026-11-20T08:43:13Z",
+                        "lastUpdateTime": "2026-11-20T08:44:43Z",
+                        "message": "ReplicaSet \"user-db-6d84dcf56b\" has successfully progressed.",
+                        "reason": "NewReplicaSetAvailable",
+                        "status": "True",
+                        "type": "Progressing"
+                    },
+                    {
+                        "lastTransitionTime": "2026-11-21T09:30:21Z",
+                        "lastUpdateTime": "2026-11-21T09:30:21Z",
+                        "message": "Deployment has minimum availability.",
+                        "reason": "MinimumReplicasAvailable",
+                        "status": "True",
+                        "type": "Available"
+                    }
+                ],
+                "observedGeneration": 2,
+                "readyReplicas": 1,
+                "replicas": 1,
+                "terminatingReplicas": 0,
+                "updatedReplicas": 1
+            }
+        }
+    ],
+    "kind": "List",
+    "metadata": {
+        "resourceVersion": ""
+    }
+}

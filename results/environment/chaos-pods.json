@@ -1,0 +1,883 @@
+{
+    "apiVersion": "v1",
+    "items": [
+        {
+            "apiVersion": "v1",
+            "kind": "Pod",
+            "metadata": {
+                "annotations": {
+                    "rollme": "ISQAp"
+                },
+                "creationTimestamp": "2026-11-20T09:04:56Z",
+                "generateName": "chaos-controller-manager-75d974c578-",
+                "generation": 1,
+                "labels": {
+                    "app.kubernetes.io/component": "controller-manager",
+                    "app.kubernetes.io/instance": "chaos-mesh",
+                    "app.kubernetes.io/managed-by": "Helm",
+                    "app.kubernetes.io/name": "chaos-mesh",
+                    "app.kubernetes.io/part-of": "chaos-mesh",
+                    "app.kubernetes.io/version": "2.8.8",
+                    "helm.sh/chart": "chaos-mesh-2.8.8",
+                    "pod-template-hash": "75d974c578"
+                },
+                "name": "chaos-controller-manager-75d974c578-gtj88",
+                "namespace": "chaos-mesh",
+                "ownerReferences": [
+                    {
+                        "apiVersion": "apps/v1",
+                        "blockOwnerDeletion": true,
+                        "controller": true,
+                        "kind": "ReplicaSet",
+                        "name": "chaos-controller-manager-75d974c578",
+                        "uid": "92b6bdf9-8072-4915-beb1-5417cc604513"
+                    }
+                ],
+                "resourceVersion": "3729",
+                "uid": "3b02a038-d901-46f8-a119-ef83760cd10d"
+            },
+            "spec": {
+                "containers": [
+                    {
+                        "command": [
+                            "/usr/local/bin/chaos-controller-manager"
+                        ],
+                        "env": [
+                            {
+                                "name": "METRICS_PORT",
+                                "value": "10080"
+                            },
+                            {
+                                "name": "WEBHOOK_PORT",
+                                "value": "10250"
+                            },
+                            {
+                                "name": "NAMESPACE",
+                                "valueFrom": {
+                                    "fieldRef": {
+                                        "apiVersion": "v1",
+                                        "fieldPath": "metadata.namespace"
+                                    }
+                                }
+                            },
+                            {
+                                "name": "TEMPLATE_NAMESPACE",
+                                "valueFrom": {
+                                    "fieldRef": {
+                                        "apiVersion": "v1",
+                                        "fieldPath": "metadata.namespace"
+                                    }
+                                }
+                            },
+                            {
+                                "name": "ALLOW_HOST_NETWORK_TESTING",
+                                "value": "false"
+                            },
+                            {
+                                "name": "TARGET_NAMESPACE",
+                                "value": "sock-shop"
+                            },
+                            {
+                                "name": "QPS",
+                                "value": "30"
+                            },
+                            {
+                                "name": "BURST",
+                                "value": "50"
+                            },
+                            {
+                                "name": "CLUSTER_SCOPED",
+                                "value": "false"
+                            },
+                            {
+                                "name": "TZ",
+                                "value": "UTC"
+                            },
+                            {
+                                "name": "CHAOS_DAEMON_SERVICE_PORT",
+                                "value": "31767"
+                            },
+                            {
+                                "name": "BPFKI_PORT",
+                                "value": "50051"
+                            },
+                            {
+                                "name": "ENABLED_CONTROLLERS",
+                                "value": "*"
+                            },
+                            {
+                                "name": "ENABLED_WEBHOOKS",
+                                "value": "*"
+                            },
+                            {
+                                "name": "TEMPLATE_LABELS",
+                                "value": "app.kubernetes.io/component:template"
+                            },
+                            {
+                                "name": "CONFIGMAP_LABELS",
+                                "value": "app.kubernetes.io/component:webhook"
+                            },
+                            {
+                                "name": "ENABLE_FILTER_NAMESPACE",
+                                "value": "true"
+                            },
+                            {
+                                "name": "PPROF_ADDR",
+                                "value": ":10081"
+                            },
+                            {
+                                "name": "CHAOS_DNS_SERVICE_NAME",
+                                "value": "chaos-mesh-dns-server"
+                            },
+                            {
+                                "name": "CHAOS_DNS_SERVICE_PORT",
+                                "value": "9288"
+                            },
+                            {
+                                "name": "SECURITY_MODE",
+                                "value": "true"
+                            },
+                            {
+                                "name": "CHAOSD_SECURITY_MODE",
+                                "value": "true"
+                            },
+                            {
+                                "name": "CHAOS_DAEMON_CLIENT_CERT",
+                                "value": "/etc/chaos-daemon/cert/tls.crt"
+                            },
+                            {
+                                "name": "CHAOS_DAEMON_CLIENT_KEY",
+                                "value": "/etc/chaos-daemon/cert/tls.key"
+                            },
+                            {
+                                "name": "CHAOS_MESH_CA_CERT",
+                                "value": "/etc/chaos-daemon/cert/ca.crt"
+                            },
+                            {
+                                "name": "CHAOSD_CA_CERT",
+                                "value": "/etc/chaosd/cert/ca.crt"
+                            },
+                            {
+                                "name": "CHAOSD_CLIENT_CERT",
+                                "value": "/etc/chaosd/cert/tls.crt"
+                            },
+                            {
+                                "name": "CHAOSD_CLIENT_KEY",
+                                "value": "/etc/chaosd/cert/tls.key"
+                            },
+                            {
+                                "name": "POD_FAILURE_PAUSE_IMAGE",
+                                "value": "gcr.io/google-containers/pause:latest"
+                            },
+                            {
+                                "name": "ENABLE_LEADER_ELECTION",
+                                "value": "true"
+                            },
+                            {
+                                "name": "LEADER_ELECT_LEASE_DURATION",
+                                "value": "15s"
+                            },
+                            {
+                                "name": "LEADER_ELECT_RENEW_DEADLINE",
+                                "value": "10s"
+                            },
+                            {
+                                "name": "LEADER_ELECT_RETRY_PERIOD",
+                                "value": "2s"
+                            }
+                        ],
+                        "image": "ghcr.io/chaos-mesh/chaos-mesh:v2.8.8",
+                        "imagePullPolicy": "IfNotPresent",
+                        "name": "chaos-mesh",
+                        "ports": [
+                            {
+                                "containerPort": 10250,
+                                "name": "webhook",
+                                "protocol": "TCP"
+                            },
+                            {
+                                "containerPort": 10080,
+                                "name": "http",
+                                "protocol": "TCP"
+                            },
+                            {
+                                "containerPort": 10081,
+                                "name": "pprof",
+                                "protocol": "TCP"
+                            }
+                        ],
+                        "resources": {
+                            "limits": {
+                                "cpu": "300m",
+                                "memory": "256Mi"
+                            },
+                            "requests": {
+                                "cpu": "50m",
+                                "memory": "64Mi"
+                            }
+                        },
+                        "terminationMessagePath": "/dev/termination-log",
+                        "terminationMessagePolicy": "File",
+                        "volumeMounts": [
+                            {
+                                "mountPath": "/etc/webhook/certs",
+                                "name": "webhook-certs",
+                                "readOnly": true
+                            },
+                            {
+                                "mountPath": "/etc/chaos-daemon/cert",
+                                "name": "chaos-daemon-client-cert",
+                                "readOnly": true
+                            },
+                            {
+                                "mountPath": "/etc/chaosd/cert",
+                                "name": "chaosd-client-cert",
+                                "readOnly": true
+                            },
+                            {
+                                "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                                "name": "kube-api-access-j9dcd",
+                                "readOnly": true
+                            }
+                        ]
+                    }
+                ],
+                "dnsPolicy": "ClusterFirst",
+                "enableServiceLinks": true,
+                "nodeName": "shyn-thesis",
+                "preemptionPolicy": "PreemptLowerPriority",
+                "priority": 0,
+                "restartPolicy": "Always",
+                "schedulerName": "default-scheduler",
+                "securityContext": {},
+                "serviceAccount": "chaos-controller-manager",
+                "serviceAccountName": "chaos-controller-manager",
+                "terminationGracePeriodSeconds": 30,
+                "tolerations": [
+                    {
+                        "effect": "NoExecute",
+                        "key": "node.kubernetes.io/not-ready",
+                        "operator": "Exists",
+                        "tolerationSeconds": 300
+                    },
+                    {
+                        "effect": "NoExecute",
+                        "key": "node.kubernetes.io/unreachable",
+                        "operator": "Exists",
+                        "tolerationSeconds": 300
+                    }
+                ],
+                "volumes": [
+                    {
+                        "name": "webhook-certs",
+                        "secret": {
+                            "defaultMode": 420,
+                            "secretName": "chaos-mesh-webhook-certs"
+                        }
+                    },
+                    {
+                        "name": "chaos-daemon-client-cert",
+                        "secret": {
+                            "defaultMode": 420,
+                            "secretName": "chaos-mesh-daemon-client-certs"
+                        }
+                    },
+                    {
+                        "name": "chaosd-client-cert",
+                        "secret": {
+                            "defaultMode": 420,
+                            "secretName": "chaos-mesh-chaosd-client-certs"
+                        }
+                    },
+                    {
+                        "name": "kube-api-access-j9dcd",
+                        "projected": {
+                            "defaultMode": 420,
+                            "sources": [
+                                {
+                                    "serviceAccountToken": {
+                                        "expirationSeconds": 3607,
+                                        "path": "token"
+                                    }
+                                },
+                                {
+                                    "configMap": {
+                                        "items": [
+                                            {
+                                                "key": "ca.crt",
+                                                "path": "ca.crt"
+                                            }
+                                        ],
+                                        "name": "kube-root-ca.crt"
+                                    }
+                                },
+                                {
+                                    "downwardAPI": {
+                                        "items": [
+                                            {
+                                                "fieldRef": {
+                                                    "apiVersion": "v1",
+                                                    "fieldPath": "metadata.namespace"
+                                                },
+                                                "path": "namespace"
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            },
+            "status": {
+                "allocatedResources": {
+                    "cpu": "50m",
+                    "memory": "64Mi"
+                },
+                "conditions": [
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2026-11-20T09:04:57Z",
+                        "observedGeneration": 1,
+                        "status": "True",
+                        "type": "PodReadyToStartContainers"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2026-11-20T09:04:56Z",
+                        "observedGeneration": 1,
+                        "status": "True",
+                        "type": "Initialized"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2026-11-20T09:12:38Z",
+                        "observedGeneration": 1,
+                        "status": "True",
+                        "type": "Ready"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2026-11-20T09:12:38Z",
+                        "observedGeneration": 1,
+                        "status": "True",
+                        "type": "ContainersReady"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2026-11-20T09:04:56Z",
+                        "observedGeneration": 1,
+                        "status": "True",
+                        "type": "PodScheduled"
+                    }
+                ],
+                "containerStatuses": [
+                    {
+                        "allocatedResources": {
+                            "cpu": "50m",
+                            "memory": "64Mi"
+                        },
+                        "containerID": "containerd://54061d105d4c9bde11fb6db1a69d2150458e8258e662250e98e2165f0815a217",
+                        "image": "ghcr.io/chaos-mesh/chaos-mesh:v2.8.8",
+                        "imageID": "ghcr.io/chaos-mesh/chaos-mesh@sha256:8d0cbda45236a51f8c1b572dd9abce990a086f3267ecd767a55b93ea57eb1595",
+                        "lastState": {
+                            "terminated": {
+                                "containerID": "containerd://4a661bbb26e577ecb2ce8f56e037a1a57725d607b20ac7c2f10c73ea4f112fe2",
+                                "exitCode": 1,
+                                "finishedAt": "2026-11-20T09:12:08Z",
+                                "reason": "Error",
+                                "startedAt": "2026-11-20T09:09:52Z"
+                            }
+                        },
+                        "name": "chaos-mesh",
+                        "ready": true,
+                        "resources": {
+                            "limits": {
+                                "cpu": "300m",
+                                "memory": "256Mi"
+                            },
+                            "requests": {
+                                "cpu": "50m",
+                                "memory": "64Mi"
+                            }
+                        },
+                        "restartCount": 3,
+                        "started": true,
+                        "state": {
+                            "running": {
+                                "startedAt": "2026-11-20T09:12:38Z"
+                            }
+                        },
+                        "user": {
+                            "linux": {
+                                "gid": 0,
+                                "supplementalGroups": [
+                                    0,
+                                    1,
+                                    2,
+                                    3,
+                                    4,
+                                    6,
+                                    10,
+                                    11,
+                                    20,
+                                    26,
+                                    27
+                                ],
+                                "uid": 0
+                            }
+                        },
+                        "volumeMounts": [
+                            {
+                                "mountPath": "/etc/webhook/certs",
+                                "name": "webhook-certs",
+                                "readOnly": true,
+                                "recursiveReadOnly": "Disabled"
+                            },
+                            {
+                                "mountPath": "/etc/chaos-daemon/cert",
+                                "name": "chaos-daemon-client-cert",
+                                "readOnly": true,
+                                "recursiveReadOnly": "Disabled"
+                            },
+                            {
+                                "mountPath": "/etc/chaosd/cert",
+                                "name": "chaosd-client-cert",
+                                "readOnly": true,
+                                "recursiveReadOnly": "Disabled"
+                            },
+                            {
+                                "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                                "name": "kube-api-access-j9dcd",
+                                "readOnly": true,
+                                "recursiveReadOnly": "Disabled"
+                            }
+                        ]
+                    }
+                ],
+                "hostIP": "192.168.49.2",
+                "hostIPs": [
+                    {
+                        "ip": "192.168.49.2"
+                    }
+                ],
+                "observedGeneration": 1,
+                "phase": "Running",
+                "podIP": "10.244.0.34",
+                "podIPs": [
+                    {
+                        "ip": "10.244.0.34"
+                    }
+                ],
+                "qosClass": "Burstable",
+                "resources": {
+                    "limits": {
+                        "cpu": "300m",
+                        "memory": "256Mi"
+                    },
+                    "requests": {
+                        "cpu": "28m",
+                        "memory": "64Mi"
+                    }
+                },
+                "startTime": "2026-11-20T09:04:56Z"
+            }
+        },
+        {
+            "apiVersion": "v1",
+            "kind": "Pod",
+            "metadata": {
+                "annotations": {
+                    "rollme": "JRBpp"
+                },
+                "creationTimestamp": "2026-11-20T09:04:56Z",
+                "generateName": "chaos-daemon-",
+                "generation": 1,
+                "labels": {
+                    "app.kubernetes.io/component": "chaos-daemon",
+                    "app.kubernetes.io/instance": "chaos-mesh",
+                    "app.kubernetes.io/managed-by": "Helm",
+                    "app.kubernetes.io/name": "chaos-mesh",
+                    "app.kubernetes.io/part-of": "chaos-mesh",
+                    "app.kubernetes.io/version": "2.8.8",
+                    "controller-revision-hash": "686fdd67dc",
+                    "helm.sh/chart": "chaos-mesh-2.8.8",
+                    "pod-template-generation": "1"
+                },
+                "name": "chaos-daemon-dfgh8",
+                "namespace": "chaos-mesh",
+                "ownerReferences": [
+                    {
+                        "apiVersion": "apps/v1",
+                        "blockOwnerDeletion": true,
+                        "controller": true,
+                        "kind": "DaemonSet",
+                        "name": "chaos-daemon",
+                        "uid": "6c1e67c0-5049-4066-9dfd-b40940f32984"
+                    }
+                ],
+                "resourceVersion": "3158",
+                "uid": "353fe622-6952-469c-8285-5c2eddd99d56"
+            },
+            "spec": {
+                "affinity": {
+                    "nodeAffinity": {
+                        "requiredDuringSchedulingIgnoredDuringExecution": {
+                            "nodeSelectorTerms": [
+                                {
+                                    "matchFields": [
+                                        {
+                                            "key": "metadata.name",
+                                            "operator": "In",
+                                            "values": [
+                                                "shyn-thesis"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                },
+                "containers": [
+                    {
+                        "command": [
+                            "/usr/local/bin/chaos-daemon",
+                            "--runtime",
+                            "containerd",
+                            "--http-port",
+                            "31766",
+                            "--grpc-port",
+                            "31767",
+                            "--pprof",
+                            "--ca",
+                            "/etc/chaos-daemon/cert/ca.crt",
+                            "--cert",
+                            "/etc/chaos-daemon/cert/tls.crt",
+                            "--key",
+                            "/etc/chaos-daemon/cert/tls.key",
+                            "--runtime-socket-path",
+                            "/host-run/containerd.sock"
+                        ],
+                        "env": [
+                            {
+                                "name": "TZ",
+                                "value": "UTC"
+                            }
+                        ],
+                        "image": "ghcr.io/chaos-mesh/chaos-daemon:v2.8.8",
+                        "imagePullPolicy": "IfNotPresent",
+                        "name": "chaos-daemon",
+                        "ports": [
+                            {
+                                "containerPort": 31767,
+                                "name": "grpc",
+                                "protocol": "TCP"
+                            },
+                            {
+                                "containerPort": 31766,
+                                "name": "http",
+                                "protocol": "TCP"
+                            }
+                        ],
+                        "resources": {
+                            "limits": {
+                                "cpu": "300m",
+                                "memory": "256Mi"
+                            },
+                            "requests": {
+                                "cpu": "50m",
+                                "memory": "64Mi"
+                            }
+                        },
+                        "securityContext": {
+                            "capabilities": {
+                                "add": [
+                                    "SYS_PTRACE"
+                                ]
+                            },
+                            "privileged": true
+                        },
+                        "terminationMessagePath": "/dev/termination-log",
+                        "terminationMessagePolicy": "File",
+                        "volumeMounts": [
+                            {
+                                "mountPath": "/host-run",
+                                "name": "socket-path"
+                            },
+                            {
+                                "mountPath": "/host-sys",
+                                "name": "sys-path"
+                            },
+                            {
+                                "mountPath": "/lib/modules",
+                                "name": "lib-modules"
+                            },
+                            {
+                                "mountPath": "/etc/chaos-daemon/cert",
+                                "name": "chaos-daemon-cert",
+                                "readOnly": true
+                            },
+                            {
+                                "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                                "name": "kube-api-access-stksd",
+                                "readOnly": true
+                            }
+                        ]
+                    }
+                ],
+                "dnsPolicy": "ClusterFirst",
+                "enableServiceLinks": true,
+                "hostPID": true,
+                "nodeName": "shyn-thesis",
+                "preemptionPolicy": "PreemptLowerPriority",
+                "priority": 0,
+                "restartPolicy": "Always",
+                "schedulerName": "default-scheduler",
+                "securityContext": {},
+                "serviceAccount": "chaos-daemon",
+                "serviceAccountName": "chaos-daemon",
+                "terminationGracePeriodSeconds": 30,
+                "tolerations": [
+                    {
+                        "effect": "NoExecute",
+                        "key": "node.kubernetes.io/not-ready",
+                        "operator": "Exists"
+                    },
+                    {
+                        "effect": "NoExecute",
+                        "key": "node.kubernetes.io/unreachable",
+                        "operator": "Exists"
+                    },
+                    {
+                        "effect": "NoSchedule",
+                        "key": "node.kubernetes.io/disk-pressure",
+                        "operator": "Exists"
+                    },
+                    {
+                        "effect": "NoSchedule",
+                        "key": "node.kubernetes.io/memory-pressure",
+                        "operator": "Exists"
+                    },
+                    {
+                        "effect": "NoSchedule",
+                        "key": "node.kubernetes.io/pid-pressure",
+                        "operator": "Exists"
+                    },
+                    {
+                        "effect": "NoSchedule",
+                        "key": "node.kubernetes.io/unschedulable",
+                        "operator": "Exists"
+                    }
+                ],
+                "volumes": [
+                    {
+                        "hostPath": {
+                            "path": "/run/containerd",
+                            "type": ""
+                        },
+                        "name": "socket-path"
+                    },
+                    {
+                        "hostPath": {
+                            "path": "/sys",
+                            "type": ""
+                        },
+                        "name": "sys-path"
+                    },
+                    {
+                        "hostPath": {
+                            "path": "/lib/modules",
+                            "type": ""
+                        },
+                        "name": "lib-modules"
+                    },
+                    {
+                        "name": "chaos-daemon-cert",
+                        "secret": {
+                            "defaultMode": 420,
+                            "secretName": "chaos-mesh-daemon-certs"
+                        }
+                    },
+                    {
+                        "name": "kube-api-access-stksd",
+                        "projected": {
+                            "defaultMode": 420,
+                            "sources": [
+                                {
+                                    "serviceAccountToken": {
+                                        "expirationSeconds": 3607,
+                                        "path": "token"
+                                    }
+                                },
+                                {
+                                    "configMap": {
+                                        "items": [
+                                            {
+                                                "key": "ca.crt",
+                                                "path": "ca.crt"
+                                            }
+                                        ],
+                                        "name": "kube-root-ca.crt"
+                                    }
+                                },
+                                {
+                                    "downwardAPI": {
+                                        "items": [
+                                            {
+                                                "fieldRef": {
+                                                    "apiVersion": "v1",
+                                                    "fieldPath": "metadata.namespace"
+                                                },
+                                                "path": "namespace"
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            },
+            "status": {
+                "allocatedResources": {
+                    "cpu": "50m",
+                    "memory": "64Mi"
+                },
+                "conditions": [
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2026-11-20T09:04:57Z",
+                        "observedGeneration": 1,
+                        "status": "True",
+                        "type": "PodReadyToStartContainers"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2026-11-20T09:04:56Z",
+                        "observedGeneration": 1,
+                        "status": "True",
+                        "type": "Initialized"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2026-11-20T09:05:12Z",
+                        "observedGeneration": 1,
+                        "status": "True",
+                        "type": "Ready"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2026-11-20T09:05:12Z",
+                        "observedGeneration": 1,
+                        "status": "True",
+                        "type": "ContainersReady"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2026-11-20T09:04:56Z",
+                        "observedGeneration": 1,
+                        "status": "True",
+                        "type": "PodScheduled"
+                    }
+                ],
+                "containerStatuses": [
+                    {
+                        "allocatedResources": {
+                            "cpu": "50m",
+                            "memory": "64Mi"
+                        },
+                        "containerID": "containerd://7a2ce2b220c75c2da724adfcc57c8747c8440e23fc9d22ff034f4dd5877fed50",
+                        "image": "ghcr.io/chaos-mesh/chaos-daemon:v2.8.8",
+                        "imageID": "ghcr.io/chaos-mesh/chaos-daemon@sha256:adbc4fb417ff425a449e904de582acaf72a7add0b465ee1e0545f9be94564443",
+                        "lastState": {},
+                        "name": "chaos-daemon",
+                        "ready": true,
+                        "resources": {
+                            "limits": {
+                                "cpu": "300m",
+                                "memory": "256Mi"
+                            },
+                            "requests": {
+                                "cpu": "50m",
+                                "memory": "64Mi"
+                            }
+                        },
+                        "restartCount": 0,
+                        "started": true,
+                        "state": {
+                            "running": {
+                                "startedAt": "2026-11-20T09:05:12Z"
+                            }
+                        },
+                        "user": {
+                            "linux": {
+                                "gid": 0,
+                                "supplementalGroups": [
+                                    0
+                                ],
+                                "uid": 0
+                            }
+                        },
+                        "volumeMounts": [
+                            {
+                                "mountPath": "/host-run",
+                                "name": "socket-path"
+                            },
+                            {
+                                "mountPath": "/host-sys",
+                                "name": "sys-path"
+                            },
+                            {
+                                "mountPath": "/lib/modules",
+                                "name": "lib-modules"
+                            },
+                            {
+                                "mountPath": "/etc/chaos-daemon/cert",
+                                "name": "chaos-daemon-cert",
+                                "readOnly": true,
+                                "recursiveReadOnly": "Disabled"
+                            },
+                            {
+                                "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                                "name": "kube-api-access-stksd",
+                                "readOnly": true,
+                                "recursiveReadOnly": "Disabled"
+                            }
+                        ]
+                    }
+                ],
+                "hostIP": "192.168.49.2",
+                "hostIPs": [
+                    {
+                        "ip": "192.168.49.2"
+                    }
+                ],
+                "observedGeneration": 1,
+                "phase": "Running",
+                "podIP": "10.244.0.35",
+                "podIPs": [
+                    {
+                        "ip": "10.244.0.35"
+                    }
+                ],
+                "qosClass": "Burstable",
+                "resources": {
+                    "limits": {
+                        "cpu": "300m",
+                        "memory": "256Mi"
+                    },
+                    "requests": {
+                        "cpu": "28m",
+                        "memory": "64Mi"
+                    }
+                },
+                "startTime": "2026-11-20T09:04:56Z"
+            }
+        }
+    ],
+    "kind": "List",
+    "metadata": {
+        "resourceVersion": ""
+    }
+}

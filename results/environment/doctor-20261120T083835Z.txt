@@ -1,0 +1,21 @@
+Fri Nov 20 08:38:35 UTC 2026
+ProductName:		macOS
+ProductVersion:		27.0.1
+BuildVersion:		26A434
+arm64
+17179869184
+Filesystem      Size    Used   Avail Capacity iused ifree %iused  Mounted on
+/dev/disk3s5   228Gi    81Gi   117Gi    41%    707k  1.2G    0%   /System/Volumes/Data
+/usr/bin/git
+git version 2.39.2 (Apple Git-143)
+/Applications/Docker.app/Contents/Resources/bin/docker
+Docker version 29.9.2, build a82e528
+/opt/homebrew/bin/minikube
+minikube version: v1.39.0
+commit: 7a9f6a841470a207de8cf4bafcccee0969d8ba10
+/Applications/Docker.app/Contents/Resources/bin/kubectl
+Client Version: v1.36.1
+Kustomize Version: v5.8.1
+/opt/homebrew/bin/helm
+v4.3.1+gc0d08d0
+Server=29.9.2 OS=linux Arch=aarch64 CPUs=8 Memory=8319770624

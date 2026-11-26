@@ -1,0 +1,66 @@
+{
+  "checked_at": "2026-11-20T08:42:16.486970+00:00",
+  "images": [
+    {
+      "image": "mongo:3.4.24",
+      "digest": "sha256:d314f7eca9d3f825d091b77c40d2f3c9d6fff4de88dde2962527353476f107ba",
+      "platforms": [
+        {
+          "architecture": "amd64",
+          "os": "linux"
+        },
+        {
+          "architecture": "arm64",
+          "os": "linux",
+          "variant": "v8"
+        },
+        {
+          "architecture": "amd64",
+          "os": "windows",
+          "os.version": "10.0.14393.3443"
+        }
+      ],
+      "arm64_native": true,
+      "status": "ok"
+    },
+    {
+      "image": "redis:4.0.14-alpine",
+      "digest": "sha256:aaf7c123077a5e45ab2328b5ef7e201b5720616efac498d55e65a7afbb96ae20",
+      "platforms": [
+        {
+          "architecture": "amd64",
+          "os": "linux"
+        },
+        {
+          "architecture": "arm",
+          "os": "linux",
+          "variant": "v6"
+        },
+        {
+          "architecture": "arm",
+          "os": "linux",
+          "variant": "v7"
+        },
+        {
+          "architecture": "arm64",
+          "os": "linux",
+          "variant": "v8"
+        },
+        {
+          "architecture": "386",
+          "os": "linux"
+        },
+        {
+          "architecture": "ppc64le",
+          "os": "linux"
+        },
+        {
+          "architecture": "s390x",
+          "os": "linux"
+        }
+      ],
+      "arm64_native": true,
+      "status": "ok"
+    }
+  ]
+}

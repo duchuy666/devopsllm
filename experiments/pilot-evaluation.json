@@ -1,0 +1,22 @@
+{
+  "dataset_role": "development_pilot",
+  "modes": [
+    "B3"
+  ],
+  "note": "One reviewed integration case only; not official test accuracy. Admission here is for development scoring, not the 200-case dataset.",
+  "cases": [
+    {
+      "case_id": "CPU-PILOT-ONE",
+      "context_id": "CTX-780d7195ef4231ff",
+      "admission_status": "reviewed_for_development_scoring",
+      "split": "development",
+      "expected": {
+        "target": "payment",
+        "fault_type": "Resource Exhaustion"
+      },
+      "reports": {
+        "B3": "../results/diagnoses/CTX-780d7195ef4231ff/B3/result.json"
+      }
+    }
+  ]
+}

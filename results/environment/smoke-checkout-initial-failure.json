@@ -1,0 +1,43 @@
+{
+  "started_at": "2026-11-20T08:45:09.942759+00:00",
+  "finished_at": "2026-11-20T08:45:10.689527+00:00",
+  "config": {
+    "url": "http://127.0.0.1:8080",
+    "profile": "checkout",
+    "workers": 1,
+    "journeys": 2,
+    "pause": 1.0,
+    "seed": 42,
+    "output": "results/environment/smoke-checkout.json"
+  },
+  "completed_journeys": 0,
+  "expected_journeys": 2,
+  "request_count": 2,
+  "failed_requests": 1,
+  "p95_request_latency_ms": 708.63,
+  "errors": [
+    "POST /register: HTTP 500"
+  ],
+  "requests": [
+    {
+      "worker": 0,
+      "timestamp": "2026-11-20T08:45:09.960381+00:00",
+      "method": "GET",
+      "path": "/",
+      "status": 200,
+      "latency_ms": 20.287,
+      "ok": true,
+      "error": null
+    },
+    {
+      "worker": 0,
+      "timestamp": "2026-11-20T08:45:09.980714+00:00",
+      "method": "POST",
+      "path": "/register",
+      "status": 500,
+      "latency_ms": 708.63,
+      "ok": false,
+      "error": "HTTP 500"
+    }
+  ]
+}

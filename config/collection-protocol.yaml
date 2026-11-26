@@ -1,0 +1,35 @@
+version: prospective-collection-v1
+status: collection_precommitted
+purpose: collect_200_candidates_for_independent_review
+scenario_plan: experiments/scenario-plan.json
+split_order: [reference, validation, test]
+observation:
+  anchor: injection_confirmed_at
+  pre_seconds: 30
+  post_seconds: 30
+  completed_spans_only: true
+interpretation:
+  timing_uses_fault_clock_for_offline_benchmark: true
+  timing_does_not_represent_live_detection: true
+  fault_labels_in_model_context: false
+  full_raw_window_for_quality_review_only: true
+  detector_misses_retained: true
+  missing_modalities: retain_failed_observation_attempt_and_stop_collection
+  no_automatic_retry: true
+  failed_attempts_do_not_count_as_collected: true
+controls:
+  max_concurrent_faults: 1
+  max_cases_per_soak_batch: 4
+  pod_failure_last_in_batch: true
+  soak_seconds: 600
+  temporal_gate: utc-active-v1
+  source_change_stops_collection: true
+  no_prompt_or_threshold_tuning_after_test_access: true
+  no_test_indexing: true
+  independent_admission_required: true
+  automatically_call_gemini: false
+limitations:
+  - Short observation windows may miss slow-developing symptoms; report misses.
+  - Injection-anchored observation is an offline benchmark convention, not live TTD.
+  - Existing development reports use different windows and are not official test reports.
+  - Collection precommitment is not independent admission or benchmark completion.

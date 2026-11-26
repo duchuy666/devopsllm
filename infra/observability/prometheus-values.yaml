@@ -1,0 +1,134 @@
+server:
+  retention: 24h
+  persistentVolume:
+    enabled: true
+    size: 4Gi
+  resources:
+    requests:
+      cpu: 100m
+      memory: 192Mi
+    limits:
+      cpu: 750m
+      memory: 768Mi
+  global:
+    scrape_interval: 15s
+    evaluation_interval: 15s
+alertmanager:
+  enabled: true
+  persistence:
+    enabled: true
+    size: 1Gi
+  resources:
+    requests:
+      cpu: 20m
+      memory: 32Mi
+    limits:
+      cpu: 200m
+      memory: 128Mi
+  config:
+    global:
+      resolve_timeout: 1m
+    route:
+      receiver: incident-collector
+      group_by:
+      - alertname
+      - pod
+      - service
+      - route
+      group_wait: 0s
+      group_interval: 30s
+      repeat_interval: 1h
+    receivers:
+    - name: incident-collector
+      webhook_configs:
+      - url: http://incident-collector.monitoring.svc.cluster.local:8000/alerts
+        send_resolved: true
+kube-state-metrics:
+  enabled: true
+  resources:
+    requests:
+      cpu: 20m
+      memory: 32Mi
+    limits:
+      cpu: 200m
+      memory: 128Mi
+prometheus-node-exporter:
+  enabled: true
+  resources:
+    requests:
+      cpu: 20m
+      memory: 32Mi
+    limits:
+      cpu: 200m
+      memory: 128Mi
+prometheus-pushgateway:
+  enabled: false
+serverFiles:
+  alerting_rules.yml:
+    groups:
+    - name: sock-shop-symptoms
+      rules:
+      - alert: SockShopCPUHigh
+        expr: sum by (namespace,pod) (label_replace(rate(container_cpu_usage_seconds_total{namespace="sock-shop",job="kubernetes-nodes-cadvisor",container!="",container!="POD"}[1m]),
+          "cid", "$1", "id", ".*/([a-f0-9]{64})") and on(namespace,pod,container,cid)
+          label_replace(kube_pod_container_info{namespace="sock-shop"}, "cid", "$1",
+          "container_id", "containerd://(.*)")) / sum by (namespace,pod) (kube_pod_container_resource_limits{namespace="sock-shop",resource="cpu",unit="core"})
+          > 0.75
+        for: 15s
+        labels:
+          severity: warning
+        annotations:
+          summary: Application Pod CPU usage is near its configured limit
+      - alert: SockShopMemoryHigh
+        expr: sum by (namespace,pod) (label_replace(container_memory_working_set_bytes{namespace="sock-shop",job="kubernetes-nodes-cadvisor",container!="",container!="POD"},
+          "cid", "$1", "id", ".*/([a-f0-9]{64})") and on(namespace,pod,container,cid)
+          label_replace(kube_pod_container_info{namespace="sock-shop"}, "cid", "$1",
+          "container_id", "containerd://(.*)")) / sum by (namespace,pod) (kube_pod_container_resource_limits{namespace="sock-shop",resource="memory"})
+          > 0.75
+        for: 15s
+        labels:
+          severity: warning
+        annotations:
+          summary: Application Pod memory working set is near its configured limit
+      - alert: SockShopCatalogueSlow
+        expr: 'sum by (namespace) (rate(request_duration_seconds_sum{namespace="sock-shop",route="/catalogue"}[1m]))
+
+          / sum by (namespace) (rate(request_duration_seconds_count{namespace="sock-shop",route="/catalogue"}[1m]))
+          > 0.25
+
+          '
+        for: 15s
+        labels:
+          severity: warning
+        annotations:
+          summary: Catalogue requests exceed the pilot latency threshold
+      - alert: SockShopRequestSlow
+        expr: |
+          (
+            sum by (namespace,service,route) (rate(request_duration_seconds_sum{namespace="sock-shop",job="kubernetes-service-endpoints",service="front-end",route=~"/cart|/orders"}[1m]))
+            / sum by (namespace,service,route) (rate(request_duration_seconds_count{namespace="sock-shop",job="kubernetes-service-endpoints",service="front-end",route=~"/cart|/orders"}[1m]))
+            > 0.25
+          )
+          and on (namespace,service,route)
+          (
+            sum by (namespace,service,route) (increase(request_duration_seconds_count{namespace="sock-shop",job="kubernetes-service-endpoints",service="front-end",route=~"/cart|/orders"}[1m])) >= 5
+          )
+        for: 15s
+        labels:
+          severity: warning
+        annotations:
+          summary: HTTP route mean latency exceeds 250ms with at least five requests per minute
+          description: Route latency is a symptom; inspect telemetry to identify the failing service or dependency.
+      - alert: SockShopPodNotReady
+        expr: kube_pod_status_ready{namespace="sock-shop",condition="true"} == 0
+        for: 15s
+        labels:
+          severity: warning
+        annotations:
+          summary: Application Pod is not Ready
+      - alert: SockShopPodLifecycleChange
+        expr: time() - kube_pod_created{namespace="sock-shop"} < 60
+        labels:
+          severity: info
+        annotations:
+          summary: Application Pod was recently created and requires lifecycle review

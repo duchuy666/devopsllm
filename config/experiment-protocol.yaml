@@ -1,0 +1,49 @@
+status: draft_not_frozen
+dataset:
+  official_case_count: 200
+  development_pilots_count_as_official: false
+  fault_classes:
+    Resource Exhaustion: 67
+    Network Delay / Packet Loss: 67
+    Pod Failure: 66
+  split_targets:
+    reference: 120
+    validation: 40
+    test: 40
+  split_method: grouped_by_scenario_family_and_near_duplicate_parameters
+  index_test_cases: false
+provider:
+  name: gemini
+  model_candidate: gemini-3.8-flash
+  embedding_candidate: gemini-embedding-001
+  embedding_dimension: 768
+  freeze_model_after_access_probe: true
+configurations:
+  B0:
+    type: rules_and_dashboard
+    ranking_protocol: deterministic_observed_context_rules_v0_1_pending_validation
+    implementation: app/baseline.py
+    resource_threshold: 0.75
+    latency_abstains_from_network_root_cause: true
+    ties: score_desc_then_service_fault_and_evidence_lexicographic
+  B1:
+    modalities: [log]
+    retrieval: false
+  B2:
+    modalities: [log]
+    retrieval: true
+  B3:
+    modalities: [log, metric, trace]
+    retrieval: true
+primary_comparisons:
+  rag: [B1, B2]
+  multimodal: [B2, B3]
+evaluation:
+  same_test_cases_and_observation_cutoff: true
+  accuracy_match: service_or_directed_edge_and_fault_class
+  confidence_interval: required
+  evidence_existence_is_not_grounding: true
+  ttd_live_includes_context_wait: true
+  replay_latency_is_separate: true
+  human_baseline_requires_observed_measurements: true
+  api_errors_and_missing_telemetry_must_be_reported: true

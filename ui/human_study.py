@@ -6,7 +6,7 @@ from pathlib import Path
 import time
 import uuid
 import streamlit as st
-from app.human_study import timing,study_complete,snapshot_inputs,read_inputs
+from app.human_study import timing,study_complete,snapshot_inputs,read_inputs,study_cancelled
 from app.report_schema import IncidentReport
 
 ROOT=Path(__file__).resolve().parents[1]
@@ -20,6 +20,8 @@ def save(path,session):
 
 def render_study():
     st.subheader('Đo thời gian chẩn đoán với đáp án ẩn')
+    if study_cancelled(ROOT):
+        st.warning('Phiên đo đã được hủy trước khi bắt đầu (experiments/human-study-cancelled.json); review ca test đã mở nên không thể đo mù với cùng reviewer.');return
     st.caption('Phiên pilot một người, 14 ca thuộc bảy cặp cùng họ kịch bản; mỗi cặp dùng hai ca khác nhau. Không phải crossover cùng ca. Thời gian là thao tác trên context đã có sẵn, không phải live TTD.')
     plan_path=ROOT/'experiments/human-study-plan.json'
     if not plan_path.exists():st.info('Chưa có protocol phiên đo.');return

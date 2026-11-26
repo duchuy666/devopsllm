@@ -1,0 +1,14 @@
+{
+  "study_id": "human-pilot-v1",
+  "status": "cancelled_before_any_session",
+  "decided_at": "2026-11-26T03:40:00+00:00",
+  "decided_by": "user (thesis author), in chat",
+  "user_decision": "Bỏ phiên đo, chạy benchmark sớm",
+  "reason": "Submission deadline 16:00 on 2026-11-26; the 14 precommitted test tasks cannot all be captured in time. Test review is unlocked so admitted test cases can be benchmarked under the early-stop rule.",
+  "consequences": [
+    "RQ4 human timing is reported as not measured; no T_baseline/T_assistant and no ROI.",
+    "The reviewer will see test ground truth; this study protocol must not be run later with the same reviewer and test cases.",
+    "Live alert-to-report TTD and API cost remain reported separately."
+  ],
+  "sessions_started": 0
+}

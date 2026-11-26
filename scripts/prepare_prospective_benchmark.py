@@ -43,8 +43,12 @@ def stable_json(path,value):
 def main():
     parser=argparse.ArgumentParser();parser.add_argument('--journal',type=Path,required=True)
     parser.add_argument('--split',choices=['reference','validation','test'],required=True)
-    parser.add_argument('--allow-partial',action='store_true');args=parser.parse_args()
+    parser.add_argument('--allow-partial',action='store_true')
+    parser.add_argument('--early-stop',action='store_true',help='Precommitted early-stop rule: admitted cases only, >=10 test covering 3 fault classes')
+    parser.add_argument('--preliminary',action='store_true',help='Captured but NOT independently reviewed test cases; separate manifest, never official')
+    args=parser.parse_args()
     if args.allow_partial and args.split!='reference':parser.error('Partial preparation is limited to reference')
+    if args.preliminary and (args.split!='test' or args.early_stop):parser.error('--preliminary is test-only and excludes --early-stop')
     journal=json.loads(args.journal.read_text());release=Path(journal['release'])
     verify_release(release,ROOT,args.split)
     release_hash=hashlib.sha256(release.read_bytes()).hexdigest()
@@ -58,9 +62,14 @@ def main():
         expected_release=attempt.get('inherited_from_release_sha256',release_hash)
         if ground['scenario']!=wanted[attempt['scenario_id']] or ground.get('collection_release_sha256')!=expected_release:
             raise ValueError('Candidate setting/release mismatch')
+        if args.early_stop and ground.get('admission_status')!='admitted':continue
         if attempt['scenario_id'] in selected:raise ValueError('Explicit selection required for repeated captures')
         selected[attempt['scenario_id']]=(path,ground)
-    if not args.allow_partial and set(selected)!=set(wanted):
+    if args.early_stop:
+        faults={wanted[k]['fault_class'] for k in selected}
+        if args.split=='test' and (len(selected)<10 or len(faults)<3):
+            raise ValueError(f'Early-stop rule not met: {len(selected)} admitted test cases, {len(faults)} fault classes (need >=10 and 3)')
+    elif not args.allow_partial and not args.preliminary and set(selected)!=set(wanted):
         raise ValueError(f'Complete split required: {len(selected)}/{len(wanted)} captured')
     if not selected:raise ValueError('No completed observations for this split')
     output=ROOT/'results/prospective-benchmark'/release_hash[:12]/args.split;output.mkdir(parents=True,exist_ok=True)
@@ -102,11 +111,18 @@ def main():
         'max_new_generation_requests_if_separately_approved':3*len(cases),
         'max_query_embedding_requests_if_separately_approved':2*len(cases),
         'generation_called':False,'embedding_called':False,
+        'early_stop':{'applied':args.early_stop,'planned_cases':len(wanted),'scored_cases':len(cases),
+                      'rule':'config/collection-protocol.yaml early_stop'} if args.early_stop else None,
         'note':'Manifest report paths are relative to this directory. Pending admission cannot be scored as an official test. Preparation is not API authorization.'}
+    if args.preliminary:
+        manifest.update(dataset_role='preliminary_unreviewed_test',status='preliminary_not_independently_reviewed',
+            note='Captured test cases scored BEFORE independent review. Never report as the official benchmark.')
+        name='manifest-preliminary.json'
+    else:name='manifest.json'
     # This manifest can refresh admission metadata; contexts/reports/packets above stay immutable.
-    temporary=output/'manifest.json.tmp';temporary.write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n')
-    temporary.replace(output/'manifest.json')
-    print(json.dumps({'manifest':str(output/'manifest.json'),'cases':len(cases),'status':manifest['status'],
+    temporary=output/(name+'.tmp');temporary.write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n')
+    temporary.replace(output/name)
+    print(json.dumps({'manifest':str(output/name),'cases':len(cases),'status':manifest['status'],
                       'cloud_called':False},indent=2))
 
 

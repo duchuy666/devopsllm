@@ -53,8 +53,20 @@ def study_complete(root):
     return False
 
 
+def study_cancelled(root):
+    """An explicit, recorded cancellation before any session (user decision) also unlocks test review."""
+    record=root/'experiments/human-study-cancelled.json'
+    try:data=json.loads(record.read_text())
+    except (OSError,ValueError):return False
+    return data.get('status')=='cancelled_before_any_session' and data.get('sessions_started')==0 and bool(data.get('decided_by'))
+
+
+def test_review_unlocked(root):
+    return study_complete(root) or study_cancelled(root)
+
+
 def hidden_test_contexts(root):
-    if study_complete(root):return set()
+    if test_review_unlocked(root):return set()
     hidden=set()
     for path in (root/'results/prospective-benchmark').glob('*/test/manifest.json'):
         hidden.update(c['context_id'] for c in json.loads(path.read_text()).get('cases',[]))

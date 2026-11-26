@@ -47,16 +47,40 @@ class ProspectiveCollectionTests(unittest.TestCase):
             root=Path(tmp);raw=self.raw(root);crop(raw,root/'out',1,5)
             with self.assertRaisesRegex(ValueError,'replace'):crop(raw,root/'out',1,5)
 
-    def test_schedule_keeps_group_split_order_and_pod_failure_last(self):
+    def test_schedule_covers_plan_once_and_pod_failure_closes_batches(self):
         plan=json.loads((Path(__file__).resolve().parents[1]/'experiments/scenario-plan.json').read_text())
         schedule=batches(plan['scenarios']);rows={r['scenario_id']:r for r in plan['scenarios']}
         ordered=[rows[key] for group in schedule for key in group]
         self.assertEqual(len(ordered),200);self.assertEqual(len({r['scenario_id'] for r in ordered}),200)
-        ranks={'reference':0,'validation':1,'test':2}
-        self.assertEqual([ranks[r['split']] for r in ordered],sorted(ranks[r['split']] for r in ordered))
         for group in schedule:
-            self.assertLessEqual(len(group),4);self.assertEqual(len({rows[key]['split'] for key in group}),1)
+            self.assertLessEqual(len(group),4)
             for key in group[:-1]:self.assertNotEqual(rows[key]['variant'],'pod-failure')
+
+    def test_any_early_stop_keeps_split_and_fault_shares(self):
+        from collections import Counter
+        from scripts.run_dataset_collection import stratified_order
+        plan=json.loads((Path(__file__).resolve().parents[1]/'experiments/scenario-plan.json').read_text())['scenarios']
+        order=stratified_order(plan)
+        for n in (25,50,100):
+            split=Counter(r['split'] for r in order[:n])
+            self.assertLessEqual(abs(split['test']-n*0.2),1);self.assertLessEqual(abs(split['validation']-n*0.2),1)
+            for name in ('validation','test'):
+                faults=Counter(r['fault_class'] for r in order[:n] if r['split']==name)
+                self.assertEqual(len(faults),3);self.assertLessEqual(max(faults.values())-min(faults.values()),1)
+
+    def test_already_captured_settings_are_counted_and_not_rescheduled(self):
+        plan=json.loads((Path(__file__).resolve().parents[1]/'experiments/scenario-plan.json').read_text())['scenarios']
+        done=set([r['scenario_id'] for r in plan if r['split']=='reference'][:20])
+        flat=[k for g in batches(plan,done) for k in g]
+        self.assertFalse(done&set(flat));self.assertEqual(len(flat),180)
+        rows={r['scenario_id']:r for r in plan}
+        self.assertNotIn('reference',{rows[k]['split'] for k in flat[:5]})
+
+    def test_inheritance_allows_only_schedule_changes_in_collection_protocol(self):
+        from scripts.run_dataset_collection import protocol_without_schedule
+        base='version: v1\nobservation: {pre_seconds: 30}\nsplit_order: [reference, validation, test]\n'
+        self.assertEqual(protocol_without_schedule(base),protocol_without_schedule(base.replace('split_order: [reference, validation, test]','schedule: {method: x}\nearly_stop: {a: 1}')))
+        self.assertNotEqual(protocol_without_schedule(base),protocol_without_schedule(base.replace('30','20')))
 
     def test_incomplete_or_mutated_release_cannot_open_heldout_execution(self):
         with tempfile.TemporaryDirectory() as tmp:

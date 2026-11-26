@@ -6,7 +6,7 @@ import uuid
 import streamlit as st
 from scripts.apply_admission_review import validate_review,propose
 from scripts.review_network_case import summarize
-from app.human_study import study_complete
+from app.human_study import test_review_unlocked
 
 ROOT=Path(__file__).resolve().parents[1]
 
@@ -15,7 +15,7 @@ def render_review():
     st.subheader('Review độc lập dữ liệu thực nghiệm')
     st.caption('Dành cho người review: có ground truth để kiểm tác động. Không gửi dữ liệu từ tab này tới Gemini hoặc KB. Lưu phiếu không tự admission.')
     cases=[]
-    unlock_test=study_complete(ROOT)
+    unlock_test=test_review_unlocked(ROOT)
     for path in sorted((ROOT/'data/candidates').glob('CANDIDATE-*')):
         if (path/'review-packet.json').exists():
             ground=json.loads((path/'ground-truth.json').read_text())

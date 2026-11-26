@@ -2,7 +2,21 @@
 
 Người dùng xác nhận bản nộp cuối bắt buộc đủ 200 ca, hạn hai ngày, có một người review độc lập. Không giảm mục tiêu hoặc tự admission.
 
-## Release đang dùng
+## Release đang dùng (cập nhật 26/11/2026)
+
+Release hiện hành: `results/collection-releases/20261126-prospective-v4/release.json`, journal `results/dataset-collection/20261126T033214Z/journal.json`. Thay đổi duy nhất so với v3 là **thứ tự thu** (`schedule: stratified_interleaved_v1` trong `config/collection-protocol.yaml`): mỗi lượt chọn split thiếu nhiều nhất so với tỷ lệ 120/40/40, rồi nhóm lỗi thiếu nhất trong split đó, rồi họ kịch bản được chọn ít nhất. Nhờ vậy dừng ở bất kỳ điểm nào cũng giữ tỷ lệ split và nhóm lỗi (mô phỏng: 50 ca → 29–30/10–11/10). Plan, setting, split, cửa sổ quan sát, prompt và KB không đổi. 20 ca reference của v3 được kế thừa qua `predecessor-handoff.json`; v3 dừng trong soak, không có attempt dở.
+
+**Quy tắc dừng sớm (chốt trước khi có bất kỳ kết quả test nào):** nếu không thu đủ 200, báo cáo trên mọi ca đã admitted tại thời điểm dừng, mỗi split/nhóm lỗi kèm n riêng, khoảng tin cậy Wilson 95%, không ngoại suy lên 200. Ngưỡng tối thiểu để báo cáo benchmark: ít nhất 10 ca test admitted phủ cả ba nhóm lỗi. Công bố thời điểm dừng, số capture/từ chối/admitted và lý do dừng.
+
+Lệnh resume v4:
+
+```bash
+bash -c 'source scripts/common.sh; caffeinate -dims .venv/bin/python scripts/run_dataset_collection.py --release results/collection-releases/20261126-prospective-v4/release.json --execute --max-cases 200 --resume results/dataset-collection/20261126T033214Z'
+```
+
+Vì ca test giờ xuất hiện sớm, reviewer nên hoàn tất phiên đo RB16 sớm để mở khóa review ca test.
+
+### Lịch sử: release v3
 
 `results/collection-releases/20261124-prospective-v3/release.json` ghim 50 file và giữ bản sao nguồn ở `sources/`. Plan 0.3 có 200 cấu hình danh nghĩa khác nhau, ba nhóm 67/67/66, grouped split 120/40/40. Trước khi mở validation/test, 48 lượt Pod chưa chạy được đổi traffic pause để đáp ứng mục 5.3 của bản Word; bảy ca reference giữ nguyên setting được chuyển tiếp với release hash gốc. `migration.json` giữ đối chiếu và bản release v1 vẫn được bảo toàn. Không coi 200 setting là 200 cơ chế lỗi độc lập. Lịch gồm 66 batch; reference trước, validation sau, test cuối; mỗi batch tối đa bốn ca, Pod failure cuối batch.
 

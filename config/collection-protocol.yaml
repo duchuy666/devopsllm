@@ -2,7 +2,19 @@ version: prospective-collection-v1
 status: collection_precommitted
 purpose: collect_200_candidates_for_independent_review
 scenario_plan: experiments/scenario-plan.json
-split_order: [reference, validation, test]
+schedule:
+  method: stratified_interleaved_v1
+  adopted_at: '2026-11-26'
+  reason: Any stopping point must keep the planned 120/40/40 split shares, fault-class balance and family diversity.
+  rule: next pick = split with largest deficit vs planned share, then fault class with largest deficit in that split, then least-picked family, then plan order; already-captured settings count.
+  batching: at most 4 per soak batch; Pod failure closes its batch; up to 3 non-Pod settings may be pulled forward from the next 6 positions.
+  plan_settings_unchanged: true
+early_stop:
+  decided_before_any_test_result: true
+  report_on: all independently admitted cases at the stopping time, each split and fault class with its own n
+  minimum_reportable: at least 10 admitted test cases covering all three fault classes
+  statistics: Wilson 95% intervals; no extrapolation to 200 cases
+  disclosure: report stopping time, captured, rejected and admitted counts, and the reason for stopping
 observation:
   anchor: injection_confirmed_at
   pre_seconds: 30

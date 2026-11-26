@@ -118,6 +118,8 @@ def grounding_facts(root):
 
 def human_facts(root):
     data=load(root/HUMAN)
+    cancelled=load(root/'experiments/human-study-cancelled.json',{})
+    if cancelled.get('status')=='cancelled_before_any_session':return {'available':False,'cancelled':True,'record':cancelled}
     if not data or data.get('status')!='completed_observed_pilot':return {'available':False}
     return {'available':True,**data}
 
@@ -131,7 +133,7 @@ def live_facts(root):
 
 def collect(root=ROOT):
     root=Path(root)
-    return {'live':live_facts(root),'dataset':dataset_facts(root),'development':development_facts(root),'official':official_facts(root),
+    return {'preliminary':load(root/'results/evaluation/preliminary-test-B0-B3.json'),'live':live_facts(root),'dataset':dataset_facts(root),'development':development_facts(root),'official':official_facts(root),
             'grounding':grounding_facts(root),'human':human_facts(root),
             'built_at':dt.datetime.now(dt.timezone(dt.timedelta(hours=7))).strftime('%d/%m/%Y %H:%M (UTC+7)')}
 
@@ -139,12 +141,12 @@ def collect(root=ROOT):
 def pending_items(facts):
     items=[]
     d=facts['dataset']
-    if not d['complete']:items.append(f'Dataset: {d["funnel"]["admitted"]}/200 ca admitted (cần reviewer duyệt đủ 200).')
+    if not d['complete']:items.append(f'Dataset: {d["funnel"]["admitted"]}/200 ca admitted (cần reviewer duyệt; nếu dừng sớm, báo cáo theo quy tắc dừng sớm khi có ≥10 ca test admitted).')
     if not facts['official']['available']:items.append('Benchmark B0–B3 trên 40 ca test chính thức chưa chạy ('+OFFICIAL+').')
     if not facts['grounding']['available']:items.append('Evidence grounding/hallucination: '+facts['grounding'].get('reason',''))
-    if not facts['human']['available']:items.append('Đo thời gian người thật (RB16) chưa hoàn tất ('+HUMAN+').')
+    if not facts['human']['available'] and not facts['human'].get('cancelled'):items.append('Đo thời gian người thật (RB16) chưa hoàn tất ('+HUMAN+').')
     if not facts['live']['available']:items.append('Live TTD alert → report chưa đo (scripts/auto_diagnose.py).')
-    if not (facts['human']['available'] and facts['official']['available']):items.append('ROI/Net value chưa tính được vì thiếu số đo người thật hoặc chi phí test.')
+    if not facts['human'].get('cancelled') and not (facts['human']['available'] and facts['official']['available']):items.append('ROI/Net value chưa tính được vì thiếu số đo người thật hoặc chi phí test.')
     return items
 
 
@@ -442,6 +444,10 @@ def build(facts,output=OUT,root=ROOT):
          f'{f["admitted"]}/200 ca đã được duyệt vào bộ dữ liệu')
     if lv['available']:res+=f'; thời gian từ alert tới báo cáo trên đường live có trung vị {num(lv["median"],1)} giây'
     rich([('Kết quả chính: ',True),(res+'.',False)])
+    pre=facts.get('preliminary')
+    if not off['available'] and pre:
+        para(f'Benchmark chính thức trên các ca đã được duyệt độc lập chưa hoàn tất; bốn cấu hình đã được chạy sơ bộ trên {pre["case_count"]} ca test '
+             'chưa qua review độc lập (mục 4.5), kết quả chỉ mang tính sơ bộ.')
     if not off['available']:wait('Kết quả benchmark chính thức trên tập test sẽ được bổ sung vào phần này khi hoàn tất.')
     para('Ngoài phần mở đầu và kết luận, khóa luận gồm bốn chương: Chương 1 trình bày tổng quan về đề tài; Chương 2 trình bày cơ sở lý thuyết; '
          'Chương 3 trình bày phương pháp nghiên cứu và thiết kế hệ thống; Chương 4 trình bày kết quả và thảo luận.')
@@ -704,7 +710,12 @@ def build(facts,output=OUT,root=ROOT):
              'Mỗi lô tối đa bốn ca, lỗi Pod đặt cuối lô; soak 600 giây trước mỗi lô; lỗi sức khỏe hoặc cleanup dừng đợt thu, không tự thử lại.',
              'Reviewer độc lập xác nhận tác động đúng mục tiêu, phục hồi, telemetry phù hợp và kiểm tra trùng lặp, ghi mã, thời điểm và lý do.',
              'Công cụ duyệt kiểm lại hash dữ liệu thô, cửa sổ quan sát, provenance và kế hoạch, ghi qua transaction có rollback.',
-             'Ca bị từ chối chỉ được thu lại cùng cấu hình khi mọi lần thu đều bị từ chối có lý do; lần thu cũ được giữ trong thống kê.'])
+             'Ca bị từ chối chỉ được thu lại cùng cấu hình khi mọi lần thu đều bị từ chối có lý do; lần thu cũ được giữ trong thống kê.',
+             'Từ release v4, thứ tự thu được xen kẽ phân tầng: mỗi lượt chọn tập dữ liệu thiếu nhiều nhất so với tỷ lệ 120/40/40, rồi nhóm lỗi '
+             'thiếu nhất, rồi họ kịch bản ít được chọn nhất, để dừng ở bất kỳ điểm nào cũng giữ được tỷ lệ; cấu hình trong kế hoạch không đổi.',
+             'Quy tắc dừng sớm được chốt trước khi có kết quả test: nếu không đủ 200 ca, báo cáo trên mọi ca đã duyệt tại thời điểm dừng với n '
+             'riêng cho từng tập và nhóm lỗi, khoảng tin cậy Wilson 95%, không ngoại suy; benchmark chỉ báo cáo khi có ít nhất 10 ca test '
+             'phủ cả ba nhóm lỗi.'])
     H('3.8.4. Lược đồ nhãn',3)
     lbl=T();para(f'Mỗi ca được duyệt được xuất theo lược đồ của đề cương như trong {lbl}; vị trí bằng chứng và runbook liên quan lấy từ phiếu reviewer.')
     table(lbl,'Lược đồ nhãn của một ca',['Trường','Nội dung'],[
@@ -755,7 +766,7 @@ def build(facts,output=OUT,root=ROOT):
     table(lbl,'Trạng thái thu thập và duyệt dữ liệu',['Trạng thái','Số cấu hình'],[['Đã thu hoàn chỉnh',f['captured_scenarios']],
         ['Chờ reviewer',c['pending_review']+c['approved_record_incomplete']],['Đã duyệt, chờ áp dụng',c['approved_ready_to_apply']],
         ['Bị từ chối, cần thu lại',c['rejected_requires_new_attempt']],['Đã duyệt chính thức',f['admitted']],['Chưa thu',c['not_captured']]],[10,5])
-    if not d['complete']:wait(f'Bộ dữ liệu mới có {f["admitted"]}/200 ca được duyệt; kết quả chính thức chỉ tính khi đủ 200 ca và protocol được đóng băng.')
+    if not d['complete']:wait(f'Bộ dữ liệu mới có {f["admitted"]}/200 ca được duyệt; kết quả chính thức tính khi đủ 200 ca, hoặc theo quy tắc dừng sớm (mục 3.8.3) khi có ít nhất 10 ca test được duyệt.')
     H('4.3. Kết quả trên dữ liệu phát triển',2)
     lbl=T()
     para(f'Các ca phát triển dùng để hiệu chỉnh pipeline trước khi mở tập test được tóm tắt trong {lbl}. Mỗi dòng là một tập riêng với phiên bản ngữ '
@@ -789,6 +800,28 @@ def build(facts,output=OUT,root=ROOT):
         l3=T();para(f'Độ trễ phát lại và chi phí theo cấu hình được trình bày trong {l3}.')
         table(l3,'Độ trễ phát lại và chi phí trên tập test',['Cấu hình','Trung vị độ trễ (s)','Chi phí TB/ca (USD)'],
               [[m,num(off['per_mode'][m]['latency_median']),num(off['per_mode'][m]['cost_mean'],5)] for m in MODES],[3,6,6])
+    elif facts.get('preliminary'):
+        pre=facts['preliminary'];ps={(x['mode'],x['fault_class']):x for x in pre['summaries']}
+        para(f'Benchmark chính thức (chỉ trên ca đã được duyệt độc lập) chưa có. Để có kết quả trước hạn nộp, bốn cấu hình được chạy sơ bộ trên '
+             f'{pre["case_count"]} ca test đã thu theo protocol nhưng chưa qua review độc lập. Kết quả dưới đây là sơ bộ: một số ca có thể bị loại '
+             'sau khi duyệt, nên không thay thế benchmark chính thức và không được gộp với nó.')
+        lbl=T()
+        if pre['reportable']:
+            para(f'Độ chính xác sơ bộ của bốn cấu hình được trình bày trong {lbl}.')
+            table(lbl,f'Độ chính xác sơ bộ trên {pre["case_count"]} ca test chưa qua review độc lập',['Cấu hình','n','Báo cáo lỗi','Top-1','95% CI','Top-3','95% CI'],
+                  [[m,x['denominator'],x['missing_or_invalid_reports'],pct(x['top1_correct']['rate']),ci(x['top1_correct']['wilson_95_ci']),
+                    pct(x['top3_correct']['rate']),ci(x['top3_correct']['wilson_95_ci'])] for m in MODES for x in [ps.get((m,'all'))] if x],[1.7,1,1.8,1.7,3.2,1.7,3.2])
+            l2=T();faults=sorted({k[1] for k in ps if k[1]!='all'})
+            para(f'Kết quả sơ bộ theo nhóm lỗi được trình bày trong {l2}.')
+            table(l2,'Số ca đúng Top-1 sơ bộ theo nhóm lỗi',['Nhóm lỗi','n','B0','B1','B2','B3'],
+                  [[fc,ps[('B0',fc)]['denominator']]+[f'{ps[(m,fc)]["top1_correct"]["count"]}/{ps[(m,fc)]["denominator"]}' for m in MODES] for fc in faults],[5.5,1.5,2,2,2,2])
+        else:
+            para(f'Mới có {pre["case_count"]} ca, chưa đạt ngưỡng tối thiểu 10 ca phủ đủ ba nhóm lỗi; số ca đúng được liệt kê trong {lbl} chỉ để minh họa, '
+                 'không tính tỷ lệ hay khoảng tin cậy và không dùng để kết luận.')
+            table(lbl,f'Số ca đúng sơ bộ trên {pre["case_count"]} ca test chưa qua review (minh họa)',['Cấu hình','Top-1 đúng','Top-3 đúng','Báo cáo lỗi'],
+                  [[m,f'{x["top1_correct"]["count"]}/{x["denominator"]}',f'{x["top3_correct"]["count"]}/{x["denominator"]}',x['missing_or_invalid_reports']]
+                   for m in MODES for x in [ps.get((m,'all'))] if x],[3,4,4,4])
+        wait('Benchmark chính thức trên các ca test đã được duyệt độc lập (quy tắc dừng sớm, tối thiểu 10 ca) sẽ thay cho kết quả sơ bộ này.')
     else:
         wait('Bảng độ chính xác B0–B3 (Top-1, Top-3, khoảng tin cậy Wilson 95%, theo nhóm lỗi), độ trễ phát lại và chi phí trên 40 ca test. Cần đủ 200 ca, '
              'đóng băng protocol, phạm vi API được duyệt, rồi chạy experiments/evaluate.py và lưu tại '+OFFICIAL+'.')
@@ -810,6 +843,11 @@ def build(facts,output=OUT,root=ROOT):
             table(lbl,'Phân tích độ nhạy giá trị giờ công',['C_hour (VNĐ)','Giá trị giờ công/ca (VNĐ)','Chi phí API B3/ca (USD)'],
                   [[num(h,0),num(delta/3600*h,0),num(cost,5)] for h in (100_000,200_000,400_000)],[4.5,5.5,5])
         else:wait('Phân tích độ nhạy cần chi phí API B3 trên tập test.')
+    elif hu.get('cancelled'):
+        para('Phiên đo thời gian người dùng đã được hủy trước khi bắt đầu (ngày 26/11/2026) để kịp hạn nộp: 14 ca test được chỉ định trước '
+             'không thể thu đủ trong thời gian còn lại, và việc mở review ca test khiến reviewer không còn ở trạng thái mù với đáp án. Vì vậy '
+             'khóa luận không báo cáo thời gian chẩn đoán của người dùng, thời gian tiết kiệm hay giá trị ròng; RQ4 chỉ được trả lời một phần '
+             'qua TTD live (mục 4.4) và chi phí API (mục 4.5).')
     else:
         wait('Phiên đo 14 nhiệm vụ ẩn đáp án chưa hoàn tất; chưa tính giờ công tiết kiệm hoặc giá trị ròng ('+HUMAN+').')
     H('4.8. Thảo luận',2)
@@ -822,7 +860,16 @@ def build(facts,output=OUT,root=ROOT):
             overlap=not (ia[1]<ib[0] or ib[1]<ia[0])
             para(f'{rq}: Top-1 của {a} là {pct(s[(a,"all")]["top1_correct"]["rate"])}, của {b} là {pct(s[(b,"all")]["top1_correct"]["rate"])}; hai khoảng tin cậy '
                  +('chồng nhau nên chưa đủ bằng chứng cho khác biệt.' if overlap else 'không chồng nhau.'))
-        para('RQ4: '+('xem mục 4.7.' if hu['available'] else 'chưa trả lời được vì thiếu số đo người thật.'))
+        para('RQ4: '+('xem mục 4.7.' if hu['available'] else 'chỉ trả lời một phần: có TTD live và chi phí API, không có số đo thời gian người dùng nên không kết luận về giờ công tiết kiệm.'))
+    elif facts.get('preliminary') and facts['preliminary']['reportable']:
+        ps={(x['mode'],x['fault_class']):x for x in facts['preliminary']['summaries']}
+        para('Các nhận xét sau dựa trên kết quả sơ bộ ở mục 4.5 (ca chưa qua review độc lập) nên chỉ mang tính định hướng.')
+        for rq,(a,b) in (('RQ1',('B0','B3')),('RQ3',('B1','B2')),('RQ2',('B2','B3'))):
+            ia,ib=ps[(a,'all')]['top1_correct']['wilson_95_ci'],ps[(b,'all')]['top1_correct']['wilson_95_ci']
+            overlap=not (ia[1]<ib[0] or ib[1]<ia[0])
+            para(f'{rq}: Top-1 sơ bộ của {a} là {pct(ps[(a,"all")]["top1_correct"]["rate"])}, của {b} là {pct(ps[(b,"all")]["top1_correct"]["rate"])}; '
+                 +('khoảng tin cậy chồng nhau nên chưa đủ bằng chứng cho khác biệt.' if overlap else 'khoảng tin cậy không chồng nhau.'))
+        para('RQ4: chỉ trả lời một phần: có TTD live và chi phí API, không có số đo thời gian người dùng.')
     else:wait('Câu trả lời RQ1–RQ4 chỉ viết khi có benchmark chính thức; kết quả phát triển ở mục 4.3 không dùng để kết luận.')
     H('4.8.2. Các mối đe dọa đến tính hợp lệ',3)
     bullets(['Tính tổng quát: lỗi được tiêm trên một ứng dụng mẫu, chưa phản ánh đầy đủ sự cố production.',
@@ -831,7 +878,8 @@ def build(facts,output=OUT,root=ROOT):
              'Duyệt dữ liệu: một reviewer độc lập; công cụ không xác thực danh tính người điền phiếu.',
              'Thời gian: cửa sổ neo theo thời điểm tiêm nên benchmark đo độ trễ phát lại; TTD live đo riêng trên ít ca.',
              'Chi phí: ước tính theo bảng giá công bố, chưa đối chiếu hóa đơn và chưa gồm embedding, hạ tầng.',
-             'Người dùng: một người tham gia, các cặp khác ca cùng họ; kết quả mang tính mô tả.'])
+             'Người dùng: phiên đo thời gian người dùng đã hủy; không có số đo T_baseline/T_assistant.' if hu.get('cancelled') else 'Người dùng: một người tham gia, các cặp khác ca cùng họ; kết quả mang tính mô tả.',
+             'Cỡ mẫu: nếu áp dụng quy tắc dừng sớm, tập test nhỏ hơn 40 ca kế hoạch nên khoảng tin cậy rộng; không ngoại suy lên 200 ca.'])
 
     # ======================================================= KẾT LUẬN
     H('KẾT LUẬN')

@@ -2,7 +2,7 @@
 import json
 from pathlib import Path
 import streamlit as st
-from app.human_study import study_complete
+from app.human_study import test_review_unlocked
 from app.admission_progress import progress
 
 ROOT=Path(__file__).resolve().parents[1]
@@ -112,7 +112,7 @@ def dataset():
     if audit.get('errors'):st.error('Audit có lỗi: '+str(audit['errors']))
     else:st.success('Audit local gần nhất đạt. Independent review và protocol freeze còn pending.')
     if audit.get('cases'):
-        visible_cases=[r for r in audit['cases'] if r['split']!='test' or study_complete(ROOT)]
+        visible_cases=[r for r in audit['cases'] if r['split']!='test' or test_review_unlocked(ROOT)]
         st.dataframe([{'Scenario':r['scenario_id'],'Biến thể':r['variant'],'Split':r['split'],
             'Execution':r['execution_status'],'Admission':r['admission_status'],
             'Review độc lập':r.get('independent_human_review','Chưa capture')} for r in visible_cases],hide_index=True,width='stretch')

@@ -191,7 +191,8 @@ def live_rows(root=ROOT):
 
 # ---------------------------------------------------------------- document (FIT NEU template)
 
-def build(facts,output=OUT,root=ROOT):
+def build(facts,output=OUT,root=ROOT,submission=True):
+    SUBMISSION=submission
     from docx import Document
     from docx.enum.section import WD_SECTION
     from docx.enum.table import WD_CELL_VERTICAL_ALIGNMENT
@@ -274,8 +275,11 @@ def build(facts,output=OUT,root=ROOT):
               'autoSpaceDN','bidi','adjustRightInd','snapToGrid','spacing','ind','contextualSpacing','mirrorIndents','suppressOverlap',
               'jc','textDirection','textAlignment','textboxTightWrap','outlineLvl','divId','cnfStyle','rPr','sectPr','pPrChange'))
 
-    def wait(text):
-        pending.append(text);p=doc.add_paragraph();shade(p,'FFF2CC');p.paragraph_format.first_line_indent=Cm(0)
+    def wait(text,formal=None):
+        pending.append(text)
+        if SUBMISSION and formal:
+            para(formal);return
+        p=doc.add_paragraph();shade(p,'FFF2CC');p.paragraph_format.first_line_indent=Cm(0)
         r=p.add_run('[Chờ dữ liệu] ');r.bold=True;r.font.color.rgb=RGBColor(0x9C,0x57,0x00);p.add_run(text).italic=True
 
     def field(p,instr,placeholder=''):
@@ -295,11 +299,12 @@ def build(facts,output=OUT,root=ROOT):
 
     def F(name):
         """Reserve the next figure label only if the image exists."""
-        if not (FIG/(name+'.png')).is_file():return None
+        if not any((FIG/(name+ext)).is_file() for ext in ('.png','.jpg')):return None
         state['fig']+=1;return f'Hình {state["chapter"]}.{state["fig"]}'
 
     def figure(label,name,title,width=15.5):
-        p=para(align=C,after=2);p.paragraph_format.keep_with_next=True;p.add_run().add_picture(str(FIG/(name+'.png')),width=Cm(width))
+        img=next(FIG/(name+ext) for ext in ('.png','.jpg') if (FIG/(name+ext)).is_file())
+        p=para(align=C,after=2);p.paragraph_format.keep_with_next=True;p.add_run().add_picture(str(img),width=Cm(width))
         doc.add_paragraph(f'{label}. {title}',style='Figure Caption')
 
     def T():
@@ -484,7 +489,8 @@ def build(facts,output=OUT,root=ROOT):
     if not off['available'] and pre:
         para(f'Benchmark chính thức trên các ca đã được duyệt độc lập chưa hoàn tất; bốn cấu hình đã được chạy sơ bộ trên {pre["case_count"]} ca test '
              'chưa qua review độc lập (mục 4.5), kết quả chỉ mang tính sơ bộ.')
-    if not off['available']:wait('Kết quả benchmark chính thức trên tập test sẽ được bổ sung vào phần này khi hoàn tất.')
+    if not off['available']:wait('Kết quả benchmark chính thức trên tập test sẽ được bổ sung vào phần này khi hoàn tất.',
+        formal='Benchmark chính thức trên các ca đã qua duyệt độc lập chưa hoàn tất tại thời điểm nộp và được nêu là việc tiếp theo ở phần Kết luận.')
     para('Ngoài phần mở đầu và kết luận, khóa luận gồm bốn chương: Chương 1 trình bày tổng quan về đề tài; Chương 2 trình bày cơ sở lý thuyết; '
          'Chương 3 trình bày phương pháp nghiên cứu và thiết kế hệ thống; Chương 4 trình bày kết quả và thảo luận.')
 
@@ -721,6 +727,32 @@ def build(facts,output=OUT,root=ROOT):
     para('Trong đánh giá có truy xuất, rò rỉ xảy ra khi thông tin của ca kiểm thử xuất hiện trong cơ sở tri thức hoặc trong quá trình tinh chỉnh. Chia ngẫu nhiên '
          'từng ca là không đủ, vì hai ca cùng loại lỗi, cùng mục tiêu và chỉ khác cường độ gần như là một. Đề tài chia theo họ kịch bản: mọi cấu hình cùng loại '
          'lỗi, biến thể và mục tiêu nằm trong cùng một tập, và chỉ tập reference được phép vào cơ sở tri thức.')
+    H('2.13. Lan truyền lỗi và cơ chế tự phục hồi',2)
+    H('2.13.1. Lan truyền lỗi giữa các dịch vụ',3)
+    para('Trong một chuỗi gọi đồng bộ, dịch vụ phía trước phải chờ dịch vụ phía sau trả lời. Khi dịch vụ phía sau chậm, thời gian chờ cộng dồn lên phía trước, và '
+         'nếu dịch vụ phía trước dùng một số lượng luồng xử lý có hạn thì các luồng này bị chiếm, làm các yêu cầu không liên quan cũng chậm theo. Vì vậy cảnh báo '
+         'thường xuất hiện ở dịch vụ giao tiếp với người dùng (front-end) trước, trong khi nguyên nhân nằm sâu hơn trong chuỗi.')
+    para('Lan truyền theo chiều ngược lại cũng xảy ra: một dịch vụ phía trước bị quá tải có thể gửi ít yêu cầu hơn xuống phía sau, làm các chỉ số phía sau trông '
+         'như đang tốt lên. Chẩn đoán dựa trên một chỉ số đơn lẻ dễ nhầm trong cả hai trường hợp; cần đối chiếu đồng thời tài nguyên, độ trễ trên từng cạnh và '
+         'nội dung log theo thời gian.')
+    H('2.13.2. Cơ chế tự phục hồi của Kubernetes',3)
+    para('Kubernetes tự động thay Pod bị dừng để duy trì số bản sao khai báo trong Deployment. Readiness probe loại Pod khỏi danh sách nhận lưu lượng khi Pod chưa '
+         'sẵn sàng; liveness probe khởi động lại container khi Pod không phản hồi quá số lần cho phép. Với container khởi động lại liên tục, thời gian chờ giữa các '
+         'lần tăng dần theo cấp số.')
+    para('Các cơ chế này rút ngắn thời gian gián đoạn nhưng cũng xóa dấu vết: một Pod bị dừng có thể được thay trong vài giây, và nếu cửa sổ quan sát bắt đầu sau '
+         'đó thì chỉ còn thấy một Pod mới vừa khởi động. Đề tài ghi lại thời điểm tạo Pod và bộ đếm khởi động lại như các metric riêng để mô hình còn thấy được sự '
+         'kiện đã xảy ra.')
+    H('2.14. Thiết kế chỉ dẫn cho mô hình chẩn đoán',2)
+    H('2.14.1. Nguyên tắc chỉ dẫn',3)
+    para('Chất lượng câu trả lời của LLM phụ thuộc nhiều vào chỉ dẫn. Với bài toán chẩn đoán, ba nguyên tắc quan trọng là: chỉ kết luận từ dữ liệu được cung cấp, '
+         'trích dẫn bằng chứng cụ thể cho từng kết luận, và được phép từ chối kết luận khi bằng chứng không đủ. Nguyên tắc thứ ba thường bị bỏ qua, nhưng một câu '
+         'trả lời “chưa đủ bằng chứng” có giá trị hơn một giả thuyết sai được trình bày tự tin.')
+    para('Một vấn đề riêng của dữ liệu vận hành là phân biệt lỗi mới với lỗi nền đã tồn tại từ trước. Chỉ dẫn cần nhắc mô hình xét diễn biến theo thời gian, ví dụ '
+         'so giá trị đầu cửa sổ với giá trị lớn nhất, thay vì chỉ đếm số lần lỗi xuất hiện.')
+    H('2.14.2. Vai trò của tri thức truy xuất',3)
+    para('Runbook cung cấp tri thức chung: dấu hiệu điển hình của từng loại lỗi và các bước kiểm tra. Ca đã giải quyết cung cấp tri thức cụ thể: triệu chứng thực tế '
+         'trong hệ thống này đã từng tương ứng với nguyên nhân nào. Hai loại tri thức bổ sung cho nhau, nhưng cả hai đều chỉ là gợi ý; chỉ dẫn của đề tài nói rõ '
+         'runbook là hướng dẫn, không phải bằng chứng, để mô hình không suy luận ngược từ runbook ra kết luận khi dữ liệu không ủng hộ.')
     # ======================================================= CHƯƠNG 3
     H('CHƯƠNG 3. PHƯƠNG PHÁP NGHIÊN CỨU VÀ THIẾT KẾ HỆ THỐNG')
     H('3.1. Phương pháp nghiên cứu',2)
@@ -975,6 +1007,55 @@ def build(facts,output=OUT,root=ROOT):
          'hash của các tệp trên tại thời điểm chạy. Nhờ đó, khi đọc một kết quả bất kỳ, có thể biết chính xác phiên bản mã và cấu hình đã sinh ra nó.')
     para('Khóa API được lưu ngoài kho mã, trong tệp môi trường bị loại khỏi Git. Mọi lần gọi Gemini được ghi vào sổ gọi API cùng phạm vi đã được duyệt; công cụ '
          'chạy benchmark từ chối trước khi gọi nếu số lượt vượt hạn mức, và không tự thử lại khi lỗi.')
+    H('3.16. Thiết kế prompt và báo cáo',2)
+    H('3.16.1. Nội dung chỉ dẫn',3)
+    para('Chỉ dẫn phiên bản 0.2.0 yêu cầu mô hình: chỉ chẩn đoán từ dữ liệu quan sát; coi runbook là hướng dẫn chứ không phải bằng chứng; trả về tối đa ba giả thuyết '
+         'khác nhau và chỉ trích dẫn mã bằng chứng có trong ngữ cảnh; xét diễn biến theo thời gian và phân biệt lỗi nền kéo dài với dấu hiệu của sự cố mới. Với giả '
+         'thuyết lỗi mạng, mô hình chỉ được ghi cạnh dạng bên gọi → bên được gọi khi dữ liệu xác định được cả hai đầu và chiều gọi, ví dụ qua span client; một route '
+         'chậm không đủ để kết luận về cạnh hay nguyên nhân mạng. Khi không xác định được, mô hình phải chọn Unknown hoặc báo thiếu bằng chứng và nêu bằng chứng còn '
+         'thiếu. Hành động đề xuất chỉ để kỹ sư xác nhận; phần giải thích viết bằng tiếng Việt.')
+    para('Prompt gồm ba khối: chỉ dẫn nhiệm vụ, ngữ cảnh sự cố dạng JSON và danh sách tri thức truy xuất được. Hash của chỉ dẫn và của lược đồ báo cáo được ghim '
+         'trong release, nên mọi thay đổi chỉ dẫn sau khi thu dữ liệu đều bị phát hiện.')
+    H('3.16.2. Kiểm tra báo cáo và sổ gọi API',3)
+    para('Báo cáo trả về được kiểm tra theo lược đồ: đúng kiểu dữ liệu, tối đa ba giả thuyết, loại lỗi thuộc danh sách cho phép, mã bằng chứng tồn tại trong ngữ cảnh. '
+         'Báo cáo không hợp lệ được giữ lại và tính là sai trong thống kê thay vì bị gọi lại. Mỗi lần gọi ghi một bản ghi gồm mã lần gọi, mô hình yêu cầu và mô hình '
+         'thực sự trả lời, thời điểm, số token, độ trễ, chi phí ước tính và nguồn bảng giá.')
+    H('3.17. Giao diện người dùng',2)
+    H('3.17.1. Các chức năng',3)
+    lbl=T()
+    para(f'Giao diện Streamlit gồm tám tab với chức năng như trong {lbl}.')
+    table(lbl,'Các tab của giao diện',['Tab','Chức năng'],[
+        ['Tổng quan','Chỉ số tiến độ, funnel thu và duyệt dữ liệu, trạng thái đợt thu, cập nhật mỗi 15 giây'],
+        ['Incident','Danh sách incident từ collector, dựng ngữ cảnh từ một incident live'],
+        ['Phân tích','Xem telemetry đã chuẩn hóa, chạy B0 cục bộ, gửi chẩn đoán tới Gemini khi người dùng bấm'],
+        ['Báo cáo','Xem các báo cáo đã lưu, giả thuyết, bằng chứng trích dẫn, chi phí và độ trễ'],
+        ['Runbook','Đọc runbook và ghi phiếu đánh giá nội dung runbook'],
+        ['Dataset & kiểm thử','Kết quả audit kế hoạch, danh sách ca, kết quả kiểm thử dữ liệu'],
+        ['Review dữ liệu','Phiếu duyệt độc lập từng ca: kiểm tra cấu trúc, metric theo pha, dữ liệu thô, nhãn runbook'],
+        ['Đo thời gian','Phiên đo thời gian chẩn đoán ẩn đáp án (đã hủy trong đợt nộp này)']],[3.5,11.5])
+    H('3.17.2. Minh họa giao diện',3)
+    f1=F('ui-overview');f2=F('ui-review')
+    if f1 and f2:
+        para(f'{f1} là tab Tổng quan và {f2} là tab Review dữ liệu, chụp ngày 23/11/2026 trong quá trình phát triển nên số liệu trên ảnh là của thời điểm đó.')
+        figure(f1,'ui-overview','Tab Tổng quan của giao diện (ảnh chụp ngày 23/11/2026)',10.5)
+        figure(f2,'ui-review','Tab Review dữ liệu của giao diện (ảnh chụp ngày 23/11/2026)',10.5)
+    H('3.18. Tổ chức lưu trữ và kiểm soát truy cập',2)
+    H('3.18.1. Tổ chức thư mục dữ liệu',3)
+    lbl=T()
+    para(f'Dữ liệu và kết quả được tổ chức như trong {lbl}; nhãn đúng và dữ liệu dành cho mô hình luôn nằm ở các thư mục tách biệt.')
+    table(lbl,'Tổ chức lưu trữ chính',['Thư mục','Nội dung'],[
+        ['data/candidates/<ca>/','Nhãn đúng, dữ liệu thô ba nguồn, cửa sổ quan sát cho mô hình, trạng thái chaos, provenance, phiếu duyệt gốc'],
+        ['results/dataset-collection/','Nhật ký từng đợt thu, kế hoạch lô, nhật ký tự khôi phục'],
+        ['results/collection-releases/','Release đã ghim hash và bản sao nguồn'],
+        ['results/stability/','Kết quả soak, mẫu theo thời gian, lưu lượng'],
+        ['results/diagnoses/<ngữ cảnh>/<cấu hình>/','Báo cáo chẩn đoán và ngữ cảnh đã gửi'],
+        ['results/api-calls/','Sổ ghi từng lần gọi API'],
+        ['results/review-handoff/','Phiếu duyệt độc lập, hàng đợi review, phiếu chấm nhận định'],
+        ['results/evaluation/','Kết quả chấm điểm và kiểm tra']],[6,9])
+    H('3.18.2. Kiểm soát truy cập và chi phí',3)
+    para('Khóa API nằm trong tệp môi trường bị loại khỏi Git và không bao giờ được ghi vào log, URL hay manifest. Việc gửi dữ liệu lên dịch vụ đám mây chỉ diễn ra qua '
+         'gói yêu cầu đã được duyệt: mỗi gói ghi ngữ cảnh, câu truy vấn embedding và runbook được phép, cùng hash của chúng; công cụ chạy so lại hash trước khi gọi và '
+         'từ chối nếu có thay đổi. Dữ liệu nhãn đúng, trạng thái chaos và phiếu duyệt không bao giờ được gửi đi.')
     # ======================================================= CHƯƠNG 4
     H('CHƯƠNG 4. KẾT QUẢ VÀ THẢO LUẬN')
     H('4.1. Kết quả xây dựng hệ thống',2)
@@ -995,7 +1076,8 @@ def build(facts,output=OUT,root=ROOT):
     fl=F('dataset')
     if fl:
         para(f'{fl} so sánh số cấu hình đã thu và đã duyệt với kế hoạch của từng tập.');figure(fl,'dataset','Tiến độ thu và duyệt dữ liệu theo tập',13.5)
-    if not d['complete']:wait(f'Bộ dữ liệu mới có {f["admitted"]}/200 ca được duyệt; kết quả chính thức tính khi đủ 200 ca, hoặc theo quy tắc dừng sớm (mục 3.8.3) khi có ít nhất 10 ca test được duyệt.')
+    if not d['complete']:wait(f'Bộ dữ liệu mới có {f["admitted"]}/200 ca được duyệt; kết quả chính thức tính khi đủ 200 ca, hoặc theo quy tắc dừng sớm (mục 3.8.3) khi có ít nhất 10 ca test được duyệt.',
+             formal='Tại thời điểm nộp, đợt thu dữ liệu vẫn đang tiếp tục và chưa có ca nào hoàn tất bước duyệt độc lập; vì vậy các kết quả trên tập test ở mục 4.5 được trình bày ở mức sơ bộ.')
     H('4.3. Kết quả trên dữ liệu phát triển',2)
     lbl=T()
     para(f'Các ca phát triển dùng để hiệu chỉnh pipeline trước khi mở tập test được tóm tắt trong {lbl}. Mỗi dòng là một tập riêng với phiên bản ngữ '
@@ -1004,6 +1086,15 @@ def build(facts,output=OUT,root=ROOT):
     table(lbl,'Số ca đúng Top-1 trên các tập phát triển',['Tập phát triển','Số ca','B0','B1','B2','B3'],rows,[5.8,1.6,1.9,1.9,1.9,1.9])
     para(f'Tổng cộng {dev["reports"]} báo cáo Gemini đã lưu, trung vị độ trễ API {num(dev["latency_median"])} giây, trung vị {num(dev["tokens_median"],0)} '
          f'token mỗi báo cáo, chi phí ước tính {num(dev["cost_total"],4)} USD.')
+    H('4.3.1. Những gì các ca phát triển cho thấy',3)
+    para('Ngay từ các ca CPU đầu tiên, B1 và B2 đã chọn queue-master, dịch vụ có lỗi nền liên tục, trong khi B3 chỉ ra đúng dịch vụ bị tiêm lỗi. Kết quả này lặp lại ở '
+         'ca shipping và ở hai ca mạng chạy với ngữ cảnh 0.4.1, và là động lực để bổ sung vào chỉ dẫn yêu cầu phân biệt lỗi nền với sự cố mới. Các ca phát triển '
+         'cũng cho thấy B0 nhận tốt lỗi Pod nhờ bộ đếm khởi động lại, nhưng không có cách nào xác định cạnh mạng.')
+    H('4.3.2. Các điều chỉnh trước khi thu dữ liệu chính thức',3)
+    para('Từ kết quả phát triển, pipeline được điều chỉnh trước khi chốt release: ngữ cảnh lên phiên bản 0.4.1, giữ limit tài nguyên theo Pod và tối đa tám cạnh client '
+         'trước các span lặp; chỉ dẫn lên phiên bản 0.2.0 với quy tắc về cạnh có hướng và lỗi nền; luật RequestSlow được thêm cho các route /orders và /cart để phát '
+         'hiện lỗi mạng mà trước đó không có cảnh báo nào bắt được. Sau khi chốt release, các thành phần này không thay đổi nữa, nên kết quả trên tập test không bị '
+         'ảnh hưởng bởi việc tinh chỉnh theo chính tập đó.')
     H('4.4. Thời gian chẩn đoán trên đường live',2)
     rows=live_rows(root)
     if rows:
@@ -1016,9 +1107,11 @@ def build(facts,output=OUT,root=ROOT):
         fl=F('ttd')
         if fl:
             para(f'Thành phần thời gian của từng incident được thể hiện trong {fl}.');figure(fl,'ttd','Phân rã TTD từ cảnh báo tới báo cáo trên đường live',13.5)
+        para('Khoảng 70% TTD là thời gian collector chủ động chờ đủ 30 giây dữ liệu sau cảnh báo, nhằm có đủ bằng chứng về diễn biến sau thời điểm phát hiện. '
+             'Rút ngắn khoảng chờ sẽ giảm TTD nhưng có thể làm thiếu bằng chứng; đây là đánh đổi cần đánh giá riêng. Phần do LLM và truy xuất chỉ chiếm 6–9 giây.')
         para('Đây là số đo minh họa đường live trên một loại lỗi, không phải độ chính xác chung, và được báo cáo tách khỏi độ trễ phát lại của benchmark.')
     else:
-        wait('Chạy scripts/auto_diagnose.py để đo TTD từ cảnh báo tới báo cáo.')
+        wait('Chạy scripts/auto_diagnose.py để đo TTD từ cảnh báo tới báo cáo.',formal='TTD trên đường live chưa được đo trong bản nộp này.')
     H('4.5. Kết quả benchmark trên tập test',2)
     if off['available']:
         l1=T();l2=T()
@@ -1056,10 +1149,12 @@ def build(facts,output=OUT,root=ROOT):
         fl=F('benchmark') if pre['reportable'] else None
         if fl:
             para(f'{fl} biểu diễn tỷ lệ đúng Top-1 và Top-3 sơ bộ kèm khoảng tin cậy Wilson 95%.');figure(fl,'benchmark','Tỷ lệ đúng sơ bộ của bốn cấu hình trên tập test',13.5)
-        wait('Benchmark chính thức trên các ca test đã được duyệt độc lập (quy tắc dừng sớm, tối thiểu 10 ca) sẽ thay cho kết quả sơ bộ này.')
+        wait('Benchmark chính thức trên các ca test đã được duyệt độc lập (quy tắc dừng sớm, tối thiểu 10 ca) sẽ thay cho kết quả sơ bộ này.',
+             formal='Khi các ca test hoàn tất duyệt độc lập, benchmark chính thức theo quy tắc dừng sớm (tối thiểu 10 ca phủ đủ ba nhóm lỗi) sẽ thay thế kết quả sơ bộ này; nếu có ca bị loại khi duyệt, kết quả có thể thay đổi.')
     else:
         wait('Bảng độ chính xác B0–B3 (Top-1, Top-3, khoảng tin cậy Wilson 95%, theo nhóm lỗi), độ trễ phát lại và chi phí trên 40 ca test. Cần đủ 200 ca, '
-             'đóng băng protocol, phạm vi API được duyệt, rồi chạy experiments/evaluate.py và lưu tại '+OFFICIAL+'.')
+             'đóng băng protocol, phạm vi API được duyệt, rồi chạy experiments/evaluate.py và lưu tại '+OFFICIAL+'.',
+             formal='Benchmark trên tập test chưa được thực hiện trong bản nộp này.')
     ca=case_analysis(root)
     if ca:
         from experiments.evaluate import target_key
@@ -1121,7 +1216,8 @@ def build(facts,output=OUT,root=ROOT):
         lbl=T();para(f'Kết quả chấm nhận định bởi hai người được trình bày trong {lbl}.')
         table(lbl,'Kết quả chấm nhận định',['Cấu hình','Báo cáo','Nhận định','Grounding','Hallucination'],
               [[m,v['reports'],v['units'],pct(v['supported']/v['units']),pct(v['reports_with_unsupported']/v['reports'])] for m,v in sorted(gr['per_mode'].items())],[2.6,2.6,3,3.4,3.4])
-    else:wait('Grounding và hallucination do hai người chấm độc lập. '+gr.get('reason',''))
+    else:wait('Grounding và hallucination do hai người chấm độc lập. '+gr.get('reason',''),
+             formal='Việc chấm tính có căn cứ và hallucination cần hai người chấm độc lập trên từng nhận định của báo cáo. Bộ phiếu chấm đã được chuẩn bị (137 đơn vị nhận định từ 25 báo cáo giai đoạn phát triển) nhưng chưa có nhãn của người chấm tại thời điểm nộp, nên khóa luận không báo cáo hai chỉ số này; việc chấm được nêu là hướng tiếp theo.')
     H('4.9. Thời gian người dùng và giá trị kinh tế',2)
     if hu['available']:
         lbl=T();para(f'Kết quả phiên đo được trình bày trong {lbl}. Chênh lệch trung bình theo họ (dashboard trừ trợ lý) là '
@@ -1133,14 +1229,15 @@ def build(facts,output=OUT,root=ROOT):
             lbl=T();para(f'Phân tích độ nhạy theo chi phí giờ công giả định được trình bày trong {lbl}.')
             table(lbl,'Phân tích độ nhạy giá trị giờ công',['C_hour (VNĐ)','Giá trị giờ công/ca (VNĐ)','Chi phí API B3/ca (USD)'],
                   [[num(h,0),num(delta/3600*h,0),num(cost,5)] for h in (100_000,200_000,400_000)],[4.5,5.5,5])
-        else:wait('Phân tích độ nhạy cần chi phí API B3 trên tập test.')
+        else:wait('Phân tích độ nhạy cần chi phí API B3 trên tập test.',formal='Phân tích độ nhạy chưa thực hiện vì chưa có chi phí API trên tập test chính thức.')
     elif hu.get('cancelled'):
         para('Phiên đo thời gian người dùng đã được hủy trước khi bắt đầu (ngày 26/11/2026) để kịp hạn nộp: 14 ca test được chỉ định trước '
              'không thể thu đủ trong thời gian còn lại, và việc mở review ca test khiến reviewer không còn ở trạng thái mù với đáp án. Vì vậy '
              'khóa luận không báo cáo thời gian chẩn đoán của người dùng, thời gian tiết kiệm hay giá trị ròng; RQ4 chỉ được trả lời một phần '
              'qua TTD live (mục 4.4) và chi phí API (mục 4.7).')
     else:
-        wait('Phiên đo 14 nhiệm vụ ẩn đáp án chưa hoàn tất; chưa tính giờ công tiết kiệm hoặc giá trị ròng ('+HUMAN+').')
+        wait('Phiên đo 14 nhiệm vụ ẩn đáp án chưa hoàn tất; chưa tính giờ công tiết kiệm hoặc giá trị ròng ('+HUMAN+').',
+             formal='Phiên đo thời gian người dùng chưa được thực hiện, nên khóa luận không báo cáo giờ công tiết kiệm hay giá trị ròng.')
     H('4.10. Thảo luận',2)
     H('4.10.1. Trả lời câu hỏi nghiên cứu',3)
     if off['available']:
@@ -1161,7 +1258,8 @@ def build(facts,output=OUT,root=ROOT):
             para(f'{rq}: Top-1 sơ bộ của {a} là {pct(ps[(a,"all")]["top1_correct"]["rate"])}, của {b} là {pct(ps[(b,"all")]["top1_correct"]["rate"])}; '
                  +('khoảng tin cậy chồng nhau nên chưa đủ bằng chứng cho khác biệt.' if overlap else 'khoảng tin cậy không chồng nhau.'))
         para('RQ4: chỉ trả lời một phần: có TTD live và chi phí API, không có số đo thời gian người dùng.')
-    else:wait('Câu trả lời RQ1–RQ4 chỉ viết khi có benchmark chính thức; kết quả phát triển ở mục 4.3 không dùng để kết luận.')
+    else:wait('Câu trả lời RQ1–RQ4 chỉ viết khi có benchmark chính thức; kết quả phát triển ở mục 4.3 không dùng để kết luận.',
+        formal='Chưa có kết quả trên tập test nên các câu hỏi nghiên cứu chưa được trả lời định lượng; kết quả phát triển ở mục 4.3 không được dùng để kết luận.')
     H('4.10.2. Các mối đe dọa đến tính hợp lệ',3)
     bullets(['Tính tổng quát: lỗi được tiêm trên một ứng dụng mẫu, chưa phản ánh đầy đủ sự cố production.',
              'Môi trường: phần lớn image chạy giả lập AMD64 trên ARM64, ảnh hưởng tới số đo CPU và độ trễ.',
@@ -1196,7 +1294,8 @@ def build(facts,output=OUT,root=ROOT):
           'ba nguồn, Chaos Mesh, collector, ngữ cảnh có mã bằng chứng, truy xuất runbook và ca đã giải quyết, sinh báo cáo bằng Gemini, giao diện '
           'Streamlit, dashboard Grafana và worker chẩn đoán tự động; cùng protocol thu dữ liệu được ghim bằng hash, duyệt độc lập và ghi bằng transaction.',False)])
     if not (off['available'] and hu['available'] and d['complete']):
-        wait('Kết luận định lượng về RQ1–RQ4 sẽ được viết khi đủ 200 ca, có benchmark test, chấm grounding và phiên đo người thật.')
+        wait('Kết luận định lượng về RQ1–RQ4 sẽ được viết khi đủ 200 ca, có benchmark test, chấm grounding và phiên đo người thật.',
+             formal='Các kết luận định lượng ở trên dựa trên kết quả sơ bộ; kết luận chính thức cần benchmark trên các ca đã duyệt, việc chấm tính có căn cứ và phiên đo thời gian người dùng.')
     rich([('Hạn chế. ',True),('Phạm vi gồm ba nhóm lỗi trên một ứng dụng mẫu, chạy giả lập một phần trên một máy cá nhân, với một người duyệt dữ liệu. '
           'Tại thời điểm nộp, kết quả benchmark mới ở mức sơ bộ trên các ca test chưa qua duyệt độc lập, cỡ mẫu nhỏ nên khoảng tin cậy rộng và các so sánh giữa '
           'cấu hình chưa đủ để kết luận có ý nghĩa thống kê. Phiên đo thời gian người dùng đã được hủy, nên chưa có số liệu về thời gian kỹ sư tiết kiệm. Cửa sổ quan '
@@ -1205,6 +1304,9 @@ def build(facts,output=OUT,root=ROOT):
           'giữ tỷ lệ ở mọi điểm dừng, quy tắc dừng sớm được chốt trước khi có kết quả, và mọi bước từ dữ liệu thô tới con số trong báo cáo đều có thể chạy lại. '
           'Kết quả sơ bộ cho thấy hướng đi đáng tiếp tục: cấu hình đầy đủ B3 đứng đầu trên mọi chỉ số đã đo và tránh được nhiễu nền mà các cấu hình chỉ dùng '
           'log mắc phải.',False)])
+    rich([('Việc tiếp theo. ',True),('Ba việc cần hoàn tất để có kết luận chính thức: duyệt độc lập các ca đã thu và chạy benchmark chính thức theo quy tắc dừng '
+          'sớm hoặc trên đủ 40 ca test; chấm tính có căn cứ và hallucination bởi hai người trên các báo cáo của tập test; và thực hiện phiên đo thời gian người dùng '
+          'với một người tham gia chưa xem đáp án để trả lời trọn vẹn RQ4. Đợt thu dữ liệu vẫn đang chạy và mọi công cụ cho ba việc này đã sẵn sàng.',False)])
     rich([('Hướng phát triển. ',True),('Kiểm tra ổn định dài hạn và build native cho toàn bộ dịch vụ; mở rộng nhóm lỗi (cấu hình sai, lỗi cơ sở dữ liệu); '
           'bổ sung reviewer thứ hai; giảm thời gian chờ cửa sổ trong TTD live; đánh giá hiệu chỉnh độ tin cậy do mô hình tự khai.',False)])
 

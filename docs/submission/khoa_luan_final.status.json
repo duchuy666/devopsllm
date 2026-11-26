@@ -1,12 +1,12 @@
 {
-  "built_at": "26/11/2026 13:04 (UTC+7)",
+  "built_at": "26/11/2026 14:32 (UTC+7)",
   "output": "docs/submission/khoa_luan_final.docx",
   "pending": [
     "Dataset: 0/200 ca admitted (cần reviewer duyệt; nếu dừng sớm, báo cáo theo quy tắc dừng sớm khi có ≥10 ca test admitted).",
     "Benchmark B0–B3 trên 40 ca test chính thức chưa chạy (results/evaluation/official-test-B0-B3.json).",
     "Evidence grounding/hallucination: Chưa có bộ phiếu chấm claim cho tập test chính thức."
   ],
-  "placeholder_blocks": 6,
+  "placeholder_blocks": 5,
   "admitted": 0,
   "official_benchmark": false,
   "grounding": false,

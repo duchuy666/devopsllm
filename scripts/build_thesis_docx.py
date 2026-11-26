@@ -392,20 +392,20 @@ def build(facts,output=OUT,root=ROOT):
     new_section(fmt='lowerRoman',start=1)
     front_title('MỤC LỤC');field(para(indent=False),'TOC \\o "1-3" \\h \\z \\u','Nhấn chuột phải → Update Field (F9) để cập nhật mục lục.')
     H('LỜI CAM ĐOAN')
-    para(f'Tôi xin cam đoan khóa luận tốt nghiệp “{meta["title"].capitalize()}” là công trình nghiên cứu của riêng tôi, được thực hiện '
-         f'dưới sự hướng dẫn của {meta["supervisor_title"]} {meta["supervisor"]}. Các số liệu và kết quả trình bày trong khóa luận được '
-         'sinh trực tiếp từ dữ liệu thực nghiệm đã lưu trữ, có thể kiểm tra lại; những nội dung chưa có dữ liệu được ghi rõ là chưa có. '
-         'Các tài liệu tham khảo đều được trích dẫn đầy đủ theo chuẩn IEEE.')
-    para('Tôi xin hoàn toàn chịu trách nhiệm về lời cam đoan này.')
+    para(f'Khóa luận này do tôi tự thực hiện trong học kỳ cuối, với sự định hướng của {meta["supervisor_title"]} {meta["supervisor"]}. '
+         'Mọi con số trong các chương được tính từ dữ liệu thực nghiệm mà tôi thu trên testbed riêng và lưu lại cùng mã nguồn, nên người đọc có thể '
+         'chạy lại để đối chiếu; chỗ nào chưa có số đo thì được để trống và ghi chú rõ thay vì ước đoán. Ý tưởng, số liệu hay hình bảng lấy từ '
+         'công trình khác đều được dẫn nguồn theo chuẩn IEEE.')
+    para('Nếu có sai lệch so với những điều nêu trên, tôi chịu trách nhiệm trước Khoa và Nhà trường.')
     for text,b,it in ((f'{meta["place"]}, ngày …… tháng …… năm {dt.date.today().year}',False,True),('Sinh viên',True,False),
                       ('(Ký và ghi rõ họ tên)',False,True),('',False,False),('',False,False),(meta['student'],True,False)):
         p=para(text,bold=b,italic=it,after=0,align=C)
         p.paragraph_format.left_indent=Cm(8)
     H('LỜI CẢM ƠN')
-    para(f'Tôi xin gửi lời cảm ơn chân thành tới {meta["supervisor_title"]} {meta["supervisor"]} đã tận tình hướng dẫn, góp ý về định '
-         'hướng nghiên cứu và phương pháp đánh giá trong suốt quá trình thực hiện khóa luận.')
-    para('Tôi xin cảm ơn các thầy cô Khoa Công nghệ thông tin, Trường Công nghệ, Đại học Kinh tế Quốc dân đã trang bị kiến thức nền tảng '
-         'trong những năm học vừa qua, và cảm ơn gia đình, bạn bè đã động viên, hỗ trợ tôi hoàn thành khóa luận.')
+    para(f'Những góp ý của {meta["supervisor_title"]} {meta["supervisor"]}, nhất là về cách thu hẹp phạm vi, chọn ba nhóm lỗi và đánh giá bằng cả '
+         'chi phí lẫn độ chính xác, đã định hình phần lớn khóa luận này. Em cảm ơn Thầy vì đã dành thời gian đọc và phản biện từng bản nháp.')
+    para('Em cũng cảm ơn các thầy cô Khoa Công nghệ thông tin, Trường Công nghệ, Đại học Kinh tế Quốc dân về những môn học làm nền cho đề tài, '
+         'và cảm ơn gia đình, bạn bè đã ở bên em trong những tuần chạy thực nghiệm kéo dài.')
     H('DANH MỤC TỪ VIẾT TẮT')
     abbreviations=[('AIOps','Artificial Intelligence for IT Operations','Trí tuệ nhân tạo cho vận hành CNTT'),
         ('API','Application Programming Interface','Giao diện lập trình ứng dụng'),('CI','Confidence Interval','Khoảng tin cậy'),
@@ -471,42 +471,46 @@ def build(facts,output=OUT,root=ROOT):
          'kiểm chứng một cách định lượng khi nào và ở mức độ nào LLM kết hợp RAG thực sự giúp ích cho chẩn đoán sự cố.')
     H('1.2. Mục đích và câu hỏi nghiên cứu',2)
     H('1.2.1. Mục đích',3)
-    bullets(['Xây dựng pipeline giám sát – phát hiện – thu thập ngữ cảnh – chẩn đoán trên Kubernetes, tái lập được trên máy cá nhân.',
+    bullets(['Dựng một chuỗi xử lý liền mạch trên Kubernetes, đi từ cảnh báo tới báo cáo chẩn đoán, có thể dựng lại trọn vẹn trên một laptop.',
              'Tích hợp LLM và RAG để đề xuất nguyên nhân gốc, hướng khắc phục và trích dẫn mã bằng chứng từ telemetry.',
              'Xây dựng bộ dữ liệu 200 ca có nhãn đúng bằng Chaos Engineering, với protocol thu thập được ghim trước và duyệt độc lập.',
              'Đánh giá các cấu hình bằng độ chính xác, mức độ có căn cứ của kết luận, thời gian chẩn đoán, chi phí API và giá trị giờ công.'])
     H('1.2.2. Câu hỏi nghiên cứu',3)
-    bullets(['RQ1: LLM kết hợp RAG có xác định đúng nguyên nhân gốc tốt hơn baseline dựa trên luật và ngưỡng (B0) hay không?',
-             'RQ2: Cung cấp đồng thời log, metric và trace (B3) có cải thiện độ chính xác và giảm hallucination so với chỉ dùng log (B2) hay không?',
-             'RQ3: RAG trên runbook (B2) có cải thiện chất lượng chẩn đoán so với LLM không truy xuất (B1) hay không?',
-             'RQ4: Hệ thống có giảm thời gian chẩn đoán đủ để bù chi phí API và tạo giá trị vận hành hay không?'])
+    bullets(['RQ1: So với bộ luật ngưỡng chạy trên cùng ngữ cảnh (B0), mô hình ngôn ngữ có truy xuất tri thức (B3) chỉ ra đúng dịch vụ và loại lỗi thường xuyên hơn không?',
+             'RQ2: Khi bổ sung metric và trace bên cạnh log (B3 so với B2), tỷ lệ chẩn đoán đúng có tăng và số nhận định thiếu căn cứ có giảm không?',
+             'RQ3: Việc đưa runbook vào prompt qua truy xuất (B2 so với B1) có làm chẩn đoán tốt lên không?',
+             'RQ4: Thời gian rút ngắn được có đủ lớn để bù tiền gọi API và đem lại giá trị cho người vận hành không?'])
     H('1.3. Đối tượng và phạm vi nghiên cứu',2)
     H('1.3.1. Đối tượng nghiên cứu',3)
     para('Đối tượng nghiên cứu là quá trình chẩn đoán nguyên nhân gốc của sự cố trong hệ thống microservices dựa trên telemetry, và vai trò '
          'của LLM, RAG, dữ liệu đa nguồn trong quá trình đó.')
     H('1.3.2. Phạm vi nghiên cứu',3)
-    para('Hệ thống thử nghiệm là ứng dụng thương mại điện tử Sock Shop chạy trên Minikube. Ba nhóm lỗi được nghiên cứu gồm cạn kiệt tài nguyên '
-         '(CPU, bộ nhớ), suy giảm mạng (độ trễ, mất gói) và lỗi Pod. Hệ thống đóng vai trò trợ lý: đề xuất giả thuyết có bằng chứng để kỹ sư '
-         'xác nhận, không tự động sửa lỗi trên môi trường production. Lỗi cấu hình sai được loại khỏi phạm vi vì khó chuẩn hóa và tự động hóa.')
+    para('Mọi thí nghiệm diễn ra trên Sock Shop, một cửa hàng trực tuyến mẫu triển khai trong Minikube. Đề tài chỉ xét ba kiểu sự cố: dịch vụ '
+         'bị thiếu CPU hoặc bộ nhớ, đường mạng giữa hai dịch vụ bị chậm hoặc rơi gói, và Pod bị dừng đột ngột. Sản phẩm chỉ đưa ra giả thuyết kèm '
+         'bằng chứng để người vận hành quyết định; nó không tự can thiệp vào hệ thống thật. Sự cố do cấu hình sai không được đưa vào vì rất khó '
+         'tạo ra một cách lặp lại được và có nhãn rõ ràng như ba kiểu trên.')
     H('1.4. Ý nghĩa khoa học và thực tiễn',2)
     para('Về khoa học, đề tài cung cấp một pipeline đánh giá tái lập được, trong đó nhãn đúng được tách khỏi ngữ cảnh của mô hình, mọi nguồn '
          'khoa học được ghim bằng hash và các so sánh dùng cùng tập kiểm thử với khoảng tin cậy. Về thực tiễn, đề tài đo trực tiếp thời gian '
          'và chi phí của việc dùng LLM, làm cơ sở để đánh giá giá trị vận hành thay vì chỉ dựa vào độ chính xác.')
     H('1.5. Tổng quan các nghiên cứu liên quan',2)
     H('1.5.1. Phân tích nguyên nhân gốc dựa trên telemetry',3)
-    para('Trước làn sóng LLM, các phương pháp RCA cho microservices khai thác phát hiện bất thường, đồ thị phụ thuộc, suy luận nhân quả hoặc học '
-         'máy trên metric, log và trace. DiagFusion cho thấy kết hợp dữ liệu đa phương thức cải thiện chẩn đoán so với một nguồn đơn lẻ [2]. '
-         'RCAEval công bố 735 ca lỗi từ ba hệ thống microservices cùng 15 baseline, nhấn mạnh vai trò của bộ dữ liệu và protocol tái lập [4]. '
-         'MicroOps tập trung vào nền tảng sinh dữ liệu phục vụ AIOps [5].')
+    para('Các hướng RCA cho microservices ra đời trước khi có LLM chủ yếu dựa vào phát hiện bất thường trên chuỗi thời gian, dựng đồ thị phụ '
+         'thuộc giữa dịch vụ hoặc suy luận nhân quả. Nhóm tác giả DiagFusion ghép log, metric và trace vào một mô hình học đồ thị và cho thấy '
+         'cách ghép này chẩn đoán tốt hơn khi chỉ dùng từng nguồn riêng [2]. RCAEval đi theo hướng khác: thay vì đề xuất thuật toán mới, họ '
+         'công bố một bộ benchmark với 735 ca lỗi trên ba hệ thống và 15 phương pháp đối chứng để các nghiên cứu sau so sánh cùng điều kiện [4]. '
+         'MicroOps thì tập trung vào việc sinh dữ liệu mô phỏng cho các mô hình AIOps [5].')
     H('1.5.2. Tri thức sự cố và mô hình ngôn ngữ lớn',3)
-    para('Nghiên cứu tại Salesforce khai thác hơn 2.000 hồ sơ điều tra sự cố để hỗ trợ truy xuất tri thức cho RCA [1]. Ahmed và cộng sự đánh giá '
-         'LLM trên hơn 40.000 sự cố tại Microsoft, cho thấy tiềm năng gợi ý nguyên nhân và biện pháp khắc phục, nhưng dựa trên dữ liệu doanh '
-         'nghiệp khó tái lập công khai [3]. Các hướng gần đây tổ chức lịch sử sự cố thành bộ nhớ vận hành có cấu trúc để truy xuất [6].')
+    para('Ghosh và cộng sự dùng khoảng hai nghìn biên bản điều tra sự cố nội bộ của Salesforce làm kho tri thức, từ đó gợi ý nguyên nhân cho sự '
+         'cố mới dựa trên những ca tương tự đã xử lý [1]. Ở quy mô lớn hơn, nhóm của Ahmed thử nghiệm LLM trên hơn bốn mươi nghìn sự cố của '
+         'Microsoft và ghi nhận mô hình có thể đề xuất nguyên nhân cùng bước khắc phục hữu ích; tuy vậy dữ liệu này thuộc doanh nghiệp nên '
+         'người ngoài không thể chạy lại [3]. Gần đây, Guan và cộng sự sắp xếp các sự cố đã giải quyết thành bộ nhớ có cấu trúc để LLM tra cứu [6].')
     H('1.5.3. Khoảng trống nghiên cứu',3)
     lbl=T()
-    para(f'So sánh các công trình tiêu biểu với đề tài được trình bày trong {lbl}. Có bốn khoảng trống phù hợp với quy mô khóa luận: thiếu pipeline '
-         'end-to-end quan sát được thay vì thuật toán riêng lẻ; dữ liệu đánh giá LLM thường không tái lập công khai; ít nghiên cứu nhỏ gọn kết '
-         'hợp telemetry đa nguồn, RAG và Chaos Engineering để tạo nhãn đúng; chi phí API so với giờ công tiết kiệm hiếm khi là chỉ tiêu chính.')
+    para(f'{lbl} đặt các công trình trên cạnh đề tài này. Nhìn tổng thể, còn bốn điểm để một khóa luận có thể đóng góp. Thứ nhất, phần lớn '
+         'công trình đề xuất thuật toán chứ ít khi dựng trọn một hệ thống chạy được từ cảnh báo tới báo cáo. Thứ hai, các đánh giá LLM thường '
+         'dùng dữ liệu đóng. Thứ ba, hiếm có nghiên cứu quy mô nhỏ dùng Chaos Engineering để tự tạo nhãn đúng rồi đưa cả ba nguồn telemetry và '
+         'tri thức truy xuất vào cùng một phép so sánh. Thứ tư, tiền gọi API thường không được đặt cạnh thời gian kỹ sư tiết kiệm được.')
     table(lbl,'So sánh đề tài với các công trình liên quan',['Công trình','Dữ liệu/phương pháp','Khoảng trống so với đề tài'],[
         ['ICA – Salesforce 2022 [1]','Hồ sơ sự cố + truy xuất','Không có pipeline chaos và telemetry live'],
         ['DiagFusion 2023 [2]','Log + metric + trace + GNN','Không dùng LLM/RAG sinh giải thích'],

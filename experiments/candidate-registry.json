@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-26T05:04:37.510287+00:00",
+  "updated_at": "2026-11-26T07:26:49.162462+00:00",
   "official_admitted": 0,
   "note": "Separate execution registry. The scenario plan remains a draft template, not a list of admitted cases.",
   "attempts": [
@@ -416,6 +416,150 @@
       "admission_status": "requires_review",
       "effect_review_status": "not_verified",
       "path": "data/candidates/CANDIDATE-20261126T050436875021-S0068"
+    },
+    {
+      "candidate_id": "CANDIDATE-20261126T061424070468-S0068",
+      "scenario_id": "S0068",
+      "split": "reference",
+      "execution_status": "captured_requires_review",
+      "admission_status": "requires_review",
+      "effect_review_status": "requires_technical_effect_review",
+      "path": "data/candidates/CANDIDATE-20261126T061424070468-S0068"
+    },
+    {
+      "candidate_id": "CANDIDATE-20261126T061658437005-S0075",
+      "scenario_id": "S0075",
+      "split": "reference",
+      "execution_status": "captured_requires_review",
+      "admission_status": "requires_review",
+      "effect_review_status": "requires_technical_effect_review",
+      "path": "data/candidates/CANDIDATE-20261126T061658437005-S0075"
+    },
+    {
+      "candidate_id": "CANDIDATE-20261126T061931675354-S0050",
+      "scenario_id": "S0050",
+      "split": "validation",
+      "execution_status": "captured_requires_review",
+      "admission_status": "requires_review",
+      "effect_review_status": "requires_technical_effect_review",
+      "path": "data/candidates/CANDIDATE-20261126T061931675354-S0050"
+    },
+    {
+      "candidate_id": "CANDIDATE-20261126T062205483026-S0182",
+      "scenario_id": "S0182",
+      "split": "validation",
+      "execution_status": "captured_requires_review",
+      "admission_status": "requires_review",
+      "effect_review_status": "requires_technical_effect_review",
+      "path": "data/candidates/CANDIDATE-20261126T062205483026-S0182"
+    },
+    {
+      "candidate_id": "CANDIDATE-20261126T063440215731-S0082",
+      "scenario_id": "S0082",
+      "split": "reference",
+      "execution_status": "captured_requires_review",
+      "admission_status": "requires_review",
+      "effect_review_status": "requires_technical_effect_review",
+      "path": "data/candidates/CANDIDATE-20261126T063440215731-S0082"
+    },
+    {
+      "candidate_id": "CANDIDATE-20261126T063715872975-S0089",
+      "scenario_id": "S0089",
+      "split": "reference",
+      "execution_status": "captured_requires_review",
+      "admission_status": "requires_review",
+      "effect_review_status": "requires_technical_effect_review",
+      "path": "data/candidates/CANDIDATE-20261126T063715872975-S0089"
+    },
+    {
+      "candidate_id": "CANDIDATE-20261126T063948917111-S0096",
+      "scenario_id": "S0096",
+      "split": "reference",
+      "execution_status": "captured_requires_review",
+      "admission_status": "requires_review",
+      "effect_review_status": "requires_technical_effect_review",
+      "path": "data/candidates/CANDIDATE-20261126T063948917111-S0096"
+    },
+    {
+      "candidate_id": "CANDIDATE-20261126T064223109107-S0195",
+      "scenario_id": "S0195",
+      "split": "test",
+      "execution_status": "captured_requires_review",
+      "admission_status": "requires_review",
+      "effect_review_status": "requires_technical_effect_review",
+      "path": "data/candidates/CANDIDATE-20261126T064223109107-S0195"
+    },
+    {
+      "candidate_id": "CANDIDATE-20261126T065459672993-S0123",
+      "scenario_id": "S0123",
+      "split": "test",
+      "execution_status": "captured_requires_review",
+      "admission_status": "requires_review",
+      "effect_review_status": "requires_technical_effect_review",
+      "path": "data/candidates/CANDIDATE-20261126T065459672993-S0123"
+    },
+    {
+      "candidate_id": "CANDIDATE-20261126T065748700652-S0102",
+      "scenario_id": "S0102",
+      "split": "reference",
+      "execution_status": "captured_requires_review",
+      "admission_status": "requires_review",
+      "effect_review_status": "requires_technical_effect_review",
+      "path": "data/candidates/CANDIDATE-20261126T065748700652-S0102"
+    },
+    {
+      "candidate_id": "CANDIDATE-20261126T070023592644-S0116",
+      "scenario_id": "S0116",
+      "split": "validation",
+      "execution_status": "captured_requires_review",
+      "admission_status": "requires_review",
+      "effect_review_status": "requires_technical_effect_review",
+      "path": "data/candidates/CANDIDATE-20261126T070023592644-S0116"
+    },
+    {
+      "candidate_id": "CANDIDATE-20261126T070312923064-S0189",
+      "scenario_id": "S0189",
+      "split": "test",
+      "execution_status": "captured_requires_review",
+      "admission_status": "requires_review",
+      "effect_review_status": "requires_technical_effect_review",
+      "path": "data/candidates/CANDIDATE-20261126T070312923064-S0189"
+    },
+    {
+      "candidate_id": "CANDIDATE-20261126T071547991897-S0069",
+      "scenario_id": "S0069",
+      "split": "reference",
+      "execution_status": "captured_requires_review",
+      "admission_status": "requires_review",
+      "effect_review_status": "requires_technical_effect_review",
+      "path": "data/candidates/CANDIDATE-20261126T071547991897-S0069"
+    },
+    {
+      "candidate_id": "CANDIDATE-20261126T071837033551-S0055",
+      "scenario_id": "S0055",
+      "split": "test",
+      "execution_status": "captured_requires_review",
+      "admission_status": "requires_review",
+      "effect_review_status": "requires_technical_effect_review",
+      "path": "data/candidates/CANDIDATE-20261126T071837033551-S0055"
+    },
+    {
+      "candidate_id": "CANDIDATE-20261126T072126617359-S0076",
+      "scenario_id": "S0076",
+      "split": "reference",
+      "execution_status": "captured_requires_review",
+      "admission_status": "requires_review",
+      "effect_review_status": "requires_technical_effect_review",
+      "path": "data/candidates/CANDIDATE-20261126T072126617359-S0076"
+    },
+    {
+      "candidate_id": "CANDIDATE-20261126T072415433747-S0176",
+      "scenario_id": "S0176",
+      "split": "validation",
+      "execution_status": "captured_requires_review",
+      "admission_status": "requires_review",
+      "effect_review_status": "requires_technical_effect_review",
+      "path": "data/candidates/CANDIDATE-20261126T072415433747-S0176"
     }
   ]
 }

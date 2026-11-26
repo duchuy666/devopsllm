@@ -435,6 +435,10 @@ def build(facts,output=OUT,root=ROOT,submission=True):
          'Mọi con số trong các chương được tính từ dữ liệu thực nghiệm mà tôi thu trên testbed riêng và lưu lại cùng mã nguồn, nên người đọc có thể '
          'chạy lại để đối chiếu; chỗ nào chưa có số đo thì được để trống và ghi chú rõ thay vì ước đoán. Ý tưởng, số liệu hay hình bảng lấy từ '
          'công trình khác đều được dẫn nguồn theo chuẩn IEEE.')
+    para('Trong quá trình thực hiện, tôi có sử dụng trợ lý trí tuệ nhân tạo Claude (Anthropic) để hỗ trợ viết và kiểm thử mã nguồn, soạn thảo và biên tập '
+         'văn bản báo cáo. Mọi nội dung có sự hỗ trợ của công cụ này đều đã được tôi đọc, kiểm tra lại với mã nguồn và dữ liệu, và tôi chịu trách nhiệm về '
+         'chúng. Các số liệu, bảng và hình về kết quả được tính trực tiếp từ dữ liệu thực nghiệm đã lưu, không do công cụ AI tạo ra. Mô hình Gemini (Google) '
+         'được dùng như một thành phần của hệ thống được nghiên cứu, không dùng để viết báo cáo.')
     para('Nếu có sai lệch so với những điều nêu trên, tôi chịu trách nhiệm trước Khoa và Nhà trường.')
     for text,b,it in ((f'{meta["place"]}, ngày …… tháng …… năm {dt.date.today().year}',False,True),('Sinh viên',True,False),
                       ('(Ký và ghi rõ họ tên)',False,True),('',False,False),('',False,False),(meta['student'],True,False)):

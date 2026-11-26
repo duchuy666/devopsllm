@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-26T07:55:21.112639+00:00",
+  "updated_at": "2026-11-26T08:39:11.455362+00:00",
   "official_admitted": 0,
   "note": "Separate execution registry. The scenario plan remains a draft template, not a list of admitted cases.",
   "attempts": [
@@ -596,6 +596,51 @@
       "admission_status": "requires_review",
       "effect_review_status": "requires_technical_effect_review",
       "path": "data/candidates/CANDIDATE-20261126T075245945991-S0155"
+    },
+    {
+      "candidate_id": "CANDIDATE-20261126T080522912143-S0090",
+      "scenario_id": "S0090",
+      "split": "reference",
+      "execution_status": "captured_requires_review",
+      "admission_status": "requires_review",
+      "effect_review_status": "requires_technical_effect_review",
+      "path": "data/candidates/CANDIDATE-20261126T080522912143-S0090"
+    },
+    {
+      "candidate_id": "CANDIDATE-20261126T080814519020-S0156",
+      "scenario_id": "S0156",
+      "split": "reference",
+      "execution_status": "captured_requires_review",
+      "admission_status": "requires_review",
+      "effect_review_status": "requires_technical_effect_review",
+      "path": "data/candidates/CANDIDATE-20261126T080814519020-S0156"
+    },
+    {
+      "candidate_id": "CANDIDATE-20261126T082054663328-S0130",
+      "scenario_id": "S0130",
+      "split": "test",
+      "execution_status": "captured_requires_review",
+      "admission_status": "requires_review",
+      "effect_review_status": "requires_technical_effect_review",
+      "path": "data/candidates/CANDIDATE-20261126T082054663328-S0130"
+    },
+    {
+      "candidate_id": "CANDIDATE-20261126T082345351684-S0157",
+      "scenario_id": "S0157",
+      "split": "reference",
+      "execution_status": "captured_requires_review",
+      "admission_status": "requires_review",
+      "effect_review_status": "requires_technical_effect_review",
+      "path": "data/candidates/CANDIDATE-20261126T082345351684-S0157"
+    },
+    {
+      "candidate_id": "CANDIDATE-20261126T083622115425-S0097",
+      "scenario_id": "S0097",
+      "split": "reference",
+      "execution_status": "captured_requires_review",
+      "admission_status": "requires_review",
+      "effect_review_status": "requires_technical_effect_review",
+      "path": "data/candidates/CANDIDATE-20261126T083622115425-S0097"
     }
   ]
 }

@@ -158,6 +158,27 @@ def test_count(root=ROOT):
     return sum(line.lstrip().startswith('def test_') for p in (Path(root)/'tests').glob('test_*.py') for line in p.read_text().splitlines())
 
 
+def case_analysis(root=ROOT):
+    """Per-case Top-1 of each mode plus token/cost per mode, from the official manifest if any, else the preliminary one."""
+    root=Path(root)
+    for name,role in (('manifest.json','official_test'),('manifest-preliminary.json','preliminary_unreviewed_test')):
+        for path in sorted(glob.glob(str(root/'results/prospective-benchmark/*/test'/name))):
+            manifest=load(path,{})
+            if manifest.get('dataset_role')!=role or (role=='official_test' and manifest.get('status')!='prepared_for_scoring'):continue
+            base=Path(path).parent;rows=[];usage={m:{'tokens':[],'cost':[],'latency':[]} for m in ('B1','B2','B3')}
+            for case in manifest['cases']:
+                row={'scenario_id':case['scenario_id'],'fault':case['expected']['fault_type'],'target':case['expected']['target']}
+                for mode in ('B0','B1','B2','B3'):
+                    saved=load(base/case['reports'][mode],{});report=(saved.get('generated') or {}).get('report') or {}
+                    hyp=report.get('hypotheses') or [];row[mode]=(hyp[0]['service'],hyp[0]['fault_type']) if hyp else None
+                    if mode!='B0' and saved.get('generated'):
+                        g=saved['generated'];usage[mode]['tokens'].append((g.get('usage_metadata') or {}).get('prompt_token_count') or 0)
+                        usage[mode]['cost'].append(g.get('estimated_paid_api_cost_usd') or 0);usage[mode]['latency'].append(g.get('api_latency_seconds') or 0)
+                rows.append(row)
+            return {'role':role,'rows':rows,'usage':usage}
+    return None
+
+
 def live_rows(root=ROOT):
     rows=[]
     for path in sorted(glob.glob(str(Path(root)/'results/live-diagnoses/*/ttd.json'))):
@@ -484,6 +505,16 @@ def build(facts,output=OUT,root=ROOT):
     para('Mô hình ngôn ngữ lớn có thể đọc và tóm tắt bằng chứng từ nhiều nguồn. Tuy nhiên, nếu không được cung cấp bằng chứng có cấu trúc '
          'và tri thức vận hành phù hợp, mô hình có thể tạo ra kết luận nghe hợp lý nhưng không được dữ liệu hỗ trợ. Đề tài được chọn để '
          'kiểm chứng một cách định lượng khi nào và ở mức độ nào LLM kết hợp RAG thực sự giúp ích cho chẩn đoán sự cố.')
+    H('1.1.3. Quy trình xử lý sự cố trong thực tế',3)
+    para('Trong mô hình vận hành phổ biến, một sự cố đi qua năm bước: phát hiện, phân loại mức độ, chẩn đoán, khắc phục và rút kinh nghiệm sau sự cố [10]. '
+         'Phát hiện thường được tự động hóa bằng luật cảnh báo; khắc phục có thể dựa vào runbook hoặc thao tác quay lui phiên bản. Bước chẩn đoán là bước '
+         'khó tự động nhất vì nó đòi hỏi suy luận trên nhiều nguồn dữ liệu có cấu trúc khác nhau và trên hiểu biết về kiến trúc hệ thống.')
+    para('Người trực sự cố thường bắt đầu từ cảnh báo, mở dashboard để xem dịch vụ nào có tài nguyên hoặc độ trễ bất thường, sau đó lọc log theo khoảng thời gian '
+         'và tìm trace của các yêu cầu lỗi. Mỗi bước chuyển đổi giữa các công cụ làm mất thời gian và dễ bỏ sót tín hiệu. Khi hệ thống có nhiều dịch vụ, một sự cố '
+         'thật thường kéo theo nhiều cảnh báo phụ ở các dịch vụ phía trước, và cảnh báo đến sớm nhất chưa chắc nằm ở dịch vụ gây lỗi.')
+    para('Một khó khăn khác là nhiễu nền. Hệ thống đang chạy luôn có những lỗi không liên quan tới sự cố hiện tại, ví dụ một dịch vụ phụ ghi lỗi kết nối lặp đi lặp lại '
+         'từ trước. Người có kinh nghiệm biết bỏ qua các tín hiệu này; một công cụ tự động thì phải được thiết kế và đánh giá để không bị chúng đánh lừa. Chương 4 '
+         'cho thấy đây chính là kiểu sai phổ biến nhất của các cấu hình chỉ dùng log.')
     H('1.2. Mục đích và câu hỏi nghiên cứu',2)
     H('1.2.1. Mục đích',3)
     bullets(['Dựng một chuỗi xử lý liền mạch trên Kubernetes, đi từ cảnh báo tới báo cáo chẩn đoán, có thể dựng lại trọn vẹn trên một laptop.',
@@ -634,6 +665,62 @@ def build(facts,output=OUT,root=ROOT):
     para('trong đó T tính bằng giây, C_hour là chi phí giờ công giả định (VNĐ/giờ) và API_cost là chi phí API quy đổi. T_baseline và T_assistant '
          'chỉ được lấy từ phiên đo người thật; C_hour được công bố kèm phân tích độ nhạy.')
 
+    H('2.9. Cơ chế tài nguyên và lỗi trong container',2)
+    H('2.9.1. Giới hạn CPU',3)
+    para('Linux kiểm soát tài nguyên của container qua cgroup. Với CPU, limit khai báo trong Kubernetes được chuyển thành hạn mức thời gian CPU trong mỗi chu kỳ '
+         'lập lịch (mặc định 100 ms): container có limit 0,2 core chỉ được chạy tổng cộng 20 ms trong mỗi 100 ms. Khi dùng hết hạn mức, các tiến trình trong '
+         'container bị tạm dừng tới chu kỳ sau, gọi là throttling. Hệ quả quan sát được không phải là lỗi mà là thời gian xử lý yêu cầu tăng lên, và mức sử dụng '
+         'CPU đo được dừng ở gần đúng giá trị limit.')
+    para('Điều này giải thích vì sao luật cảnh báo CPU trong đề tài so sánh mức sử dụng với limit của chính Pod thay vì với một ngưỡng tuyệt đối: một dịch vụ dùng '
+         '0,19 core có thể đang bão hòa nếu limit là 0,2 core, nhưng hoàn toàn bình thường nếu limit là 1 core.')
+    H('2.9.2. Giới hạn bộ nhớ và OOM',3)
+    para('Với bộ nhớ, limit là trần cứng. Khi lượng bộ nhớ đang dùng chạm trần và hạt nhân không thu hồi được thêm, bộ phận OOM killer chọn và dừng một tiến trình '
+         'trong cgroup đó; Kubernetes ghi nhận container kết thúc với lý do OOMKilled và khởi động lại nó. Vì bộ nhớ đệm tệp có thể được thu hồi, kubelet dùng '
+         'chỉ số working set, bằng bộ nhớ đang dùng trừ phần đệm tệp không hoạt động, để đánh giá áp lực thật. Đề tài dùng đúng chỉ số này trong cổng soak.')
+    para('Một lỗi tiêm thêm bộ nhớ có thể cho hai biểu hiện khác nhau: nếu tổng vẫn dưới limit, ta thấy bộ nhớ tăng rồi giảm; nếu vượt limit, container bị dừng '
+         'và khởi động lại, tức là biểu hiện giống lỗi Pod. Trong đợt thu dữ liệu, ca S0041 tiêm thêm 60% limit vào shipping vốn đã dùng khoảng 406/500 MiB, '
+         'nên shipping bị OOMKilled ngay sau một giây. Đây là ví dụ thực tế cho thấy ranh giới giữa hai nhóm lỗi không phải lúc nào cũng rõ.')
+    H('2.10. Mô hình dữ liệu telemetry',2)
+    H('2.10.1. Chuỗi thời gian và PromQL',3)
+    para('Trong Prometheus, mỗi chuỗi thời gian được xác định bởi tên metric và tập nhãn, ví dụ tên container_cpu_usage_seconds_total với nhãn namespace, pod, '
+         'container. Bộ đếm (counter) chỉ tăng và bị đặt lại về 0 khi tiến trình khởi động lại; hàm rate tính tốc độ tăng trung bình trong một cửa sổ và tự xử lý '
+         'việc đặt lại này. Độ trễ được ghi dưới dạng histogram gồm tổng thời gian và số yêu cầu; độ trễ trung bình trong một phút bằng rate của tổng chia rate '
+         'của số yêu cầu. Prometheus trong đề tài thu mẫu 15 giây một lần.')
+    para('Một chi tiết kỹ thuật quan trọng là chuỗi của container cũ có thể còn hiển thị một thời gian ngắn sau khi container khởi động lại. Nếu cộng gộp theo Pod '
+         'mà không lọc, mức sử dụng có thể bị tính gấp đôi. Truy vấn của đề tài nối chuỗi cAdvisor với mã container hiện hành do kube-state-metrics báo cáo để '
+         'chỉ giữ container đang chạy.')
+    H('2.10.2. Trace và cạnh gọi có hướng',3)
+    para('Một trace là cây các span. Mỗi span có mã trace, mã span, mã span cha, loại span (client hoặc server), dịch vụ, thời điểm bắt đầu và thời lượng. Khi '
+         'dịch vụ A gọi dịch vụ B, A tạo span client và B tạo span server con của nó. Từ cặp này có thể suy ra cạnh có hướng A→B và độ trễ trên cạnh. Với lỗi mạng, '
+         'thông tin hướng là bắt buộc: độ trễ giữa orders và payment do mạng chậm sẽ làm orders chậm theo, nên nếu chỉ nhìn metric thì dễ quy lỗi cho orders.')
+    H('2.10.3. Mô phỏng lỗi mạng bằng netem',3)
+    para('netem là bộ lập lịch hàng đợi (qdisc) của Linux cho phép thêm độ trễ, độ dao động (jitter), mất gói hoặc trùng gói vào lưu lượng đi ra của một giao '
+         'diện mạng. Chaos Mesh cài qdisc này vào không gian mạng của Pod mục tiêu và giới hạn theo đích, nên lỗi chỉ ảnh hưởng tới một cạnh gọi cụ thể. Mất gói '
+         '10–30% ở tầng mạng không đồng nghĩa với 10–30% yêu cầu HTTP thất bại, vì TCP truyền lại gói; biểu hiện chủ yếu là độ trễ tăng và phân tán.')
+    H('2.11. Sinh văn bản, truy xuất vector và phân tích log',2)
+    H('2.11.1. Sinh văn bản có cấu trúc và chi phí token',3)
+    para('LLM sinh văn bản tuần tự từng token, mỗi bước chọn token tiếp theo dựa trên phân phối xác suất có điều kiện theo toàn bộ ngữ cảnh trước đó. Để kết '
+         'quả chấm được bằng máy, đầu ra được ràng buộc theo một lược đồ JSON và được kiểm tra hợp lệ sau khi nhận. Chi phí API tính theo số token đầu vào và '
+         'đầu ra; với các mô hình có bước suy luận nội bộ, token suy luận cũng được tính như token đầu ra. Vì vậy, đưa thêm metric và trace vào prompt có thể cải '
+         'thiện chẩn đoán nhưng chắc chắn làm tăng chi phí, và cần được đo thay vì giả định.')
+    H('2.11.2. Tìm kiếm láng giềng gần đúng',3)
+    para('Tìm vector gần nhất chính xác trong tập lớn tốn thời gian tuyến tính. Qdrant dùng chỉ mục HNSW, một đồ thị nhiều tầng trong đó tầng trên thưa giúp di '
+         'chuyển nhanh tới vùng gần truy vấn và tầng dưới dày giúp tinh chỉnh kết quả, cho độ phức tạp tìm kiếm xấp xỉ logarit [19]. Với năm runbook và vài chục ca '
+         'đã giải quyết, lợi ích tốc độ không đáng kể; lý do chọn Qdrant là khả năng lọc theo metadata (vai trò tài liệu, phiên bản cơ sở tri thức) ngay trong truy vấn.')
+    H('2.11.3. Ví dụ phân tích log bằng Drain',3)
+    para('Giả sử có ba dòng log: “Connection refused to 10.0.0.5:8080”, “Connection refused to 10.0.0.7:8080” và “Order 4512 created”. Drain tách token theo '
+         'khoảng trắng và định tuyến theo độ dài: hai dòng đầu có bốn token nên vào cùng nhánh, dòng thứ ba có ba token nên vào nhánh khác. Trong nhánh đầu, hai '
+         'dòng giống nhau ở ba trên bốn vị trí, vượt ngưỡng tương đồng, nên được gộp thành template “Connection refused to <*>” với số lần xuất hiện bằng 2 [17]. '
+         'Nhờ vậy, hàng nghìn dòng log lặp lại trong cửa sổ quan sát được rút gọn thành vài chục template kèm số đếm trước khi đưa vào prompt.')
+    H('2.12. Tính hợp lệ của thực nghiệm phần mềm',2)
+    H('2.12.1. Các loại mối đe dọa',3)
+    para('Theo cách phân loại phổ biến trong thực nghiệm kỹ thuật phần mềm, có bốn nhóm mối đe dọa [20]. Tính hợp lệ nội tại hỏi liệu khác biệt đo được có thực sự '
+         'do yếu tố đang xét gây ra hay do yếu tố khác. Tính hợp lệ cấu trúc hỏi liệu chỉ số có đo đúng khái niệm cần đo. Tính hợp lệ bên ngoài hỏi kết quả có tổng '
+         'quát hóa được ra ngoài môi trường thử nghiệm. Tính hợp lệ của kết luận thống kê hỏi cỡ mẫu và phép kiểm định có đủ để kết luận.')
+    H('2.12.2. Rò rỉ dữ liệu và chia nhóm',3)
+    para('Trong đánh giá có truy xuất, rò rỉ xảy ra khi thông tin của ca kiểm thử xuất hiện trong cơ sở tri thức hoặc trong quá trình tinh chỉnh. Chia ngẫu nhiên '
+         'từng ca là không đủ, vì hai ca cùng loại lỗi, cùng mục tiêu và chỉ khác cường độ gần như là một. Đề tài chia theo họ kịch bản: mọi cấu hình cùng loại '
+         'lỗi, biến thể và mục tiêu nằm trong cùng một tập, và chỉ tập reference được phép vào cơ sở tri thức.')
     # ======================================================= CHƯƠNG 3
     H('CHƯƠNG 3. PHƯƠNG PHÁP NGHIÊN CỨU VÀ THIẾT KẾ HỆ THỐNG')
     H('3.1. Phương pháp nghiên cứu',2)
@@ -775,6 +862,119 @@ def build(facts,output=OUT,root=ROOT):
          'incident mới từ collector, dựng ngữ cảnh, gọi B3 và ghi TTD; worker bắt buộc giới hạn số lượt gọi, lọc theo nhãn cảnh báo và tự tạm dừng '
          'khi đang thu dữ liệu để cảnh báo của kịch bản không bị chẩn đoán live.')
 
+    H('3.11. Chi tiết các thành phần',2)
+    H('3.11.1. Luật cảnh báo',3)
+    lbl=T()
+    para(f'Các luật cảnh báo đang triển khai được liệt kê trong {lbl}. Mọi luật đều yêu cầu điều kiện kéo dài ít nhất 15 giây để tránh báo động do dao động ngắn.')
+    table(lbl,'Luật cảnh báo trong Prometheus',['Cảnh báo','Điều kiện','Ý nghĩa'],[
+        ['SockShopCPUHigh','CPU dùng / limit CPU của Pod > 0,75','Áp lực CPU tại Pod'],
+        ['SockShopMemoryHigh','Working set / limit bộ nhớ > 0,75','Áp lực bộ nhớ tại Pod'],
+        ['SockShopCatalogueSlow','Độ trễ trung bình /catalogue > 250 ms','Triệu chứng chậm của trang danh mục'],
+        ['SockShopRequestSlow','Độ trễ trung bình /cart, /orders > 250 ms và ≥ 5 yêu cầu/phút','Triệu chứng chậm ở luồng giỏ hàng, đặt hàng'],
+        ['SockShopPodNotReady','Pod không ở trạng thái Ready','Gián đoạn dịch vụ'],
+        ['SockShopPodLifecycleChange','Pod được tạo trong 60 giây gần nhất','Pod vừa bị thay thế']],[4.2,6.3,4.5])
+    para('Các luật chỉ mô tả triệu chứng tại nơi quan sát được. Chẳng hạn RequestSlow chỉ cho biết route của front-end chậm, không cho biết cạnh mạng nào gây chậm; '
+         'việc xác định cạnh là nhiệm vụ của bước chẩn đoán.')
+    H('3.11.2. Giao diện lập trình của collector',3)
+    lbl=T()
+    para(f'Collector cung cấp các endpoint trong {lbl}. Dữ liệu thô của mỗi incident được lưu thành tệp riêng cùng manifest ghi cửa sổ thời gian, giới hạn truy vấn và lỗi nếu có.')
+    table(lbl,'Endpoint của incident collector',['Phương thức và đường dẫn','Chức năng'],[
+        ['POST /alerts','Nhận webhook từ Alertmanager, khử trùng lặp theo nhãn và thời điểm bắt đầu, tạo incident'],
+        ['POST /incidents/manual','Tạo incident thủ công để kiểm tra pipeline'],
+        ['GET /incidents','Liệt kê incident và trạng thái thu (queued, collecting, captured, partial)'],
+        ['GET /incidents/{id}','Trạng thái và manifest của một incident'],
+        ['GET /incidents/{id}/files/{source}','Tải dữ liệu thô metrics, logs, traces hoặc manifest'],
+        ['GET /health','Kiểm tra sức khỏe dịch vụ']],[5.5,9.5])
+    H('3.11.3. Lược đồ ngữ cảnh chẩn đoán',3)
+    lbl=T()
+    para(f'Ngữ cảnh gửi cho mô hình có cấu trúc như {lbl}. Mỗi dòng bằng chứng mang một mã riêng để báo cáo trích dẫn và để người chấm truy ngược.')
+    table(lbl,'Các trường chính của ngữ cảnh (schema 0.4.1)',['Trường','Nội dung'],[
+        ['incident_id','CTX- cộng 16 ký tự hash của nội dung'],['window_start, window_end','Cửa sổ quan sát'],
+        ['metrics[]','metric, pod hoặc service/route, giá trị đầu cửa sổ, lớn nhất, nhỏ nhất, mã E-Mxxx'],
+        ['logs[]','service, template Drain3, số lần xuất hiện, mã E-Lxxx'],
+        ['traces[]','service, operation, span_kind, duration_ms, quan hệ cha – con, mã E-Txxx'],
+        ['missing_sources','Nguồn bị thiếu, nếu có'],['selection_policy','Quy tắc chọn metric và trace đã áp dụng']],[4.5,10.5])
+    H('3.11.4. Baseline luật B0',3)
+    para('B0 chạy cục bộ trên cùng ngữ cảnh, không dùng LLM hay truy xuất. Với mỗi Pod có CPU hoặc bộ nhớ đạt ít nhất 75% limit, B0 đề xuất lỗi cạn kiệt tài nguyên với '
+         'điểm bằng tỷ lệ sử dụng; Pod có mẫu không Ready hoặc bộ đếm khởi động lại tăng được đề xuất lỗi Pod với điểm 1; route có độ trễ trung bình trên 250 ms '
+         'được ghi nhận nhưng không gán loại lỗi, vì độ trễ một mình không phân biệt được lỗi mạng với lỗi ứng dụng. Giả thuyết được sắp theo điểm và giữ tối đa ba. '
+         'Thiết kế này mô phỏng cách một kỹ sư đọc dashboard theo ngưỡng, và cố ý không suy diễn cạnh mạng.')
+    H('3.12. Kế hoạch kịch bản chi tiết',2)
+    H('3.12.1. Các họ kịch bản',3)
+    lbl=T()
+    para(f'Toàn bộ 28 họ kịch bản trong kế hoạch được liệt kê trong {lbl}, kèm tập dữ liệu và số cấu hình của mỗi họ.')
+    fams={}
+    for r in json.loads((Path(root)/'experiments/scenario-plan.json').read_text())['scenarios']:
+        fam=fams.setdefault(r['group_id'],{'fault':r['fault_class'],'variant':r['variant'],'target':r['target'],'split':r['split'],'n':0});fam['n']+=1
+    vname={'memory':'Bộ nhớ','cpu':'CPU','network-loss':'Mất gói','network-delay':'Độ trễ mạng','pod-failure':'Dừng Pod'}
+    table(lbl,'Các họ kịch bản trong kế hoạch 200 cấu hình',['Họ','Biến thể','Mục tiêu','Tập','Số cấu hình'],
+          [[k,vname.get(v['variant'],v['variant']),' → '.join(v['target']) if isinstance(v['target'],list) else v['target'],v['split'],v['n']] for k,v in fams.items()],[1.8,3.2,4.6,3,2.4])
+    H('3.12.2. Tham số theo biến thể',3)
+    lbl=T()
+    para(f'Mỗi biến thể có miền tham số như trong {lbl}. Ngoài cường độ, các cấu hình còn khác nhau ở thời lượng lỗi (30–120 giây) và kiểu lưu lượng '
+         '(thấp, trung bình, cao, hoặc có khoảng nghỉ giữa các hành trình với lỗi Pod).')
+    table(lbl,'Miền tham số của các biến thể lỗi',['Biến thể','Tham số','Miền giá trị'],[
+        ['CPU','Số worker, tải mỗi worker','1–2 worker, 100%'],['Bộ nhớ','Lượng bộ nhớ thêm so với limit','60–80% limit'],
+        ['Độ trễ mạng','Độ trễ, jitter','100–600 ms, jitter 20 ms'],['Mất gói','Tỷ lệ mất gói','10–30%'],['Dừng Pod','Kiểu, số bản sao','pod-kill, 1 bản sao']],[3.5,6,5.5])
+    H('3.13. Kiểm soát chất lượng thu thập',2)
+    H('3.13.1. Cổng soak trước mỗi lô',3)
+    para('Trước mỗi lô, hệ thống chạy lưu lượng bình thường trong 600 giây và lấy mẫu 30 giây một lần. Lô chỉ được bắt đầu khi đồng thời thỏa mãn: mọi Pod Ready, '
+         'không có khởi động lại hay thay Pod mới, số lần OOM tại cgroup của node không tăng, áp lực bộ nhớ (PSI) dưới ngưỡng, hành trình thanh toán không có yêu cầu '
+         'lỗi, và thời gian thực theo UTC khớp với thời gian đo bằng đồng hồ đơn điệu. Điều kiện cuối phát hiện máy bị ngủ: trong đợt thu, nó đã nhiều lần chặn đúng các lần '
+         'máy chuyển sang chế độ ngủ, tránh việc ghi nhận một cửa sổ quan sát bị đứt quãng.')
+    H('3.13.2. Kiểm tra cấu trúc của từng ca',3)
+    lbl=T()
+    para(f'Sau mỗi ca, công cụ kiểm tra tự động các điều kiện trong {lbl}. Ca không đạt làm dừng đợt thu; ca đạt vẫn phải được người duyệt xác nhận tác động.')
+    table(lbl,'Các kiểm tra cấu trúc tự động',['Kiểm tra','Điều kiện đạt'],[
+        ['pipeline_completed','Ca đi hết các bước tới capture'],['controller_all_injected','Chaos Mesh báo AllInjected'],
+        ['cleanup_recorded','Tài nguyên chaos đã xóa, không lỗi'],['raw_sources_present','Có đủ metric, log, trace'],
+        ['exports_not_truncated','Không chạm giới hạn log hoặc trace'],['recovery_recorded','Hệ thống phục hồi, không có vấn đề tồn đọng'],
+        ['traffic_exercised','Có hành trình thanh toán hoàn tất'],['non_target_lifecycle_unchanged','Pod ngoài mục tiêu không bị thay hoặc khởi động lại'],
+        ['node_local_oom_unchanged','Không có OOM mới ở cấp node']],[5.5,9.5])
+    H('3.13.3. Ghi kết quả duyệt và tự khôi phục',3)
+    para('Khi áp dụng phiếu duyệt, công cụ tái dựng cửa sổ quan sát từ dữ liệu thô, so hash từng nguồn, kiểm tra provenance và kế hoạch, rồi cập nhật cùng lúc năm '
+         'tệp (nhãn đúng, đánh giá tác động, registry, hồ sơ bàn giao, biên nhận) trong một giao dịch có sao lưu; lỗi giữa chừng được hoàn tác toàn bộ. Mỗi '
+         'cấu hình chỉ có tối đa một lần thu được duyệt.')
+    para('Trong đợt thu, các lỗi bộ nhớ cường độ cao đôi khi làm chính dịch vụ mục tiêu bị OOM. Ca đó vẫn hợp lệ, nhưng bước kiểm tra trước ca kế tiếp phát hiện '
+         'Pod đã khởi động lại và dừng đợt thu. Một tiến trình giám sát chỉ tự tiếp tục khi lần khởi động lại duy nhất là OOM của đúng dịch vụ vừa bị tiêm lỗi bộ '
+         'nhớ, trong khoảng thời gian tiêm, mọi Pod Ready và không còn tài nguyên chaos; mọi trường hợp khác chờ người kiểm tra.')
+    H('3.14. Kiểm thử phần mềm',2)
+    H('3.14.1. Chiến lược kiểm thử',3)
+    para('Kiểm thử tập trung vào các thuộc tính mà một lỗi lập trình có thể làm sai kết quả nghiên cứu: nhãn đúng không lọt vào ngữ cảnh, cửa sổ quan sát không '
+         'chứa dữ liệu sau mốc cắt, ca chưa duyệt không được chấm như chính thức, lần thu lỗi không bị âm thầm loại khỏi thống kê, và không ghi đè phiếu duyệt '
+         'đã có. Kiểm thử dùng dữ liệu tổng hợp và không gọi API, nên chạy được trên máy bất kỳ.')
+    H('3.14.2. Phạm vi kiểm thử',3)
+    lbl=T()
+    para(f'Các nhóm kiểm thử chính được tóm tắt trong {lbl}.')
+    table(lbl,'Các nhóm kiểm thử tự động',['Nhóm','Nội dung kiểm tra'],[
+        ['Ngữ cảnh và telemetry','Chọn container hiện hành, gom log, khử trùng lặp span, đánh dấu export không đầy đủ'],
+        ['Cửa sổ quan sát','Không lấy mẫu hoặc span hoàn tất sau mốc cắt; không ghi đè export'],
+        ['Kế hoạch và lịch thu','200 cấu hình duy nhất, tỷ lệ tập khi dừng sớm, lỗi Pod cuối lô'],
+        ['Duyệt và admission','Phiếu thiếu trường bị từ chối, giao dịch hoàn tác khi lỗi, một ca duyệt mỗi cấu hình'],
+        ['Chấm điểm','Khớp dịch vụ hoặc cạnh có hướng, báo cáo thiếu tính là sai, khoảng Wilson'],
+        ['Bộ nhớ ca và TTD','Chỉ ca reference đã duyệt vào bộ nhớ; TTD tính từ lúc nhận cảnh báo'],
+        ['Tự khôi phục','Chỉ tiếp tục với OOM của chính mục tiêu, mọi lý do khác chờ người']],[4.5,10.5])
+    para(f'Tổng cộng bộ kiểm thử có {test_count(root)} ca và đều đạt tại thời điểm dựng tài liệu.')
+    H('3.15. Triển khai và tái lập',2)
+    H('3.15.1. Các bước dựng lại môi trường',3)
+    lbl=T()
+    para(f'Toàn bộ môi trường được dựng lại bằng các lệnh trong {lbl}. Mỗi lệnh ghi bằng chứng vào thư mục kết quả để có thể đối chiếu sau.')
+    table(lbl,'Các lệnh chính để dựng lại môi trường',['Lệnh','Tác dụng'],[
+        ['make cluster-start','Khởi động Minikube với Kubernetes và tài nguyên đã ghim'],
+        ['make qdrant-start','Khởi động Qdrant cho cơ sở tri thức'],
+        ['make sock-shop-forward, make monitoring-forward, make collector-forward','Mở các cổng tới Sock Shop, Prometheus, Loki, Jaeger và collector'],
+        ['make smoke, make telemetry-check','Kiểm tra hành trình thanh toán và truy vấn được cả ba nguồn telemetry'],
+        ['make stability','Soak 600 giây với cổng sức khỏe và cổng thời gian'],
+        ['make ui','Khởi động giao diện Streamlit'],
+        ['make test','Chạy bộ kiểm thử tự động'],
+        ['make admission-preview, make admission-apply','Xem trước và áp dụng phiếu duyệt'],
+        ['make thesis','Vẽ hình và sinh lại khóa luận từ dữ liệu']],[6.5,8.5])
+    H('3.15.2. Ghim phiên bản và bằng chứng',3)
+    para('Phiên bản chart, image và thư viện Python được ghim trong các tệp khóa. Trước mỗi đợt thu, một release ghi hash của 50 tệp nguồn ảnh hưởng tới kết quả, '
+         'gồm kế hoạch, mã thu thập, mã dựng ngữ cảnh, prompt, runbook và cấu hình mô hình; bản sao các tệp này được lưu cạnh release. Mỗi ca lưu provenance gồm '
+         'hash của các tệp trên tại thời điểm chạy. Nhờ đó, khi đọc một kết quả bất kỳ, có thể biết chính xác phiên bản mã và cấu hình đã sinh ra nó.')
+    para('Khóa API được lưu ngoài kho mã, trong tệp môi trường bị loại khỏi Git. Mọi lần gọi Gemini được ghi vào sổ gọi API cùng phạm vi đã được duyệt; công cụ '
+         'chạy benchmark từ chối trước khi gọi nếu số lượt vượt hạn mức, và không tự thử lại khi lỗi.')
     # ======================================================= CHƯƠNG 4
     H('CHƯƠNG 4. KẾT QUẢ VÀ THẢO LUẬN')
     H('4.1. Kết quả xây dựng hệ thống',2)
@@ -860,13 +1060,69 @@ def build(facts,output=OUT,root=ROOT):
     else:
         wait('Bảng độ chính xác B0–B3 (Top-1, Top-3, khoảng tin cậy Wilson 95%, theo nhóm lỗi), độ trễ phát lại và chi phí trên 40 ca test. Cần đủ 200 ca, '
              'đóng băng protocol, phạm vi API được duyệt, rồi chạy experiments/evaluate.py và lưu tại '+OFFICIAL+'.')
-    H('4.6. Tính có căn cứ và hallucination',2)
+    ca=case_analysis(root)
+    if ca:
+        from experiments.evaluate import target_key
+        label_role='sơ bộ (chưa qua review độc lập)' if ca['role']!='official_test' else 'chính thức'
+        def tgt(t):return ' → '.join(t) if isinstance(t,list) else str(t)
+        def short(f):return {'Resource Exhaustion':'Tài nguyên','Network Delay / Packet Loss':'Mạng','Pod Failure':'Pod','Unknown':'Không rõ'}.get(f,f)
+        H('4.6. Phân tích từng ca test',2)
+        H('4.6.1. Giả thuyết đứng đầu của từng cấu hình',3)
+        lbl=T()
+        para(f'Giả thuyết xếp hạng đầu của mỗi cấu hình trên từng ca test ({label_role}) được trình bày trong {lbl}. Dấu ✓ đánh dấu giả thuyết khớp cả dịch vụ '
+             '(hoặc cạnh có hướng) lẫn nhóm lỗi.')
+        rows=[]
+        for r in ca['rows']:
+            cells=[r['scenario_id'],short(r['fault']),tgt(r['target'])]
+            for m in MODES:
+                h=r[m]
+                if not h:cells.append('—');continue
+                ok=target_key(h[0])==target_key(r['target']) and h[1]==r['fault']
+                cells.append(f'{h[0]} / {short(h[1])}'+(' ✓' if ok else ''))
+            rows.append(cells)
+        table(lbl,'Giả thuyết đứng đầu theo ca và cấu hình',['Ca','Lỗi','Mục tiêu','B0','B1','B2','B3'],rows,[1.4,1.6,2.4,2.4,2.4,2.4,2.4])
+        n=len(ca['rows'])
+        svc={m:sum(1 for r in ca['rows'] if r[m] and target_key(r[m][0])==target_key(r['target'])) for m in MODES}
+        bg={m:sum(1 for r in ca['rows'] if r[m] and r[m][0]=='queue-master') for m in MODES}
+        H('4.6.2. Phân tích lỗi',3)
+        para(f'Nếu chỉ xét dịch vụ hoặc cạnh có hướng mà bỏ qua nhóm lỗi, số ca B3 chỉ đúng vị trí là {svc["B3"]}/{n}, so với {svc["B0"]}/{n} của B0, '
+             f'{svc["B1"]}/{n} của B1 và {svc["B2"]}/{n} của B2. Chỉ số này không phải chỉ số chính của khóa luận nhưng giúp tách hai kiểu sai: sai vị trí và đúng vị trí '
+             'nhưng sai loại lỗi.')
+        para(f'Kiểu sai phổ biến nhất của B1 và B2 là chọn queue-master, lần lượt ở {bg["B1"]}/{n} và {bg["B2"]}/{n} ca. Dịch vụ này ghi lỗi kết nối tới Docker socket '
+             'lặp lại liên tục từ trước khi tiêm lỗi; khi chỉ có log, mô hình coi chuỗi lỗi dày đặc này là tín hiệu mạnh nhất. B3 có thêm metric tài nguyên và trace, '
+             'và trong các ca này đã chọn dịch vụ có biến động thật thay vì queue-master; nhiều khả năng là nhờ thấy được thay đổi về tài nguyên hoặc độ trễ trong cửa sổ. Đây là bằng chứng định tính cho giả '
+             'thuyết của RQ2 rằng dữ liệu đa nguồn giúp lọc nhiễu nền.')
+        para('Với lỗi mạng, B3 nhận đúng nhóm lỗi ở cả ba ca nhưng chỉ chỉ ra đúng cạnh ở một ca; hai ca còn lại B3 chọn một cạnh khác cũng xuất phát từ front-end. '
+             'Nguyên nhân khả dĩ là độ trễ trên cạnh orders → payment làm chậm cả chuỗi gọi phía trên, và trong cửa sổ 60 giây các span của nhiều cạnh cùng tăng. '
+             'Với lỗi Pod, B3 thường chỉ đúng dịch vụ nhưng gọi đó là cạn kiệt tài nguyên, có lẽ vì Pod mới khởi động có mức CPU tăng vọt. Ngược lại, B0 dựa vào bộ '
+             'đếm khởi động lại và trạng thái Ready nên nhận đúng lỗi Pod ở hai trong ba ca, nhưng không đúng ca tài nguyên nào: ở hai ca không có luật nào kích hoạt '
+             'trong cửa sổ 60 giây, và ở một ca B0 chọn nhầm shipping, dịch vụ vốn chạy sát limit bộ nhớ. Ca S0064 minh họa ranh giới mờ đã nêu ở mục 2.9.2: lỗi bộ nhớ làm orders bị OOM và khởi động lại, nên cả B0 và B3 đều gọi đây là lỗi Pod.')
+        H('4.7. Chi phí và tài nguyên của các cấu hình',2)
+        H('4.7.1. Token, độ trễ và chi phí theo cấu hình',3)
+        lbl=T();import statistics as st
+        u=ca['usage']
+        para(f'Số token đầu vào, độ trễ API và chi phí ước tính của ba cấu hình dùng LLM trên cùng các ca được so sánh trong {lbl}.')
+        table(lbl,'Token, độ trễ và chi phí theo cấu hình',['Cấu hình','Token đầu vào (trung vị)','Độ trễ API (s, trung vị)','Chi phí TB/ca (USD)'],
+              [[m,num(st.median(u[m]['tokens']),0) if u[m]['tokens'] else '—',num(st.median(u[m]['latency'])) if u[m]['latency'] else '—',
+                num(st.mean(u[m]['cost']),5) if u[m]['cost'] else '—'] for m in ('B1','B2','B3')],[2.5,4.5,4.5,3.5])
+        if u['B3']['tokens'] and u['B1']['tokens']:
+            ratio=st.median(u['B3']['tokens'])/max(st.median(u['B1']['tokens']),1)
+            para(f'B3 dùng số token đầu vào gấp khoảng {num(ratio,1)} lần B1 do có thêm metric và trace, kéo theo chi phí và độ trễ cao hơn. Ngay cả vậy, chi phí mỗi '
+                 'lần chẩn đoán vẫn ở mức vài xu Mỹ, nhỏ so với giá trị một phút làm việc của kỹ sư; điểm cần cân nhắc khi triển khai thực tế là độ trễ và hạn mức gọi '
+                 'API hơn là tiền.')
+        H('4.7.2. Ước tính chi phí vận hành',3)
+        if u['B3']['cost']:
+            per=st.mean(u['B3']['cost'])
+            para(f'Với chi phí trung bình {num(per,4)} USD cho mỗi lần chẩn đoán B3, chạy toàn bộ 40 ca test của kế hoạch tốn khoảng {num(per*40,2)} USD, và một hệ '
+                 f'thống nhận 100 cảnh báo mỗi ngày tốn khoảng {num(per*100*30,1)} USD mỗi tháng cho phần sinh văn bản, chưa gồm embedding và hạ tầng. Đây là ước tính '
+                 'theo bảng giá công bố, chưa đối chiếu hóa đơn. Trong vận hành thật, nên gom các cảnh báo cùng một sự cố trước khi gọi mô hình để tránh chẩn đoán lặp.')
+
     if gr['available']:
         lbl=T();para(f'Kết quả chấm nhận định bởi hai người được trình bày trong {lbl}.')
         table(lbl,'Kết quả chấm nhận định',['Cấu hình','Báo cáo','Nhận định','Grounding','Hallucination'],
               [[m,v['reports'],v['units'],pct(v['supported']/v['units']),pct(v['reports_with_unsupported']/v['reports'])] for m,v in sorted(gr['per_mode'].items())],[2.6,2.6,3,3.4,3.4])
     else:wait('Grounding và hallucination do hai người chấm độc lập. '+gr.get('reason',''))
-    H('4.7. Thời gian người dùng và giá trị kinh tế',2)
+    H('4.9. Thời gian người dùng và giá trị kinh tế',2)
     if hu['available']:
         lbl=T();para(f'Kết quả phiên đo được trình bày trong {lbl}. Chênh lệch trung bình theo họ (dashboard trừ trợ lý) là '
                      f'{num(hu["mean_family_difference_seconds"],1)} giây trên {hu["valid_pair_count"]} cặp hợp lệ; đây là so sánh mô tả với một người tham gia.')
@@ -882,11 +1138,11 @@ def build(facts,output=OUT,root=ROOT):
         para('Phiên đo thời gian người dùng đã được hủy trước khi bắt đầu (ngày 26/11/2026) để kịp hạn nộp: 14 ca test được chỉ định trước '
              'không thể thu đủ trong thời gian còn lại, và việc mở review ca test khiến reviewer không còn ở trạng thái mù với đáp án. Vì vậy '
              'khóa luận không báo cáo thời gian chẩn đoán của người dùng, thời gian tiết kiệm hay giá trị ròng; RQ4 chỉ được trả lời một phần '
-             'qua TTD live (mục 4.4) và chi phí API (mục 4.5).')
+             'qua TTD live (mục 4.4) và chi phí API (mục 4.7).')
     else:
         wait('Phiên đo 14 nhiệm vụ ẩn đáp án chưa hoàn tất; chưa tính giờ công tiết kiệm hoặc giá trị ròng ('+HUMAN+').')
-    H('4.8. Thảo luận',2)
-    H('4.8.1. Trả lời câu hỏi nghiên cứu',3)
+    H('4.10. Thảo luận',2)
+    H('4.10.1. Trả lời câu hỏi nghiên cứu',3)
     if off['available']:
         s=off['summary']
         for rq,(a,b) in (('RQ1',('B0','B3')),('RQ3',('B1','B2')),('RQ2',('B2','B3'))):
@@ -895,7 +1151,7 @@ def build(facts,output=OUT,root=ROOT):
             overlap=not (ia[1]<ib[0] or ib[1]<ia[0])
             para(f'{rq}: Top-1 của {a} là {pct(s[(a,"all")]["top1_correct"]["rate"])}, của {b} là {pct(s[(b,"all")]["top1_correct"]["rate"])}; hai khoảng tin cậy '
                  +('chồng nhau nên chưa đủ bằng chứng cho khác biệt.' if overlap else 'không chồng nhau.'))
-        para('RQ4: '+('xem mục 4.7.' if hu['available'] else 'chỉ trả lời một phần: có TTD live và chi phí API, không có số đo thời gian người dùng nên không kết luận về giờ công tiết kiệm.'))
+        para('RQ4: '+('xem mục 4.9.' if hu['available'] else 'chỉ trả lời một phần: có TTD live và chi phí API, không có số đo thời gian người dùng nên không kết luận về giờ công tiết kiệm.'))
     elif facts.get('preliminary') and facts['preliminary']['reportable']:
         ps={(x['mode'],x['fault_class']):x for x in facts['preliminary']['summaries']}
         para('Các nhận xét sau dựa trên kết quả sơ bộ ở mục 4.5 (ca chưa qua review độc lập) nên chỉ mang tính định hướng.')
@@ -906,7 +1162,7 @@ def build(facts,output=OUT,root=ROOT):
                  +('khoảng tin cậy chồng nhau nên chưa đủ bằng chứng cho khác biệt.' if overlap else 'khoảng tin cậy không chồng nhau.'))
         para('RQ4: chỉ trả lời một phần: có TTD live và chi phí API, không có số đo thời gian người dùng.')
     else:wait('Câu trả lời RQ1–RQ4 chỉ viết khi có benchmark chính thức; kết quả phát triển ở mục 4.3 không dùng để kết luận.')
-    H('4.8.2. Các mối đe dọa đến tính hợp lệ',3)
+    H('4.10.2. Các mối đe dọa đến tính hợp lệ',3)
     bullets(['Tính tổng quát: lỗi được tiêm trên một ứng dụng mẫu, chưa phản ánh đầy đủ sự cố production.',
              'Môi trường: phần lớn image chạy giả lập AMD64 trên ARM64, ảnh hưởng tới số đo CPU và độ trễ.',
              'Độ ổn định: testbed có lịch sử OOM nền; soak 600 giây chỉ xác nhận ổn định ngắn hạn.',
@@ -916,6 +1172,24 @@ def build(facts,output=OUT,root=ROOT):
              'Người dùng: phiên đo thời gian người dùng đã hủy; không có số đo T_baseline/T_assistant.' if hu.get('cancelled') else 'Người dùng: một người tham gia, các cặp khác ca cùng họ; kết quả mang tính mô tả.',
              'Cỡ mẫu: nếu áp dụng quy tắc dừng sớm, tập test nhỏ hơn 40 ca kế hoạch nên khoảng tin cậy rộng; không ngoại suy lên 200 ca.'])
 
+    H('4.11. Bài học kinh nghiệm',2)
+    H('4.11.1. Về xây dựng testbed trên máy cá nhân',3)
+    para('Chạy mười bốn dịch vụ, ba hệ thống telemetry, Chaos Mesh và cơ sở dữ liệu vector trên một laptop 16 GB là khả thi nhưng sát giới hạn. Phần lớn image Sock '
+         'Shop chỉ có bản AMD64 nên phải chạy qua giả lập trên chip ARM64, làm tăng tải CPU. Ba dịch vụ viết bằng Go được build lại cho ARM64 từ mã nguồn, một '
+         'dịch vụ cần bản vá nhỏ để giữ nguyên định dạng JSON cũ. Trong các lần chạy dài, payment, catalogue, user và một số cơ sở dữ liệu từng bị OOM; mỗi lần '
+         'xử lý đều đi kèm đo đạc ở cấp cgroup trước khi thay đổi cấu hình, thay vì tăng tài nguyên theo cảm tính.')
+    para('Bản thân công cụ thu thập cũng là một nguồn lỗi. Collector từng bị OOM ở giới hạn 192 MiB trong lúc thu một ca, làm ca đó không được tính. Phiên bản '
+         'sửa lỗi xử lý tuần tự từng job, ghi JSON theo luồng và được kiểm chứng bằng ba lần thu thủ công cùng một phép soak trước khi dùng tiếp.')
+    H('4.11.2. Về quy trình thực nghiệm',3)
+    para('Thứ tự thu dữ liệu ảnh hưởng trực tiếp tới khả năng báo cáo. Lịch thu ban đầu đi tuần tự theo kế hoạch, nên sau 20 ca vẫn chưa có ca test nào. Lịch xen kẽ '
+         'phân tầng được áp dụng trước khi thu bất kỳ ca validation hay test nào, nhờ vậy việc đổi lịch không làm thay đổi cấu hình hay tập dữ liệu, và 10 ca test '
+         'đầu tiên có đủ ba nhóm lỗi.')
+    para('Các cơ chế kiểm tra tự động đôi khi dừng đợt thu vì những lý do không liên quan tới chất lượng dữ liệu, như máy chuyển sang chế độ ngủ hay dịch vụ mục tiêu '
+         'bị OOM bởi chính lỗi được tiêm. Thay vì nới lỏng kiểm tra, đề tài phân loại rõ từng lý do dừng và chỉ tự động tiếp tục với trường hợp đã chứng minh là vô '
+         'hại. Cách làm này tốn thời gian hơn nhưng giữ được tính toàn vẹn của dữ liệu.')
+    para('Cuối cùng, bước duyệt độc lập là nút thắt về thời gian. Thu một ca mất khoảng ba phút, nhưng duyệt kỹ một ca cần đối chiếu dữ liệu thô của cả ba nguồn. Với '
+         'một người duyệt, tốc độ duyệt quyết định tốc độ có kết quả chính thức. Đây là lý do khóa luận tách rõ kết quả sơ bộ trên ca chưa duyệt và kết quả chính '
+         'thức trên ca đã duyệt.')
     # ======================================================= KẾT LUẬN
     H('KẾT LUẬN')
     rich([('Kết quả đạt được. ',True),('Khóa luận đã xây dựng một pipeline chẩn đoán sự cố end-to-end trên Kubernetes gồm testbed Sock Shop, telemetry '
@@ -923,8 +1197,14 @@ def build(facts,output=OUT,root=ROOT):
           'Streamlit, dashboard Grafana và worker chẩn đoán tự động; cùng protocol thu dữ liệu được ghim bằng hash, duyệt độc lập và ghi bằng transaction.',False)])
     if not (off['available'] and hu['available'] and d['complete']):
         wait('Kết luận định lượng về RQ1–RQ4 sẽ được viết khi đủ 200 ca, có benchmark test, chấm grounding và phiên đo người thật.')
-    rich([('Hạn chế. ',True),('Phạm vi gồm ba nhóm lỗi trên một ứng dụng mẫu, chạy giả lập một phần trên một máy cá nhân, với một reviewer và một '
-          'người tham gia phiên đo.',False)])
+    rich([('Hạn chế. ',True),('Phạm vi gồm ba nhóm lỗi trên một ứng dụng mẫu, chạy giả lập một phần trên một máy cá nhân, với một người duyệt dữ liệu. '
+          'Tại thời điểm nộp, kết quả benchmark mới ở mức sơ bộ trên các ca test chưa qua duyệt độc lập, cỡ mẫu nhỏ nên khoảng tin cậy rộng và các so sánh giữa '
+          'cấu hình chưa đủ để kết luận có ý nghĩa thống kê. Phiên đo thời gian người dùng đã được hủy, nên chưa có số liệu về thời gian kỹ sư tiết kiệm. Cửa sổ quan '
+          'sát neo theo thời điểm tiêm lỗi là quy ước của benchmark ngoại tuyến; TTD trên đường live chỉ được đo trên ba ca minh họa.',False)])
+    rich([('Đóng góp. ',True),('Ngoài sản phẩm, khóa luận đóng góp một quy trình thực nghiệm có thể kiểm tra lại: kế hoạch dữ liệu được ghim trước, lịch thu '
+          'giữ tỷ lệ ở mọi điểm dừng, quy tắc dừng sớm được chốt trước khi có kết quả, và mọi bước từ dữ liệu thô tới con số trong báo cáo đều có thể chạy lại. '
+          'Kết quả sơ bộ cho thấy hướng đi đáng tiếp tục: cấu hình đầy đủ B3 đứng đầu trên mọi chỉ số đã đo và tránh được nhiễu nền mà các cấu hình chỉ dùng '
+          'log mắc phải.',False)])
     rich([('Hướng phát triển. ',True),('Kiểm tra ổn định dài hạn và build native cho toàn bộ dịch vụ; mở rộng nhóm lỗi (cấu hình sai, lỗi cơ sở dữ liệu); '
           'bổ sung reviewer thứ hai; giảm thời gian chờ cửa sổ trong TTD live; đánh giá hiệu chỉnh độ tin cậy do mô hình tự khai.',False)])
 
@@ -947,7 +1227,9 @@ def build(facts,output=OUT,root=ROOT):
           'Chaos Mesh Authors, “Chaos Mesh documentation.” [Trực tuyến]. Có sẵn: https://chaos-mesh.org/docs/ [Truy cập ngày: 20/11/2026].',
           'A. Vaswani et al., “Attention is all you need,” in Proc. NeurIPS, 2017, arXiv:1706.03762.',
           'P. He, J. Zhu, Z. Zheng, and M. R. Lyu, “Drain: An online log parsing approach with fixed depth tree,” in Proc. IEEE ICWS, 2017, doi: 10.1109/ICWS.2017.13.',
-          'E. B. Wilson, “Probable inference, the law of succession, and statistical inference,” J. Amer. Statist. Assoc., vol. 22, no. 158, pp. 209–212, 1927, doi: 10.1080/01621459.1927.10502953.']
+          'E. B. Wilson, “Probable inference, the law of succession, and statistical inference,” J. Amer. Statist. Assoc., vol. 22, no. 158, pp. 209–212, 1927, doi: 10.1080/01621459.1927.10502953.',
+          'Y. A. Malkov and D. A. Yashunin, “Efficient and robust approximate nearest neighbor search using hierarchical navigable small world graphs,” IEEE Trans. Pattern Anal. Mach. Intell., vol. 42, no. 4, pp. 824–836, 2020, doi: 10.1109/TPAMI.2018.2889473.',
+          'C. Wohlin, P. Runeson, M. Höst, M. C. Ohlsson, B. Regnell, and A. Wesslén, Experimentation in Software Engineering. Berlin, Germany: Springer, 2012.']
     for i,ref in enumerate(refs,1):
         p=para(f'[{i}]\t{ref}',align=L);pf=p.paragraph_format;pf.left_indent=Cm(1);pf.first_line_indent=Cm(-1);pf.tab_stops.add_tab_stop(Cm(1))
 

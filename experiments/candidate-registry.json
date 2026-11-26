@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-26T07:39:42.893103+00:00",
+  "updated_at": "2026-11-26T07:52:45.788296+00:00",
   "official_admitted": 0,
   "note": "Separate execution registry. The scenario plan remains a draft template, not a list of admitted cases.",
   "attempts": [
@@ -578,6 +578,15 @@
       "admission_status": "requires_review",
       "effect_review_status": "not_verified",
       "path": "data/candidates/CANDIDATE-20261126T073942188210-S0083"
+    },
+    {
+      "candidate_id": "CANDIDATE-20261126T074956430228-S0083",
+      "scenario_id": "S0083",
+      "split": "reference",
+      "execution_status": "captured_requires_review",
+      "admission_status": "requires_review",
+      "effect_review_status": "requires_technical_effect_review",
+      "path": "data/candidates/CANDIDATE-20261126T074956430228-S0083"
     }
   ]
 }

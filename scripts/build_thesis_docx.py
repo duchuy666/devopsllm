@@ -200,6 +200,9 @@ def build(facts,output=OUT,root=ROOT):
         pf.keep_with_next=True;pf.first_line_indent=Cm(0);pf.left_indent=Cm(0);pf.line_spacing=1.3
         pf.space_before=Pt(6);pf.space_after=Pt(0);pf.alignment=C if name=='Heading 1' else L
         if name=='Heading 1':pf.page_break_before=True;pf.space_after=Pt(12)
+    from docx.enum.style import WD_STYLE_TYPE
+    figcap=doc.styles.add_style('Figure Caption',WD_STYLE_TYPE.PARAGRAPH);figcap.base_style=doc.styles['Normal'];set_font(figcap,13,italic=True)
+    figcap.paragraph_format.alignment=C;figcap.paragraph_format.first_line_indent=Cm(0);figcap.paragraph_format.space_after=Pt(10)
     cap=doc.styles['Caption'];set_font(cap,13,bold=True);cap.paragraph_format.alignment=C
     cap.paragraph_format.first_line_indent=Cm(0);cap.paragraph_format.keep_with_next=True;cap.paragraph_format.space_after=Pt(3)
     for st in doc.styles:
@@ -212,7 +215,8 @@ def build(facts,output=OUT,root=ROOT):
         s.page_width=Cm(21);s.page_height=Cm(29.7);s.top_margin=s.bottom_margin=Cm(2.5)
         s.left_margin=Cm(3.5);s.right_margin=Cm(2.5);s.footer_distance=Cm(1.2)
     margins(sec)
-    pending=[];state={'chapter':0,'table':0,'eq':0,'first_in_section':False}
+    pending=[];state={'chapter':0,'table':0,'eq':0,'fig':0,'first_in_section':False}
+    FIG=Path(root)/'docs/submission/figures'
 
     # ------------------------------------------------------------------ helpers
     def para(text='',bold=False,italic=False,align=None,size=None,after=None,indent=True,keep=False):
@@ -263,10 +267,19 @@ def build(facts,output=OUT,root=ROOT):
         fc('end')
 
     def H(text,level=1,first=False):
-        if level==1 and text.startswith('CHƯƠNG'):state['chapter']=int(text.split()[1].rstrip('.'));state['table']=0;state['eq']=0
+        if level==1 and text.startswith('CHƯƠNG'):state['chapter']=int(text.split()[1].rstrip('.'));state['table']=0;state['eq']=0;state['fig']=0
         h=doc.add_heading(text,level)
         if level==1 and state['first_in_section']:h.paragraph_format.page_break_before=False;state['first_in_section']=False
         return h
+
+    def F(name):
+        """Reserve the next figure label only if the image exists."""
+        if not (FIG/(name+'.png')).is_file():return None
+        state['fig']+=1;return f'Hình {state["chapter"]}.{state["fig"]}'
+
+    def figure(label,name,title,width=15.5):
+        p=para(align=C,after=2);p.paragraph_format.keep_with_next=True;p.add_run().add_picture(str(FIG/(name+'.png')),width=Cm(width))
+        doc.add_paragraph(f'{label}. {title}',style='Figure Caption')
 
     def T():
         state['table']+=1;return f'Bảng {state["chapter"]}.{state["table"]}'
@@ -427,6 +440,8 @@ def build(facts,output=OUT,root=ROOT):
                 for r in p.runs:r.font.size=Pt(12);r.bold=ri==0
     H('DANH MỤC BẢNG')
     field(para(indent=False),'TOC \\h \\z \\t "Caption,1"','Nhấn chuột phải → Update Field (F9) để cập nhật danh mục bảng.')
+    H('DANH MỤC HÌNH')
+    field(para(indent=False),'TOC \\h \\z \\t "Figure Caption,1"','Nhấn chuột phải → Update Field (F9) để cập nhật danh mục hình.')
 
     # ------------------------------------------------------------------ main body (arabic numbering from 1)
     new_section(fmt='decimal',start=1)
@@ -643,6 +658,9 @@ def build(facts,output=OUT,root=ROOT):
          'từ đó tới incident collector (FastAPI). Collector lấy cửa sổ telemetry quanh cảnh báo; Context Builder dùng Drain3 và bộ chọn metric/trace '
          'để tạo ngữ cảnh có mã bằng chứng; bộ truy xuất lấy runbook và các ca đã giải quyết từ Qdrant; LangChain gọi Gemini để sinh báo cáo; '
          'báo cáo được hiển thị trên Streamlit. Nhãn đúng, trạng thái chaos và bộ đếm qdisc được lưu riêng, không bao giờ vào ngữ cảnh hoặc cơ sở tri thức.')
+    fl=F('architecture')
+    if fl:
+        para(f'Các thành phần và luồng dữ liệu nói trên được minh họa trong {fl}.');figure(fl,'architecture','Kiến trúc logic của hệ thống chẩn đoán sự cố')
     H('3.2.2. Công nghệ sử dụng',3)
     lbl=T();para(f'Các thành phần và phiên bản đã triển khai được liệt kê trong {lbl}. Nhà cung cấp LLM được chuyển từ OpenAI (dự kiến trong đề '
                  'cương) sang Gemini ngày 20/11/2026; các thành phần còn lại và protocol đánh giá giữ nguyên.')
@@ -720,6 +738,10 @@ def build(facts,output=OUT,root=ROOT):
              'Quy tắc dừng sớm được chốt trước khi có kết quả test: nếu không đủ 200 ca, báo cáo trên mọi ca đã duyệt tại thời điểm dừng với n '
              'riêng cho từng tập và nhóm lỗi, khoảng tin cậy Wilson 95%, không ngoại suy; benchmark chỉ báo cáo khi có ít nhất 10 ca test '
              'phủ cả ba nhóm lỗi.'])
+    fl=F('schedule')
+    if fl:
+        para(f'{fl} cho thấy số cấu hình mỗi tập theo tiến độ thu khi dùng lịch xen kẽ phân tầng: ở bất kỳ điểm dừng nào, tỷ lệ giữa ba tập '
+             'vẫn bám sát 3:1:1.');figure(fl,'schedule','Số cấu hình theo tập dữ liệu khi thu theo lịch xen kẽ phân tầng',14)
     H('3.8.4. Lược đồ nhãn',3)
     lbl=T();para(f'Mỗi ca được duyệt được xuất theo lược đồ của đề cương như trong {lbl}; vị trí bằng chứng và runbook liên quan lấy từ phiếu reviewer.')
     table(lbl,'Lược đồ nhãn của một ca',['Trường','Nội dung'],[
@@ -770,6 +792,9 @@ def build(facts,output=OUT,root=ROOT):
     table(lbl,'Trạng thái thu thập và duyệt dữ liệu',['Trạng thái','Số cấu hình'],[['Đã thu hoàn chỉnh',f['captured_scenarios']],
         ['Chờ reviewer',c['pending_review']+c['approved_record_incomplete']],['Đã duyệt, chờ áp dụng',c['approved_ready_to_apply']],
         ['Bị từ chối, cần thu lại',c['rejected_requires_new_attempt']],['Đã duyệt chính thức',f['admitted']],['Chưa thu',c['not_captured']]],[10,5])
+    fl=F('dataset')
+    if fl:
+        para(f'{fl} so sánh số cấu hình đã thu và đã duyệt với kế hoạch của từng tập.');figure(fl,'dataset','Tiến độ thu và duyệt dữ liệu theo tập',13.5)
     if not d['complete']:wait(f'Bộ dữ liệu mới có {f["admitted"]}/200 ca được duyệt; kết quả chính thức tính khi đủ 200 ca, hoặc theo quy tắc dừng sớm (mục 3.8.3) khi có ít nhất 10 ca test được duyệt.')
     H('4.3. Kết quả trên dữ liệu phát triển',2)
     lbl=T()
@@ -788,6 +813,9 @@ def build(facts,output=OUT,root=ROOT):
         table(lbl,'TTD từ cảnh báo tới báo cáo trên đường live',['Incident','Top-1 B3','TTD (s)','Chờ cửa sổ (s)','LLM + truy xuất (s)','Chi phí (USD)'],
               [[r['incident_id'][-8:],r['top1'],num(r.get('ttd_seconds'),1),num(r['components_seconds'].get('alert_to_capture'),1),
                 num(r['components_seconds'].get('llm_and_retrieval'),1),num(r.get('cost'),4)] for r in rows],[2.2,4.4,1.6,2.2,2.6,2])
+        fl=F('ttd')
+        if fl:
+            para(f'Thành phần thời gian của từng incident được thể hiện trong {fl}.');figure(fl,'ttd','Phân rã TTD từ cảnh báo tới báo cáo trên đường live',13.5)
         para('Đây là số đo minh họa đường live trên một loại lỗi, không phải độ chính xác chung, và được báo cáo tách khỏi độ trễ phát lại của benchmark.')
     else:
         wait('Chạy scripts/auto_diagnose.py để đo TTD từ cảnh báo tới báo cáo.')
@@ -825,6 +853,9 @@ def build(facts,output=OUT,root=ROOT):
             table(lbl,f'Số ca đúng sơ bộ trên {pre["case_count"]} ca test chưa qua review (minh họa)',['Cấu hình','Top-1 đúng','Top-3 đúng','Báo cáo lỗi'],
                   [[m,f'{x["top1_correct"]["count"]}/{x["denominator"]}',f'{x["top3_correct"]["count"]}/{x["denominator"]}',x['missing_or_invalid_reports']]
                    for m in MODES for x in [ps.get((m,'all'))] if x],[3,4,4,4])
+        fl=F('benchmark') if pre['reportable'] else None
+        if fl:
+            para(f'{fl} biểu diễn tỷ lệ đúng Top-1 và Top-3 sơ bộ kèm khoảng tin cậy Wilson 95%.');figure(fl,'benchmark','Tỷ lệ đúng sơ bộ của bốn cấu hình trên tập test',13.5)
         wait('Benchmark chính thức trên các ca test đã được duyệt độc lập (quy tắc dừng sớm, tối thiểu 10 ca) sẽ thay cho kết quả sơ bộ này.')
     else:
         wait('Bảng độ chính xác B0–B3 (Top-1, Top-3, khoảng tin cậy Wilson 95%, theo nhóm lỗi), độ trễ phát lại và chi phí trên 40 ca test. Cần đủ 200 ca, '

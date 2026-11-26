@@ -72,4 +72,5 @@ grafana-dashboard:
 case-memory-preview:
 	.venv/bin/python scripts/index_case_memory.py
 thesis:
+	.venv/bin/python scripts/build_thesis_figures.py
 	.venv/bin/python scripts/build_thesis_docx.py

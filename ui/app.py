@@ -29,7 +29,7 @@ button[data-baseweb="tab"] {font-weight:600}
 <h1>Trợ lý chẩn đoán sự cố DevOps</h1>
 <p>Quan sát hệ thống, điều tra bằng chứng và theo dõi chất lượng thực nghiệm.</p></div>''',unsafe_allow_html=True)
 
-home,live,replay,saved,knowledge,quality,reviewer,human=st.tabs(['Tổng quan','Incident','Phân tích','Báo cáo','Runbook','Dataset & kiểm thử','Review dữ liệu','Đo thời gian'])
+home,live,replay,saved,knowledge,quality,reviewer,human=st.tabs(['Tổng quan','Incident','Phân tích','Báo cáo','Runbook','Dataset & kiểm thử','Review dữ liệu','Thời gian chẩn đoán'])
 with home:overview()
 with quality:dataset()
 with reviewer:render_review()
@@ -42,7 +42,11 @@ with live:
         with urllib.request.urlopen('http://127.0.0.1:8000/incidents',timeout=5) as response:
             rows=json.load(response)
         if rows:
-            st.dataframe(rows,width='stretch',hide_index=True)
+            label={'captured':'Đầy đủ log, metric, trace','partial':'Đủ log và metric; trace bị cắt theo giới hạn xuất'}
+            st.dataframe([{'Incident':r['id'],'Nhận lúc (UTC)':r['received_at'][:19].replace('T',' '),
+                           'Telemetry':label.get(r['status'],r['status'])} for r in rows],width='stretch',hide_index=True)
+            st.caption('Collector chỉ xuất tối đa một số trace mỗi cửa sổ để giới hạn dung lượng; khi chạm giới hạn, incident ghi "partial" '
+                       'nhưng vẫn đủ dữ liệu để dựng context và chẩn đoán.')
             available=[r['id'] for r in rows if r['status'] in ('captured','partial')]
             if available:
                 live_id=st.selectbox('Incident cần mở',available)

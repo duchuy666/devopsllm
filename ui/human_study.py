@@ -18,10 +18,35 @@ def save(path,session):
     temporary=path.with_suffix('.json.tmp');temporary.write_text(json.dumps(session,ensure_ascii=False,indent=2)+'\n');temporary.replace(path)
 
 
+def live_ttd():
+    st.subheader('Thời gian từ cảnh báo đến báo cáo (live)')
+    rows=[]
+    for path in sorted(ROOT.glob('results/live-diagnoses/*/ttd.json')):
+        r=json.loads(path.read_text())
+        if r.get('status')!='report_generated':continue
+        top=''
+        result=ROOT/'results/diagnoses'/r['context_id']/r['mode']/'result.json'
+        if result.exists():
+            hyp=json.loads(result.read_text())['generated']['report']['hypotheses']
+            if hyp:top=hyp[0]['service']+' · '+hyp[0]['fault_type']
+        c=r['components_seconds']
+        rows.append({'Incident':r['incident_id'],'Cấu hình':r['mode'],'Giả thuyết Top-1':top,
+                     'Chờ cửa sổ sau alert (s)':round(c['alert_to_capture'],1),'Dựng context (s)':round(c['capture_to_context'],1),
+                     'Truy xuất + Gemini (s)':round(c['llm_and_retrieval'],1),'Tổng (s)':round(r['ttd_seconds'],1)})
+    if not rows:st.info('Chưa có lượt đo live.');return
+    a,b,c=st.columns(3)
+    total=[r['Tổng (s)'] for r in rows]
+    a.metric('Số lượt đo',len(rows));b.metric('Trung bình (s)',round(sum(total)/len(total),1));c.metric('Nhanh nhất – chậm nhất (s)',f'{min(total)} – {max(total)}')
+    st.dataframe(rows,hide_index=True,width='stretch')
+    st.caption('Tính từ lúc collector nhận cảnh báo tới khi có báo cáo B3, gồm 30 giây chờ đủ cửa sổ telemetry sau cảnh báo. '
+               'Lỗi CPU tiêm bằng Chaos Mesh; đây là đo live, không phải thời gian replay.')
+
+
 def render_study():
-    st.subheader('Đo thời gian chẩn đoán với đáp án ẩn')
+    live_ttd()
+    st.subheader('Đo thời gian chẩn đoán của người với đáp án ẩn')
     if study_cancelled(ROOT):
-        st.warning('Phiên đo đã được hủy trước khi bắt đầu (experiments/human-study-cancelled.json); review ca test đã mở nên không thể đo mù với cùng reviewer.');return
+        st.caption('Phiên đo người đã được hủy trước khi bắt đầu (experiments/human-study-cancelled.json): review ca test đã mở nên không thể đo mù với cùng reviewer. Chưa có số liệu so sánh người–máy.');return
     st.caption('Phiên pilot một người, 14 ca thuộc bảy cặp cùng họ kịch bản; mỗi cặp dùng hai ca khác nhau. Không phải crossover cùng ca. Thời gian là thao tác trên context đã có sẵn, không phải live TTD.')
     plan_path=ROOT/'experiments/human-study-plan.json'
     if not plan_path.exists():st.info('Chưa có protocol phiên đo.');return

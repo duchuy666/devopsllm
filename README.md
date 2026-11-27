@@ -1,5 +1,7 @@
 # Trợ lý chẩn đoán sự cố DevOps dùng LLM và RAG
 
+**Cài đặt và chạy: xem [HUONG-DAN-CHAY.md](HUONG-DAN-CHAY.md).**
+
 Triển khai theo báo cáo khóa luận: Sock Shop trên Minikube, ba nhóm lỗi Chaos Mesh, telemetry log–metric–trace, FastAPI, Drain3, Qdrant, LangChain và Streamlit. LLM chuyển sang Gemini API theo yêu cầu ngày 20/11/2026; xem `docs/decisions.md`.
 
 Máy phát triển: MacBook Air M2, RAM 16 GB, SSD 256 GB. Docker VM dùng 8 GiB RAM; Minikube đã tăng từ 6 lên 7 GiB sau khi đo memory pressure tại cgroup. Cấu hình phải được kiểm chứng bằng pilot.

@@ -346,6 +346,8 @@ def build(facts,output=OUT,root=ROOT,submission=True):
 
     def new_section(fmt=None,start=None,number=True):
         s=doc.add_section(WD_SECTION.NEW_PAGE);margins(s);state['first_in_section']=True
+        # add_section copies the previous sectPr; only the two covers keep the page border.
+        for b in s._sectPr.findall(qn('w:pgBorders')):s._sectPr.remove(b)
         s.footer.is_linked_to_previous=False;fp=s.footer.paragraphs[0];fp.alignment=C;fp.paragraph_format.first_line_indent=Cm(0)
         for r in list(fp.runs):r._r.getparent().remove(r._r)
         if number:field(fp,'PAGE','1')

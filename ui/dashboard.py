@@ -24,9 +24,13 @@ def collection_progress():
     status=journal.get('status','unknown')
     st.progress(min(len(completed)/200,1),text=f'Đợt thu dataset mới: {len(completed)} / 200 ca — admission được theo dõi riêng')
     if status=='stopped_requires_review':
-        last=journal.get('attempts',[])[-1:] or [{}]
-        st.error('Đợt thu đã dừng tại '+last[0].get('scenario_id','bước kiểm tra')+': '+journal.get('error','Cần kiểm tra journal trước khi chạy tiếp.'))
-        st.caption('Lượt dừng không được tính capture hoàn chỉnh. Cần xác nhận cleanup và xử lý nguyên nhân trước attempt mới.')
+        last=(journal.get('attempts',[])[-1:] or [{}])[0]
+        reason=''
+        for path in last.get('candidate_paths',[])[:1]:
+            reason=read(path+'/ground-truth.json',{}).get('error') or ''
+        st.info(f'Đợt thu đang tạm dừng sau {last.get("scenario_id","bước kiểm tra")}: controller tự hủy lượt tiêm lỗi này'
+                +(f' ({reason})' if reason else '')+f' và dọn sạch chaos. {len(completed)} ca đã thu được giữ nguyên; lượt hủy không tính vào dataset.')
+        st.caption('Theo protocol, controller không tự thử lại; người vận hành kiểm tra cluster rồi chạy tiếp bằng --resume.')
     else:
         st.caption('Trạng thái thu: '+status+('; đang chạy '+', '.join(active) if active else '')+'. Không tự admission hoặc gọi Gemini.')
     funnel=progress(ROOT);counts=funnel['counts']
@@ -39,6 +43,12 @@ def collection_progress():
         st.warning('Ca bị từ chối không được tính; cần attempt mới cùng setting theo protocol trước khi đạt đủ 200.')
     st.caption('Tiến độ tự cập nhật mỗi 15 giây khi trang đang mở. Áp dụng phiếu đã duyệt bằng `make admission-apply` khi controller dừng.')
     st.button('Cập nhật tiến độ thu',key='refresh_collection_progress')
+
+
+@st.cache_data
+def test_count():
+    import unittest
+    return unittest.defaultTestLoader.discover(str(ROOT/'tests')).countTestCases()
 
 
 def overview():
@@ -78,7 +88,7 @@ def overview():
         a,b,c=st.columns(3)
         a.metric('Frontend tracing', '4 peer đã xác minh')
         b.metric('Collector',verification.get('collector',{}).get('version','—'))
-        c.metric('Kiểm thử Python',verification.get('python_tests',{}).get('passed',0))
+        c.metric('Unit test',test_count())
         soak_meta=verification.get('post_rollout_soak',{})
         soak=read(soak_meta.get('result',''),{}) if soak_meta.get('result') else {}
         if soak.get('status')=='passed_short_soak':
@@ -107,10 +117,10 @@ def dataset():
     audit=read('results/evaluation/dataset-validation.json',{})
     st.subheader('Dataset và chất lượng thực nghiệm')
     st.warning('200 manifest đã qua dry-run không đồng nghĩa đã chạy thực tế và admission đủ 200 ca.')
-    a,b,c=st.columns(3);a.metric('Scenario trong plan',audit.get('plan_audit',{}).get('case_count',0));b.metric('Lượt capture',audit.get('captured_cases',0));c.metric('Official admitted',f'{audit.get("official_admitted",0)} / 200')
-    st.progress(min(audit.get('official_admitted',0)/200,1),text='Tiến độ admission chính thức')
+    a,b,c=st.columns(3);a.metric('Scenario trong plan',audit.get('plan_audit',{}).get('case_count',0));b.metric('Đã capture',progress(ROOT)['captured_scenarios']);c.metric('Official admitted',f'{progress(ROOT)["admitted"]} / 200')
+    st.progress(min(progress(ROOT)['admitted']/200,1),text='Tiến độ admission chính thức (cần reviewer độc lập duyệt từng ca)')
+    st.caption('Bảng dưới là audit các lượt development trước đợt thu prospective; tiến độ đợt thu mới xem ở Tổng quan.')
     if audit.get('errors'):st.error('Audit có lỗi: '+str(audit['errors']))
-    else:st.success('Audit local gần nhất đạt. Independent review và protocol freeze còn pending.')
     if audit.get('cases'):
         visible_cases=[r for r in audit['cases'] if r['split']!='test' or test_review_unlocked(ROOT)]
         st.dataframe([{'Scenario':r['scenario_id'],'Biến thể':r['variant'],'Split':r['split'],
@@ -126,7 +136,3 @@ def dataset():
         with st.expander('B0 development — chưa phải benchmark chính thức'):
             st.dataframe(baseline['summaries'],hide_index=True,width='stretch')
             st.write('B0 abstain ở network khi chỉ có latency, không tự suy ra edge. Mẫu gồm các ca chạy lặp và observation sau recovery.')
-    for path in ('docs/progress/STATUS.md','docs/progress/DATASET-VALIDATION.md','docs/progress/NETWORK-DETECTOR-VALIDATION.md'):
-        file=ROOT/path
-        if file.exists():
-            with st.expander(file.stem):st.markdown(file.read_text())
